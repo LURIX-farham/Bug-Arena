@@ -1,0 +1,131 @@
+/* =================================================================
+   DUEL (1v1) TRANSLATIONS
+   Sections: duel — everything the live 1v1 mode surfaces.
+================================================================= */
+
+export const duel = {
+  en: {
+    duel: {
+      // Lobby
+      title: '1V1 DUEL',
+      subtitle: 'Face a live opponent on the same random bug challenge.',
+      settings: 'MATCH SETUP',
+      difficulty: 'Difficulty',
+      bugType: 'Bug type',
+      any: 'Any',
+      onlineTitle: 'ONLINE NOW',
+      onlineEmpty: 'No one else is online right now. They will see your invite the moment they show up.',
+      onlineCount: 'players ready to duel',
+      start: 'START DUEL',
+      searching: 'SEARCHING FOR OPPONENT',
+      searchingHint: 'Your duel request is live at the top of every online player\'s screen.',
+      cancel: 'CANCEL SEARCH',
+      startError: 'Could not start the duel. Please try again.',
+      rewardHint: 'Winner takes 90% of bug points + 20% bonus · Loser keeps 10%',
+
+      // Invitation toast
+      inviteWants: 'challenges you to a 1v1 bug duel!',
+      accept: 'OK',
+      decline: 'DECLINE',
+      inviteExpired: 'This invitation expired.',
+      seatTaken: 'Someone else accepted first.',
+      acceptError: 'Could not accept the invitation.',
+
+      // Room phases
+      roomTitle: 'DUEL ARENA',
+      vs: 'VS',
+      getReady: 'GET READY',
+      selecting: 'SELECTING BUG CHALLENGE',
+      lockedIn: 'CHALLENGE LOCKED',
+      entering: 'ENTERING THE ARENA',
+      hostWaiting: 'Waiting for an opponent to accept…',
+      cancelled: 'The duel was cancelled.',
+      expired: 'The duel expired with no opponent.',
+      matchNotFound: 'Match not found.',
+      matchOver: 'This duel has already ended.',
+      backToLobby: 'BACK TO DUEL LOBBY',
+
+      // Arena HUD / result overlay
+      waiting: 'WAITING FOR OPPONENT',
+      waitingHint: 'Your run is locked in. The verdict arrives as soon as your opponent finishes or time runs out.',
+      youWin: 'VICTORY',
+      youLose: 'DEFEAT',
+      drawResult: 'DRAW',
+      pointsEarned: 'POINTS EARNED',
+      comparison: 'FINAL COMPARISON',
+      finalScore: 'Total score',
+      speedBonusRow: 'Speed bonus',
+      solveTime: 'Solve time',
+      tries: 'Attempts',
+      hardenedRow: 'Hardened',
+      seconds: 's',
+      timeoutRecorded: 'Time ran out — your run was recorded as unfinished.',
+      you: 'YOU',
+      rival: 'RIVAL',
+      opponentDone: 'Your rival already finished — the verdict is being prepared.',
+      backToHome: 'BACK TO HOME',
+    },
+  },
+  fa: {
+    duel: {
+      // Lobby
+      title: 'دوئل ۱v۱',
+      subtitle: 'روی یک چالش باگ تصادفی، مقابل یک حریف زنده بجنگ.',
+      settings: 'تنظیم مسابقه',
+      difficulty: 'سختی',
+      bugType: 'نوع باگ',
+      any: 'هر چی',
+      onlineTitle: 'هم‌اکنون آنلاین',
+      onlineEmpty: 'فعلاً کس دیگری آنلاین نیست. به محض آنلاین شدن، دعوت‌نامه‌ی تو را خواهند دید.',
+      onlineCount: 'بازیکن آماده دوئل',
+      start: 'شروع دوئل',
+      searching: 'در جست‌وجوی حریف',
+      searchingHint: 'درخواست دوئل تو بالای صفحه همه کاربران آنلاین نمایش داده می‌شود.',
+      cancel: 'لغو جست‌وجو',
+      startError: 'شروع دوئل ناموفق بود. دوباره تلاش کن.',
+      rewardHint: 'برنده ۹۰٪ امتیاز باگ + ۲۰٪ جایزه · بازنده ۱۰٪',
+
+      // Invitation toast
+      inviteWants: 'تو را به دوئل باگ ۱v۱ دعوت کرده!',
+      accept: 'قبول',
+      decline: 'رد',
+      inviteExpired: 'این دعوت‌نامه منقضی شد.',
+      seatTaken: 'کسی دیگر زودتر قبول کرد.',
+      acceptError: 'پذیرش دعوت‌نامه ناموفق بود.',
+
+      // Room phases
+      roomTitle: 'ورزشگاه دوئل',
+      vs: 'علیه',
+      getReady: 'آماده باش',
+      selecting: 'در حال انتخاب چالش باگ',
+      lockedIn: 'چالش مشخص شد',
+      entering: 'ورود به ورزشگاه',
+      hostWaiting: 'در انتظار پذیرش حریف…',
+      cancelled: 'دوئل لغو شد.',
+      expired: 'دوئل بدون حریف منقضی شد.',
+      matchNotFound: 'مسابقه پیدا نشد.',
+      matchOver: 'این دوئل پیش‌تر پایان یافته است.',
+      backToLobby: 'بازگشت به لابی دوئل',
+
+      // Arena HUD / result overlay
+      waiting: 'در انتظار حریف',
+      waitingHint: 'نتیجه تو ثبت شد. به محض اتمام کار حریف یا پایان زمان، حکم مسابقه اعلام می‌شود.',
+      youWin: 'پیروزی',
+      youLose: 'شکست',
+      drawResult: 'مساوی',
+      pointsEarned: 'امتیاز کسب‌شده',
+      comparison: 'مقایسه نهایی',
+      finalScore: 'امتیاز کل',
+      speedBonusRow: 'پاداش سرعت',
+      solveTime: 'زمان حل',
+      tries: 'تلاش',
+      hardenedRow: 'هاردنینگ',
+      seconds: 'ثانیه',
+      timeoutRecorded: 'زمان تمام شد — کار شما به‌عنوان ناتمام ثبت شد.',
+      you: 'شما',
+      rival: 'حریف',
+      opponentDone: 'حریف کارش را تمام کرد — نتیجه در حال آماده‌سازی است.',
+      backToHome: 'بازگشت به خانه',
+    },
+  },
+}

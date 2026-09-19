@@ -1,0 +1,439 @@
+.challenge-details-page {
+  max-width: 1250px;
+  margin: 0 auto;
+}
+
+
+/* BACK */
+
+.details-back {
+  display: inline-block;
+
+  margin-bottom: 30px;
+
+  color: var(--text-muted);
+
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+
+  text-decoration: none;
+}
+
+.details-back:hover {
+  color: var(--accent);
+}
+
+
+/* HEADER */
+
+.details-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 40px;
+
+  padding-bottom: 35px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.details-header-main {
+  max-width: 750px;
+}
+
+.details-meta {
+  display: flex;
+  align-items: center;
+
+  gap: 15px;
+
+  color: var(--text-muted);
+
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+}
+
+.details-live {
+  color: var(--accent);
+}
+
+.details-completed {
+  color: var(--text-muted);
+}
+
+.details-header h1 {
+  margin: 13px 0 12px;
+
+  font-size: clamp(38px, 5vw, 64px);
+
+  line-height: 1;
+
+  letter-spacing: -3px;
+}
+
+.details-header p {
+  max-width: 650px;
+
+  margin: 0;
+
+  color: var(--text-muted);
+
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+
+/* ACTION */
+
+.details-action {
+  display: flex;
+  flex-direction: column;
+
+  align-items: stretch;
+
+  min-width: 190px;
+}
+
+.enter-arena-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 48px;
+
+  padding: 0 16px;
+
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+
+  background: var(--accent);
+
+  color: var(--bg-primary);
+
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  font-weight: 800;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.enter-arena-button:hover {
+  color: var(--bg-primary);
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 25px rgba(var(--accent-rgb), 0.12);
+}
+
+.enter-arena-button span {
+  font-size: 16px;
+}
+
+.action-hint {
+  margin-top: 9px;
+
+  color: var(--text-muted);
+
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px;
+
+  text-align: center;
+}
+
+
+/* MAIN */
+
+.details-main-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    320px;
+
+  gap: 10px;
+
+  margin-top: 10px;
+}
+
+.details-content {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.details-sidebar {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+
+/* PANEL */
+
+.details-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+
+  background: var(--bg-surface);
+
+  overflow: hidden;
+}
+
+.details-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  padding: 20px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.details-panel-header > div > span {
+  color: var(--text-muted);
+
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+
+.details-panel-header h2 {
+  margin: 7px 0 0;
+
+  font-size: 17px;
+}
+
+.brief-number {
+  color: var(--accent);
+
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+}
+
+
+/* BRIEF */
+
+.brief-content {
+  padding: 25px;
+}
+
+.brief-content > p {
+  max-width: 720px;
+
+  margin: 0 0 15px;
+
+  color: var(--text-secondary);
+
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.brief-warning {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 13px;
+
+  margin-top: 25px;
+  padding: 15px;
+
+  border: 1px solid rgba(215, 168, 79, 0.18);
+  border-radius: var(--radius-sm);
+
+  background: rgba(215, 168, 79, 0.04);
+}
+
+.brief-warning > span {
+  color: var(--warning);
+
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: bold;
+}
+
+.brief-warning strong {
+  display: block;
+
+  color: var(--warning);
+
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+}
+
+.brief-warning p {
+  margin: 5px 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+
+/* SKILLS */
+
+.skills-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+}
+
+.skill-item {
+  padding: 18px 20px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.skill-item:nth-child(odd) {
+  border-right: 1px solid var(--border);
+}
+
+.skill-item:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.skill-item strong,
+.skill-item span {
+  display: block;
+}
+
+.skill-item strong {
+  font-size: 11px;
+}
+
+.skill-item span {
+  margin-top: 5px;
+
+  color: var(--text-muted);
+
+  font-size: 8px;
+}
+
+
+/* STATS */
+
+.detail-stat-list {
+  padding: 5px 20px 10px;
+}
+
+.detail-stat-list > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 14px 0;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-stat-list > div:last-child {
+  border-bottom: 0;
+}
+
+.detail-stat-list span {
+  color: var(--text-muted);
+
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px;
+}
+
+.detail-stat-list strong {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+}
+
+.success-rate {
+  color: var(--accent);
+}
+
+
+/* WARNING */
+
+.details-side-warning {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 12px;
+
+  padding: 17px;
+
+  border: 1px solid rgba(var(--accent-rgb), 0.15);
+  border-radius: var(--radius-md);
+
+  background:
+    rgba(var(--accent-rgb), 0.035);
+}
+
+.warning-icon {
+  color: var(--accent);
+
+  font-size: 15px;
+}
+
+.details-side-warning strong {
+  display: block;
+
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+}
+
+.details-side-warning p {
+  margin: 6px 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+
+  .details-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .details-action {
+    width: 100%;
+  }
+
+  .details-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 550px) {
+
+  .details-header h1 {
+    font-size: 40px;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-item:nth-child(odd) {
+    border-right: 0;
+  }
+
+  .skill-item:nth-last-child(-n + 2) {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .skill-item:last-child {
+    border-bottom: 0;
+  }
+
+}

@@ -1,0 +1,678 @@
+/* =========================
+   PROFILE PAGE
+========================= */
+
+.profile-page {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 60px 40px 100px;
+  color: var(--text-primary);
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.profile-header {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+
+  gap: 50px;
+
+  padding: 45px 50px;
+
+  border: 1px solid var(--border);
+  border-radius: 20px;
+
+  background: var(--bg-surface);
+
+  overflow: hidden;
+}
+
+
+/* subtle background effect */
+
+.profile-header::before {
+  content: '';
+
+  position: absolute;
+
+  width: 420px;
+  height: 420px;
+
+  right: -180px;
+  top: -220px;
+
+  border-radius: 50%;
+
+  background: var(--primary-soft);
+
+  pointer-events: none;
+}
+
+
+/* =========================
+   EYEBROW
+========================= */
+
+.profile-eyebrow {
+  display: block;
+
+  margin-bottom: 12px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 0.18em;
+
+  color: var(--text-secondary);
+}
+
+
+/* =========================
+   PLAYER NAME
+========================= */
+
+.profile-header h1 {
+  margin: 0;
+
+  font-size: clamp(38px, 5vw, 64px);
+
+  line-height: 0.95;
+
+  font-weight: 800;
+
+  letter-spacing: -0.04em;
+
+  color: var(--text-primary);
+}
+
+
+.profile-header p {
+  max-width: 520px;
+
+  margin: 18px 0 0;
+
+  color: var(--text-secondary);
+
+  font-size: 14px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================
+   PLAYER MARK
+========================= */
+
+.profile-mark {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 72px;
+  height: 72px;
+
+  border: 1px solid var(--border-strong);
+
+  border-radius: 16px;
+
+  color: var(--text-secondary);
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+
+  background: var(--bg-elevated);
+}
+
+
+/* =========================
+   RATING
+========================= */
+
+.profile-rating {
+  position: relative;
+
+  min-width: 170px;
+
+  padding: 22px 28px;
+
+  border: 1px solid var(--border-strong);
+
+  border-radius: 16px;
+
+  background: var(--bg-elevated);
+
+  box-shadow: var(--shadow-sm);
+
+  text-align: right;
+
+  overflow: hidden;
+}
+
+
+/* small top line */
+
+.profile-rating::before {
+  content: '';
+
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: 100%;
+  height: 2px;
+
+  background: var(--primary);
+
+  opacity: 0.85;
+}
+
+
+/* label */
+
+.profile-rating span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.18em;
+
+  color: var(--text-secondary);
+}
+
+
+/* number */
+
+.profile-rating strong {
+  display: block;
+
+  font-size: 38px;
+
+  line-height: 1;
+
+  font-weight: 800;
+
+  letter-spacing: -0.04em;
+
+  color: var(--text-primary);
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+
+
+/* =========================
+   PROGRESSION
+========================= */
+
+.profile-progress-panel {
+  margin-top: 20px;
+  padding: 24px 28px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg-surface);
+}
+.profile-progress-top,.profile-progress-meta{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.profile-progress-top span,.profile-progress-meta{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--text-muted)}
+.profile-progress-top strong{display:block;margin-top:6px;font-size:12px;color:var(--text-primary);letter-spacing:.08em}
+.profile-streak{text-align:right}.profile-streak strong{color:var(--primary)}
+.profile-progress-track{height:8px;margin-top:18px;border-radius:999px;background:var(--bg-elevated);overflow:hidden}
+.profile-progress-track div{height:100%;border-radius:inherit;background:var(--primary);transition:width .45s ease}
+.profile-progress-meta{margin-top:8px;font-variant-numeric:tabular-nums}
+.profile-progress-meta span:last-child{color:var(--text-muted)}
+
+/* =========================
+   STATS
+========================= */
+
+.profile-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  margin-top: 20px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  background: var(--bg-surface);
+}
+
+
+.profile-stat {
+  padding: 25px 28px;
+
+  border-right:
+    1px solid var(--border);
+}
+
+
+.profile-stat:last-child {
+  border-right: none;
+}
+
+
+.profile-stat span {
+  display: block;
+
+  margin-bottom: 9px;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.14em;
+
+  color: var(--text-muted);
+}
+
+
+.profile-stat strong {
+  font-size: 28px;
+
+  font-weight: 750;
+
+  letter-spacing: -0.03em;
+
+  color: var(--text-primary);
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================
+   HISTORY
+========================= */
+
+.profile-history {
+  margin-top: 70px;
+}
+
+
+.profile-section-header {
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: space-between;
+
+  margin-bottom: 22px;
+}
+
+
+.profile-section-header > div span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.16em;
+
+  color: var(--text-muted);
+}
+
+
+.profile-section-header h2 {
+  margin: 0;
+
+  font-size: 28px;
+
+  font-weight: 750;
+
+  letter-spacing: -0.03em;
+}
+
+
+.history-count {
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+
+  color: var(--text-muted);
+}
+
+
+/* =========================
+   SUBMISSION LIST
+========================= */
+
+.submission-list {
+  display: flex;
+
+  flex-direction: column;
+
+  border-top:
+    1px solid var(--border);
+}
+
+
+.submission-row {
+  display: grid;
+
+  grid-template-columns:
+    40px
+    minmax(200px, 1fr)
+    110px
+    110px
+    110px
+    110px
+    130px;
+
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 22px 8px;
+
+  border-bottom:
+    1px solid var(--border-subtle);
+
+  transition:
+    background 0.2s ease,
+    padding 0.2s ease;
+}
+
+
+.submission-row:hover {
+  padding-left: 14px;
+  padding-right: 14px;
+
+  background: var(--bg-elevated);
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.submission-status {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 50%;
+
+  color: var(--text-secondary);
+
+  font-size: 13px;
+}
+
+.submission-status.done {
+  border-color: rgba(var(--success-rgb), 0.4);
+  color: var(--success);
+  background: var(--success-soft);
+}
+
+
+/* =========================
+   SUBMISSION MAIN
+========================= */
+
+.submission-main {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+
+.submission-main strong {
+  font-size: 14px;
+
+  font-weight: 650;
+
+  color: var(--text-primary);
+}
+
+
+.submission-main span {
+  font-size: 10px;
+
+  letter-spacing: 0.1em;
+
+  color: var(--text-disabled);
+}
+
+
+/* =========================
+   SUBMISSION DATA
+========================= */
+
+.submission-rating,
+.submission-score,
+.submission-attempts,
+.submission-hardening {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+
+.submission-rating span,
+.submission-score span,
+.submission-attempts span,
+.submission-hardening span {
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+
+  color: var(--text-disabled);
+}
+
+
+.submission-rating strong,
+.submission-score strong,
+.submission-attempts strong,
+.submission-hardening strong {
+  font-size: 14px;
+
+  color: var(--text-secondary);
+}
+
+
+.submission-date {
+  font-size: 11px;
+
+  color: var(--text-disabled);
+
+  text-align: right;
+}
+
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.profile-empty {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 260px;
+
+  border:
+    1px dashed var(--border-strong);
+
+  border-radius: 16px;
+
+  text-align: center;
+}
+
+
+.profile-empty > span {
+  margin-bottom: 18px;
+
+  font-size: 30px;
+
+  color: var(--text-disabled);
+}
+
+
+.profile-empty strong {
+  font-size: 15px;
+
+  color: var(--text-secondary);
+}
+
+
+.profile-empty p {
+  margin-top: 8px;
+
+  font-size: 12px;
+
+  color: var(--text-muted);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+
+  .profile-header {
+    grid-template-columns: 1fr auto;
+
+    gap: 30px;
+  }
+
+  .profile-mark {
+    display: none;
+  }
+
+  .profile-rating {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .profile-stats {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .profile-stat:nth-child(2) {
+    border-right: none;
+  }
+
+  .profile-stat:nth-child(-n + 2) {
+    border-bottom:
+      1px solid var(--border);
+  }
+
+  .submission-row {
+    grid-template-columns:
+      35px
+      1fr
+      100px
+      100px;
+  }
+
+  .submission-attempts,
+  .submission-hardening,
+  .submission-date {
+    display: none;
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .profile-page {
+    padding: 35px 18px 70px;
+  }
+
+  .profile-header {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+    padding: 30px 25px;
+  }
+
+  .profile-header h1 {
+    font-size: 42px;
+  }
+
+  .profile-rating {
+    width: 100%;
+
+    text-align: left;
+  }
+
+  .profile-stats {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .profile-stat {
+    padding: 20px;
+  }
+
+  .profile-stat strong {
+    font-size: 23px;
+  }
+
+  .profile-section-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+  .submission-row {
+    grid-template-columns:
+      30px
+      1fr
+      80px;
+  }
+
+  .submission-score {
+    display: none;
+  }
+
+  .submission-rating {
+    text-align: right;
+  }
+
+}

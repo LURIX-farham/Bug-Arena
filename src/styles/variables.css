@@ -1,0 +1,375 @@
+/* =================================================================
+   BUG ARENA — DESIGN SYSTEM · THEME TOKENS
+   -----------------------------------------------------------------
+   Every theme-dependent value in the app must come from this file.
+   Two complete palettes:
+   • DARK  — refined black-green terminal with cyan/violet undertones
+   • LIGHT — clean white-blue with a vivid blue accent
+
+   Conventions:
+   • --bg-*, --text-*, --border  → semantic surfaces & typography
+   • --primary / --secondary / --accent-* → brand roles
+   • --success/--warning/--danger/--info → status roles
+   • --*-rgb triplet helpers → use with rgba(var(--accent-rgb), .12)
+   • --*-soft → pre-mixed subtle backgrounds for badges/hover states
+   • Do NOT hardcode hex/rgba in page CSS — add a token here instead.
+================================================================= */
+
+:root {
+  /* ---------- Typography ---------- */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-fa: 'Vazirmatn', 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Type scale (1.25 ratio, base 14px) */
+  --text-2xs: 9px;
+  --text-xs: 10px;
+  --text-sm: 11px;
+  --text-base: 13px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-2xl: 26px;
+  --text-3xl: 34px;
+
+  --tracking-eyebrow: 0.16em;
+
+  /* ---------- Spacing scale (4px base) ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ---------- Radius ---------- */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+
+  /* ---------- Z-index layers ---------- */
+  --z-nav: 100;
+  --z-dropdown: 200;
+  --z-modal: 300;
+  --z-toast: 400;
+
+  /* ---------- Motion ---------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast: 0.15s;
+  --duration-base: 0.22s;
+  --duration-slow: 0.4s;
+
+  /* ---------- Focus ring ---------- */
+  --focus-ring: 0 0 0 2px var(--bg-primary), 0 0 0 4px rgba(var(--primary-rgb), 0.6);
+
+  /* Default to dark theme tokens so pre-paint state matches the
+     previous Bug Arena look. ThemeProvider swaps these on mount. */
+  --bg-primary: #07080b;
+  --bg-surface: #0f1115;
+  --bg-elevated: #161a20;
+  --bg-sunken: #040507;
+  --bg-overlay: rgba(8, 9, 12, 0.85);
+
+  --border: #232830;
+  --border-strong: #323843;
+  --border-subtle: #1a1e25;
+
+  --text-primary: #f2f4f7;
+  --text-secondary: #9aa1ac;
+  --text-muted: #656c77;
+  --text-disabled: #4a505b;
+  --text-invert: #07080b;
+
+  --primary: #7cff6b;
+  --primary-rgb: 124, 255, 107;
+  --primary-soft: rgba(124, 255, 107, 0.08);
+  --primary-soft-strong: rgba(124, 255, 107, 0.16);
+
+  /* Legacy alias — every existing rule keeps working */
+  --accent: var(--primary);
+  --accent-rgb: var(--primary-rgb);
+  --accent-hover: #95ff8b;
+  --accent-soft: var(--primary-soft);
+
+  --secondary: #5ea7ff;
+  --secondary-rgb: 94, 167, 255;
+  --secondary-soft: rgba(94, 167, 255, 0.1);
+
+  --tertiary: #b78bff;
+  --tertiary-rgb: 183, 139, 255;
+  --tertiary-soft: rgba(183, 139, 255, 0.1);
+
+  /* Legacy aliases for the numbered accents */
+  --accent-2: var(--secondary);
+  --accent-2-rgb: var(--secondary-rgb);
+  --accent-3: var(--tertiary);
+  --accent-3-rgb: var(--tertiary-rgb);
+
+  --success: #57e389;
+  --success-rgb: 87, 227, 137;
+  --success-soft: rgba(87, 227, 137, 0.1);
+
+  --warning: #ffb84d;
+  --warning-rgb: 255, 184, 77;
+  --warning-soft: rgba(255, 184, 77, 0.12);
+
+  --danger: #ff5c67;
+  --danger-rgb: 255, 92, 103;
+  --danger-soft: rgba(255, 92, 103, 0.1);
+
+  --info: #5ea7ff;
+  --info-rgb: 94, 167, 255;
+  --info-soft: rgba(94, 167, 255, 0.1);
+
+  --difficulty-easy: var(--success);
+  --difficulty-medium: var(--warning);
+  --difficulty-hard: var(--danger);
+
+  --shadow-color: 0, 0, 0;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.28);
+  --shadow-md: 0 12px 34px rgba(0, 0, 0, 0.32);
+  --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.35);
+  --shadow-strong: 0 30px 90px rgba(0, 0, 0, 0.45);
+  --shadow-accent: 0 8px 24px rgba(var(--primary-rgb), 0.12);
+
+  /* Code surfaces stay terminal-dark in BOTH themes (intentional) */
+  --code-bg: #090b0d;
+  --code-border: #1c2129;
+  --code-text: #c9d1d9;
+  --code-gutter: #444b52;
+
+  /* Legacy aliases — older page stylesheets reference these names.
+     Defining them here routes them through the live theme tokens. */
+  --muted: var(--text-muted);
+  --panel: var(--bg-surface);
+  --line: var(--border);
+  --text: var(--text-primary);
+  --border-color: var(--border);
+}
+
+/* =================================================================
+   DARK THEME — refined black-green terminal
+================================================================= */
+
+[data-theme='dark'] {
+  --bg-primary: #07080b;
+  --bg-surface: #0f1115;
+  --bg-elevated: #161a20;
+  --bg-sunken: #040507;
+  --bg-overlay: rgba(7, 8, 11, 0.85);
+
+  --border: #232830;
+  --border-strong: #323843;
+  --border-subtle: #1a1e25;
+
+  --text-primary: #f2f4f7;
+  --text-secondary: #9aa1ac;
+  --text-muted: #656c77;
+  --text-disabled: #4a505b;
+  --text-invert: #07080b;
+
+  --primary: #7cff6b;
+  --primary-rgb: 124, 255, 107;
+  --primary-soft: rgba(124, 255, 107, 0.08);
+  --primary-soft-strong: rgba(124, 255, 107, 0.16);
+
+  --accent: var(--primary);
+  --accent-rgb: var(--primary-rgb);
+  --accent-hover: #95ff8b;
+  --accent-soft: var(--primary-soft);
+
+  --secondary: #5ea7ff;
+  --secondary-rgb: 94, 167, 255;
+  --secondary-soft: rgba(94, 167, 255, 0.1);
+
+  --tertiary: #b78bff;
+  --tertiary-rgb: 183, 139, 255;
+  --tertiary-soft: rgba(183, 139, 255, 0.1);
+
+  --accent-2: var(--secondary);
+  --accent-2-rgb: var(--secondary-rgb);
+  --accent-3: var(--tertiary);
+  --accent-3-rgb: var(--tertiary-rgb);
+
+  --success: #57e389;
+  --success-rgb: 87, 227, 137;
+  --success-soft: rgba(87, 227, 137, 0.1);
+
+  --warning: #ffb84d;
+  --warning-rgb: 255, 184, 77;
+  --warning-soft: rgba(255, 184, 77, 0.12);
+
+  --danger: #ff5c67;
+  --danger-rgb: 255, 92, 103;
+  --danger-soft: rgba(255, 92, 103, 0.1);
+
+  --info: #5ea7ff;
+  --info-rgb: 94, 167, 255;
+  --info-soft: rgba(94, 167, 255, 0.1);
+
+  --shadow-color: 0, 0, 0;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.28);
+  --shadow-md: 0 12px 34px rgba(0, 0, 0, 0.32);
+  --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.35);
+  --shadow-strong: 0 30px 90px rgba(0, 0, 0, 0.45);
+  --shadow-accent: 0 8px 24px rgba(var(--primary-rgb), 0.12);
+}
+
+/* =================================================================
+   LIGHT THEME — clean white + blue
+================================================================= */
+
+[data-theme='light'] {
+  --bg-primary: #f5f7fb;
+  --bg-surface: #ffffff;
+  --bg-elevated: #eef2f9;
+  --bg-sunken: #e9edf5;
+  --bg-overlay: rgba(245, 247, 251, 0.85);
+
+  --border: #d8deea;
+  --border-strong: #b9c2d4;
+  --border-subtle: #e4e9f2;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #6b7894;
+  --text-disabled: #9aa5b8;
+  --text-invert: #ffffff;
+
+  --primary: #2563eb;
+  --primary-rgb: 37, 99, 235;
+  --primary-soft: rgba(37, 99, 235, 0.08);
+  --primary-soft-strong: rgba(37, 99, 235, 0.15);
+
+  --accent: var(--primary);
+  --accent-rgb: var(--primary-rgb);
+  --accent-hover: #1d4ed7;
+  --accent-soft: var(--primary-soft);
+
+  --secondary: #0ea5e9;
+  --secondary-rgb: 14, 165, 233;
+  --secondary-soft: rgba(14, 165, 233, 0.1);
+
+  --tertiary: #6366f1;
+  --tertiary-rgb: 99, 102, 241;
+  --tertiary-soft: rgba(99, 102, 241, 0.1);
+
+  --accent-2: var(--secondary);
+  --accent-2-rgb: var(--secondary-rgb);
+  --accent-3: var(--tertiary);
+  --accent-3-rgb: var(--tertiary-rgb);
+
+  --success: #059669;
+  --success-rgb: 5, 150, 105;
+  --success-soft: rgba(5, 150, 105, 0.1);
+
+  --warning: #b45309;
+  --warning-rgb: 180, 83, 9;
+  --warning-soft: rgba(180, 83, 9, 0.1);
+
+  --danger: #dc2626;
+  --danger-rgb: 220, 38, 38;
+  --danger-soft: rgba(220, 38, 38, 0.08);
+
+  --info: #0ea5e9;
+  --info-rgb: 14, 165, 233;
+  --info-soft: rgba(14, 165, 233, 0.1);
+
+  --shadow-color: 30, 41, 59;
+  --shadow-xs: 0 1px 2px rgba(30, 41, 59, 0.06);
+  --shadow-sm: 0 4px 14px rgba(30, 41, 59, 0.08);
+  --shadow-md: 0 12px 34px rgba(30, 41, 59, 0.12);
+  --shadow-soft: 0 20px 60px rgba(30, 41, 59, 0.12);
+  --shadow-strong: 0 30px 90px rgba(30, 41, 59, 0.18);
+  --shadow-accent: 0 8px 24px rgba(37, 99, 235, 0.14);
+
+  --focus-ring: 0 0 0 2px var(--bg-primary), 0 0 0 4px rgba(var(--primary-rgb), 0.5);
+}
+
+/* ================================================================
+   LIVE PALETTE EXTENSION · v1.8.3 motion pass
+   Light mode stays bright, but gains cool blue, teal and violet
+   surfaces so it feels like a product interface instead of a blank
+   document. Dark mode keeps the terminal identity and gains the same
+   semantic depth without becoming neon soup.
+================================================================ */
+
+:root {
+  --brand-blue: #4f7cff;
+  --brand-cyan: #22c7d9;
+  --brand-violet: #8b6cff;
+  --brand-amber: #f3b24b;
+  --surface-tint: rgba(255,255,255,.025);
+  --motion-highlight: rgba(255,255,255,.08);
+}
+
+[data-theme='dark'] {
+  --surface-tint: rgba(255,255,255,.03);
+  --motion-highlight: rgba(255,255,255,.075);
+}
+
+[data-theme='light'] {
+  --bg-primary: #eef3f9;
+  --bg-surface: #fbfcff;
+  --bg-elevated: #f2f6fd;
+  --bg-sunken: #e4ebf5;
+  --bg-overlay: rgba(239,244,251,.94);
+
+  --border: #d2dce9;
+  --border-strong: #b6c5d8;
+  --border-subtle: #e0e7f0;
+
+  --text-primary: #111827;
+  --text-secondary: #4b5c73;
+  --text-muted: #718096;
+  --text-disabled: #a2afbf;
+  --text-invert: #ffffff;
+
+  --primary: #008f70;
+  --primary-rgb: 0,143,112;
+  --primary-soft: rgba(0,143,112,.08);
+  --primary-soft-strong: rgba(0,143,112,.14);
+  --accent: #008f70;
+  --accent-rgb: 0,143,112;
+  --accent-hover: #00745a;
+  --accent-soft: rgba(0,143,112,.08);
+
+  --secondary: #6954df;
+  --secondary-rgb: 105,84,223;
+  --secondary-soft: rgba(105,84,223,.09);
+  --tertiary: #159cc7;
+  --tertiary-rgb: 21,156,199;
+  --tertiary-soft: rgba(21,156,199,.085);
+
+  --success: #087f5b;
+  --success-rgb: 8,127,91;
+  --success-soft: rgba(8,127,91,.08);
+  --warning: #a15f00;
+  --warning-rgb: 161,95,0;
+  --warning-soft: rgba(161,95,0,.09);
+  --danger: #c63d5a;
+  --danger-rgb: 198,61,90;
+  --danger-soft: rgba(198,61,90,.08);
+  --info: #087fb5;
+  --info-rgb: 8,127,181;
+  --info-soft: rgba(8,127,181,.09);
+
+  --surface-tint: rgba(82,112,168,.055);
+  --motion-highlight: rgba(255,255,255,.74);
+
+  --shadow-xs: 0 1px 2px rgba(46,64,86,.055);
+  --shadow-sm: 0 6px 18px rgba(49,68,94,.075);
+  --shadow-md: 0 16px 42px rgba(49,68,94,.11);
+  --shadow-soft: 0 24px 70px rgba(49,68,94,.12);
+  --shadow-strong: 0 34px 100px rgba(49,68,94,.16);
+}

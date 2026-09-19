@@ -1,0 +1,504 @@
+/* =================================================================
+   RTL & PERSIAN TYPOGRAPHY ENHANCEMENTS
+   Loaded after globals.css and component CSS. Targets [dir='rtl'] to
+   fix the visual issues that appeared when the UI switched to Persian:
+   • JetBrains Mono everywhere made Persian text look like a code terminal
+   • Letter-spacing tuned for Latin looked loose for Persian glyphs
+   • Hardcoded LTR paddings/margins broke the visual balance in RTL
+   • Code/demo windows should stay LTR (Python source)
+================================================================= */
+
+/* Body font swap is already done in globals.css. Here we tune weights,
+   letter-spacing, and line-height for Persian, which has different
+   optical properties than Latin. */
+
+html[lang='fa'] body {
+  font-feature-settings: 'ss01', 'ss02';
+  letter-spacing: 0;
+}
+
+html[lang='fa'] h1,
+html[lang='fa'] h2,
+html[lang='fa'] h3 {
+  letter-spacing: 0;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+html[lang='fa'] .hero h1 {
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+
+/* Persian numerals look better without monospace's tight tabular feel */
+html[lang='fa'] .stat-value,
+html[lang='fa'] .rating-number strong {
+  font-family: var(--font-fa);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+/* The mono labels (EYEBROW, STATUS, etc.) get too cramped in Persian
+   because the script doesn't have natural letter-spacing. Loosen them
+   slightly and switch them to Vazirmatn. */
+html[lang='fa'] .home-eyebrow,
+html[lang='fa'] .panel-eyebrow,
+html[lang='fa'] .stat-label,
+html[lang='fa'] .panel-period,
+html[lang='fa'] .live-indicator,
+html[lang='fa'] .challenge-id,
+html[lang='fa'] .challenge-difficulty,
+html[lang='fa'] .challenge-tags span,
+html[lang='fa'] .chart-labels,
+html[lang='fa'] .rank-info,
+html[lang='fa'] .rank-position,
+html[lang='fa'] .match-rating,
+html[lang='fa'] .match-time,
+html[lang='fa'] .panel-link,
+html[lang='fa'] .primary-action,
+html[lang='fa'] .secondary-action,
+html[lang='fa'] .challenge-start,
+html[lang='fa'] .navbar-logo,
+html[lang='fa'] .navbar-cta,
+html[lang='fa'] .navbar-login,
+html[lang='fa'] .hero-eyebrow,
+html[lang='fa'] .app-logo,
+html[lang='fa'] .sidebar-label,
+html[lang='fa'] .sidebar-link,
+html[lang='fa'] .sidebar-version,
+html[lang='fa'] .sidebar-status strong,
+html[lang='fa'] .sidebar-status small,
+html[lang='fa'] .topbar-status,
+html[lang='fa'] .search-trigger,
+html[lang='fa'] .notification-header strong,
+html[lang='fa'] .notification-header span,
+html[lang='fa'] .notification-item strong,
+html[lang='fa'] .notification-item small,
+html[lang='fa'] .profile-info strong,
+html[lang='fa'] .profile-info span,
+html[lang='fa'] .user-menu-header strong,
+html[lang='fa'] .user-menu-header span,
+html[lang='fa'] .user-menu a,
+html[lang='fa'] .logout-button,
+html[lang='fa'] .mobile-nav-link small,
+html[lang='fa'] .settings-eyebrow,
+html[lang='fa'] .settings-label,
+html[lang='fa'] .settings-saved,
+html[lang='fa'] .language-option strong,
+html[lang='fa'] .theme-option strong {
+  font-family: var(--font-fa);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* Persian script reads better with slightly larger line-height */
+html[lang='fa'] p,
+html[lang='fa'] .hero-description,
+html[lang='fa'] .challenge-preview p,
+html[lang='fa'] .settings-header p,
+html[lang='fa'] .settings-card p {
+  line-height: 1.85;
+}
+
+/* Fix the navbar in RTL: logo on the right, actions on the left, but
+   keep the brand mark readable. */
+html[dir='rtl'] .navbar-inner,
+html[dir='rtl'] .navbar-actions {
+  flex-direction: row-reverse;
+}
+
+html[dir='rtl'] .navbar-links {
+  flex-direction: row-reverse;
+}
+
+/* Hero in RTL: keep the visual order so the code demo stays on the
+   right side of the screen (which matches the original LTR composition
+   mirrored). */
+html[dir='rtl'] .hero {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir='rtl'] .hero-actions {
+  flex-direction: row-reverse;
+}
+
+/* Code window stays LTR — Python source. But the section around it
+   should respect RTL. */
+html[dir='rtl'] .code-window {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Home page: panels, stats, matches should respect RTL */
+html[dir='rtl'] .home-header {
+  text-align: right;
+}
+
+html[dir='rtl'] .home-header-actions {
+  flex-direction: row-reverse;
+}
+
+html[dir='rtl'] .challenge-top,
+html[dir='rtl'] .panel-header,
+html[dir='rtl'] .chart-labels,
+html[dir='rtl'] .rank-info,
+html[dir='rtl'] .recommended-content {
+  flex-direction: row-reverse;
+}
+
+html[dir='rtl'] .challenge-start {
+  flex-direction: row-reverse;
+}
+
+html[dir='rtl'] .match-row {
+  direction: rtl;
+}
+
+html[dir='rtl'] .match-time {
+  text-align: left;
+}
+
+/* Sidebar in RTL: flip the active indicator and indentation */
+html[dir='rtl'] .sidebar-link {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+html[dir='rtl'] .sidebar-icon {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+html[dir='rtl'] .sidebar-status {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+html[dir='rtl'] .sidebar-settings {
+  flex-direction: row-reverse;
+}
+
+/* Topbar in RTL */
+html[dir='rtl'] .topbar-right {
+  flex-direction: row-reverse;
+}
+
+html[dir='rtl'] .topbar-profile {
+  flex-direction: row-reverse;
+}
+
+html[dir='rtl'] .topbar-status {
+  flex-direction: row-reverse;
+}
+
+/* Notification panel & user menu: anchor to the left edge in RTL
+   because the trigger button is on the left side now. */
+html[dir='rtl'] .notification-panel,
+html[dir='rtl'] .user-menu {
+  right: auto;
+  left: 0;
+}
+
+@media (max-width: 760px) {
+  html[dir='rtl'] .user-menu {
+    right: auto;
+    left: 16px;
+  }
+}
+
+/* Settings page */
+html[dir='rtl'] .settings-card {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+html[dir='rtl'] .language-switcher,
+html[dir='rtl'] .theme-switcher {
+  flex-direction: row-reverse;
+}
+
+html[dir='rtl'] .language-option,
+html[dir='rtl'] .theme-option {
+  text-align: right;
+  align-items: flex-end;
+}
+
+@media (max-width: 720px) {
+  html[dir='rtl'] .settings-card {
+    flex-direction: column;
+    text-align: right;
+  }
+}
+
+/* Landing sections: stat blocks, footer, etc. */
+html[dir='rtl'] .footer-columns,
+html[dir='rtl'] .features-grid,
+html[dir='rtl'] .modes-grid,
+html[dir='rtl'] .showcase-grid,
+html[dir='rtl'] .stats-row {
+  direction: rtl;
+}
+
+html[dir='rtl'] .footer-bottom {
+  flex-direction: row-reverse;
+}
+
+/* Code editor and terminal in the Arena must stay LTR — but ONLY the
+   code surfaces. The Arena page itself (objective, side panel, headers)
+   stays RTL so Persian text keeps native typography. */
+html[dir='rtl'] .arena-code-editor,
+html[dir='rtl'] .editor-lines,
+html[dir='rtl'] .code-toolbar,
+html[dir='rtl'] .test-output,
+html[dir='rtl'] .test-output-header,
+html[dir='rtl'] .test-result pre,
+html[dir='rtl'] .test-result code,
+html[dir='rtl'] .code-window,
+html[dir='rtl'] .code-body,
+html[dir='rtl'] .code-window code,
+html[dir='rtl'] pre,
+html[dir='rtl'] code {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+/* Monospace belongs to code glyphs only — never force it on localized
+   Persian prose that happens to live inside those containers. */
+html[dir='rtl'] .arena-code-editor,
+html[dir='rtl'] .editor-lines,
+html[dir='rtl'] .code-toolbar,
+html[dir='rtl'] .test-output-header,
+html[dir='rtl'] pre,
+html[dir='rtl'] code {
+  font-family: var(--font-mono) !important;
+}
+
+/* Landing showcase editors (challenge + replay demos) stay LTR too,
+   including their line-number gutter and error markers. */
+html[dir='rtl'] .challenge-editor,
+html[dir='rtl'] .replay-editor,
+html[dir='rtl'] .replay-code {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+html[dir='rtl'] .editor-line,
+html[dir='rtl'] .replay-line {
+  direction: ltr;
+  text-align: left;
+}
+
+/* =================================================================
+   RTL v2 — physical-property mirroring
+   These fix pages that were not covered by the first pass.
+================================================================= */
+
+/* --- Arrow glyphs inside buttons/links: point along reading order --- */
+html[dir='rtl'] .challenge-arrow,
+html[dir='rtl'] .enter-arena-button span,
+html[dir='rtl'] .challenge-start span,
+html[dir='rtl'] .submit-button span {
+  transform: scaleX(-1);
+  display: inline-block;
+}
+
+html[dir='rtl'] .challenge-card:hover .challenge-arrow {
+  transform: scaleX(-1) translateX(4px);
+}
+
+/* Localized strings carry their own arrows (e.g. «← بازگشت به چالش‌ها»)
+   inside mixed-direction contexts — flip bidi-isolated arrow spans. */
+html[dir='rtl'] .back-button,
+html[dir='rtl'] .replay-link,
+html[dir='rtl'] .analytics-replay-link {
+  direction: rtl;
+}
+
+/* --- Text alignment: physical right ↔ left flips --- */
+html[dir='rtl'] .search-trigger,
+html[dir='rtl'] .search-result,
+html[dir='rtl'] .user-menu a,
+html[dir='rtl'] .logout-button,
+html[dir='rtl'] .leaderboard-footer,
+html[dir='rtl'] .timeline-step,
+html[dir='rtl'] .analytics-session b,
+html[dir='rtl'] .analytics-session small,
+html[dir='rtl'] .season-card,
+html[dir='rtl'] .opponent-diff,
+html[dir='rtl'] .history-row > strong,
+html[dir='rtl'] .profile-rating,
+html[dir='rtl'] .profile-streak,
+html[dir='rtl'] .submission-date,
+html[dir='rtl'] .leaderboard-count,
+html[dir='rtl'] .footer-bottom span:last-child,
+html[dir='rtl'] .demo-status {
+  text-align: left;
+}
+
+html[dir='rtl'] .match-time,
+html[dir='rtl'] .replay-score,
+html[dir='rtl'] .achievement-state,
+html[dir='rtl'] .leaderboard-rating {
+  text-align: right;
+}
+
+/* --- Separators: border-right ↔ border-left --- */
+html[dir='rtl'] .competitive-stats > div,
+html[dir='rtl'] .profile-stat,
+html[dir='rtl'] .skill-item:nth-child(odd),
+html[dir='rtl'] .challenge-stats div,
+html[dir='rtl'] .rating-card,
+html[dir='rtl'] .progress-stats,
+html[dir='rtl'] .mode-tab {
+  border-right: 0;
+  border-left: 1px solid var(--border);
+}
+
+html[dir='rtl'] .competitive-stats > div:last-child,
+html[dir='rtl'] .profile-stat:last-child,
+html[dir='rtl'] .challenge-stats div:last-child {
+  border-left: 0;
+}
+
+/* Landing mode tabs have their own separator color */
+html[dir='rtl'] .mode-tab {
+  border-left-color: var(--border);
+}
+
+html[dir='rtl'] .mode-tab.active,
+html[dir='rtl'] .mode-tab:last-child {
+  border-left-color: transparent;
+}
+
+/* --- Active indicators: inset shadow direction --- */
+html[dir='rtl'] .leaderboard-row.current-player,
+html[dir='rtl'] .leaderboard.landing .leaderboard-row.current-player {
+  box-shadow: inset -3px 0 0 var(--primary);
+}
+
+html[dir='rtl'] .mode-card.active {
+  box-shadow: inset -3px 0 var(--primary);
+}
+
+/* --- Absolute decorations & anchors --- */
+html[dir='rtl'] .profile-header::before {
+  right: auto;
+  left: -180px;
+}
+
+html[dir='rtl'] .mode-number {
+  right: auto;
+  left: 22px;
+}
+
+html[dir='rtl'] .demo-result {
+  right: 24px;
+  left: auto;
+}
+
+@media (max-width: 900px) {
+  html[dir='rtl'] .demo-result {
+    right: 12px;
+  }
+}
+
+html[dir='rtl'] .timeline::before {
+  left: auto;
+  right: 4px;
+}
+
+html[dir='rtl'] .process-item:hover {
+  padding-left: 12px;
+  padding-right: 20px;
+}
+
+/* --- Hover padding on submission rows: mirror the nudge --- */
+html[dir='rtl'] .submission-row:hover {
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+/* Leaderboard hover pushes along reading direction */
+html[dir='rtl'] .leaderboard-row:hover {
+  padding-left: 20px;
+  padding-right: 26px;
+}
+
+/* Forms: text inputs should accept Persian text properly. They can
+   still be LTR for email/numbers, but textarea and text inputs should
+   follow the document direction. */
+html[dir='rtl'] input[type='text'],
+html[dir='rtl'] input[type='password'],
+html[dir='rtl'] input[type='search'],
+html[dir='rtl'] textarea {
+  direction: rtl;
+  text-align: right;
+  font-family: var(--font-fa);
+}
+
+html[dir='rtl'] input[type='email'],
+html[dir='rtl'] input[type='number'],
+html[dir='rtl'] input[type='tel'],
+html[dir='rtl'] input[type='url'] {
+  direction: ltr;
+  text-align: left;
+  font-family: var(--font-mono);
+}
+
+/* Buttons stay readable in Persian */
+html[dir='rtl'] button {
+  font-family: var(--font-fa);
+}
+
+/* Make sure theme toggle icon button keeps its symmetry in RTL */
+html[dir='rtl'] .theme-toggle {
+  direction: ltr;
+}
+
+/* Persian visual rhythm: mirror layout, not the coding identity. */
+html[dir='rtl'] .hero { text-align: right; }
+html[dir='rtl'] .hero h1 { letter-spacing: 0; line-height: 1.2; font-weight: 800; }
+html[dir='rtl'] .hero h1 span { -webkit-text-stroke: 0; color: var(--text-muted); }
+html[dir='rtl'] .hero-eyebrow::before, html[dir='rtl'] .section-number::before { order: 2; }
+html[dir='rtl'] .hero-actions { flex-direction: row; justify-content: flex-start; }
+html[dir='rtl'] .section-heading { text-align: right; }
+html[dir='rtl'] .section-heading h2 { line-height: 1.2; letter-spacing: 0; }
+html[dir='rtl'] .process-item { text-align: right; }
+html[dir='rtl'] .mode-display { direction: rtl; }
+html[dir='rtl'] .mode-display-info { text-align: right; }
+html[dir='rtl'] .mode-tabs { direction: rtl; }
+html[dir='rtl'] .final-cta-content { text-align: right; }
+html[dir='rtl'] .footer-main { direction: rtl; text-align: right; }
+html[dir='rtl'] .footer-bottom { direction: rtl; }
+html[dir='rtl'] .stat-item { border-left: 0; border-right: 1px solid var(--border); }
+html[dir='rtl'] .stat-item:first-child { border-right: 1px solid var(--border); }
+html[dir='rtl'] .stat-item:last-child { border-left: 1px solid var(--border); }
+html[dir='rtl'] .demo-result { right: auto; left: -18px; }
+html[dir='rtl'] .navbar-inner { flex-direction: row-reverse; }
+html[dir='rtl'] .navbar-actions { flex-direction: row-reverse; }
+html[dir='rtl'] .navbar-links { flex-direction: row-reverse; }
+
+@media (max-width: 640px) {
+  html[dir='rtl'] .hero-actions { flex-direction: column; }
+  html[dir='rtl'] .demo-result { left: 8px; right: auto; }
+}
+
+/* Premium Persian rhythm. Keep the visual density of the Latin layout,
+   but give Persian headlines enough line-height and breathing room. */
+html[lang='fa'] .hero h1,
+html[lang='fa'] .section-heading h2,
+html[lang='fa'] .final-cta-content h2,
+html[lang='fa'] .home-header h1,
+html[lang='fa'] .challenges-header h1 {
+  line-height: 1.25;
+  font-weight: 800;
+}
+
+html[lang='fa'] .hero-description,
+html[lang='fa'] .section-heading p,
+html[lang='fa'] .final-cta-content p,
+html[lang='fa'] .home-header p,
+html[lang='fa'] .challenges-header p {
+  line-height: 2;
+}

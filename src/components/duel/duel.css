@@ -1,0 +1,102 @@
+/* =================================================================
+   DUEL SHARED — invitation toast (mounted globally in AppShell)
+================================================================= */
+
+.duel-toast {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-toast);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: 320px;
+  max-width: min(560px, calc(100vw - 32px));
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-elevated);
+  border: 1px solid rgba(var(--primary-rgb), 0.45);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md), var(--shadow-accent);
+  animation: duel-toast-in var(--duration-slow) var(--ease-spring);
+}
+
+@keyframes duel-toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-16px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.duel-toast-avatar {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-pill);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: var(--text-lg);
+  color: var(--text-invert);
+}
+
+.duel-toast-body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.duel-toast-body strong {
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.duel-toast-body span {
+  font-size: var(--text-base);
+  color: var(--text-primary);
+}
+
+.duel-toast-body small {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.duel-toast-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-inline-start: auto;
+}
+
+.duel-toast-accept {
+  padding: var(--space-2) var(--space-5);
+  background: var(--primary);
+  color: var(--text-invert);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-spring), filter var(--duration-fast);
+}
+
+.duel-toast-accept:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.08); }
+.duel-toast-accept:disabled { opacity: 0.6; cursor: wait; }
+
+.duel-toast-decline {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-md);
+  cursor: pointer;
+  transition: color var(--duration-fast), border-color var(--duration-fast);
+}
+
+.duel-toast-decline:hover:not(:disabled) { color: var(--danger); border-color: var(--danger); }

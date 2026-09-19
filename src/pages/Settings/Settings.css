@@ -1,0 +1,18 @@
+.settings-page{max-width:980px;margin:0 auto;padding:16px 0 48px}.settings-header{margin-bottom:28px}.settings-eyebrow{font:8px 'JetBrains Mono',monospace;color:var(--accent);letter-spacing:.16em}.settings-header h1{margin:10px 0 8px;font-size:34px;letter-spacing:-1px}.settings-header p{max-width:680px;color:var(--text-muted);line-height:1.8}.settings-card{display:flex;align-items:center;justify-content:space-between;gap:28px;padding:28px;border:1px solid var(--border);background:var(--bg-surface);margin-bottom:16px}.settings-card-copy h2,.settings-card>div h2{margin:8px 0}.settings-card p{color:var(--text-muted);line-height:1.7}.settings-label{font:7px 'JetBrains Mono',monospace;color:var(--text-muted);letter-spacing:.14em}.language-switcher,.theme-switcher{display:flex;gap:8px}.language-option,.theme-option{min-width:120px;padding:14px 16px;border:1px solid var(--border);background:transparent;color:var(--text-primary);cursor:pointer;text-align:start;transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}.language-option strong{display:block;font:11px 'JetBrains Mono',monospace;margin-bottom:4px}.language-option span{font-size:12px;color:var(--text-muted)}.language-option.active{border-color:var(--accent);box-shadow:inset 0 -2px 0 var(--accent);background:var(--accent-soft)}.theme-option{display:flex;flex-direction:column;align-items:flex-start;gap:6px}.theme-option-icon{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);background:var(--bg-elevated)}.theme-option strong{font:11px 'JetBrains Mono',monospace;letter-spacing:1px}.theme-option span{font-size:11px;color:var(--text-muted)}.theme-option.active{border-color:var(--accent);box-shadow:inset 0 -2px 0 var(--accent);background:var(--accent-soft)}.theme-option.active .theme-option-icon{color:var(--accent);border-color:var(--accent)}.settings-card-muted{background:transparent}.settings-saved{font:7px 'JetBrains Mono',monospace;color:var(--accent);white-space:nowrap}@media(max-width:720px){.settings-card{flex-direction:column;align-items:stretch}.language-switcher,.theme-switcher{width:100%}.language-option,.theme-option{flex:1}}
+
+/* Settings now focuses on account management and appearance. Language lives
+   in the persistent navbar/topbar for one-click switching. */
+.settings-page { max-width: 1040px; }
+.settings-header { padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+.settings-header h1 { font-size: clamp(32px, 5vw, 48px); letter-spacing: -.035em; }
+.settings-card { border-radius: 16px; box-shadow: var(--shadow-sm); }
+.account-settings-card { align-items: flex-start; }
+.account-fields { width: min(460px, 100%); display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.account-fields label { display: grid; gap: 7px; }
+.account-fields label span { font-size: 11px; font-weight: 700; color: var(--text-secondary); }
+.account-fields input { width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid var(--border); border-radius: 9px; background: var(--bg-primary); color: var(--text-primary); }
+.account-fields input:hover { border-color: var(--border-strong); }
+.settings-save-button { grid-column: 1 / -1; min-height: 42px; border: 1px solid var(--accent); border-radius: 9px; background: var(--accent); color: var(--text-invert); font-weight: 800; }
+.settings-save-button:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(var(--primary-rgb),.16); }
+.account-meta-card h2 { font-size: 18px; }
+@media(max-width:720px) { .account-fields { grid-template-columns: 1fr; } .settings-save-button { grid-column: auto; } }

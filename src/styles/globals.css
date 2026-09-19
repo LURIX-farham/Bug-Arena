@@ -1,0 +1,662 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+html {
+  color-scheme: dark;
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Persian / RTL typography
+   Vazirmatn is loaded from Google Fonts in index.html.
+   When the document is in Persian, swap body + UI fonts to Vazirmatn so
+   letter shapes, digits and spacing look native rather than like a Latin
+   fallback. Latin words inside Persian text still render fine because
+   Vazirmatn includes Latin glyphs. */
+html[lang='fa'] body,
+html[lang='fa'] button,
+html[lang='fa'] input,
+html[lang='fa'] textarea,
+html[lang='fa'] select {
+  font-family: var(--font-fa);
+}
+
+html[lang='fa'] .navbar-logo,
+html[lang='fa'] .app-logo,
+html[lang='fa'] .sidebar-label,
+html[lang='fa'] .sidebar-link,
+html[lang='fa'] .sidebar-version,
+html[lang='fa'] .topbar-status,
+html[lang='fa'] .search-trigger,
+html[lang='fa'] .notification-header,
+html[lang='fa'] .notification-item strong,
+html[lang='fa'] .notification-item small,
+html[lang='fa'] .profile-info strong,
+html[lang='fa'] .profile-info span,
+html[lang='fa'] .user-menu-header strong,
+html[lang='fa'] .user-menu-header span,
+html[lang='fa'] .user-menu a,
+html[lang='fa'] .logout-button,
+html[lang='fa'] .stat-label,
+html[lang='fa'] .stat-value,
+html[lang='fa'] .stat-meta,
+html[lang='fa'] .home-eyebrow,
+html[lang='fa'] .panel-eyebrow,
+html[lang='fa'] .panel-period,
+html[lang='fa'] .panel-link,
+html[lang='fa'] .live-indicator,
+html[lang='fa'] .challenge-id,
+html[lang='fa'] .challenge-difficulty,
+html[lang='fa'] .challenge-tags span,
+html[lang='fa'] .challenge-start,
+html[lang='fa'] .primary-action,
+html[lang='fa'] .secondary-action,
+html[lang='fa'] .chart-labels,
+html[lang='fa'] .match-rating,
+html[lang='fa'] .match-time,
+html[lang='fa'] .rank-info,
+html[lang='fa'] .rank-position {
+  font-family: var(--font-fa);
+}
+
+/* Persian numerals look better with regular weight; tighten letter-spacing */
+html[lang='fa'] .home-header h1 {
+  letter-spacing: -1px;
+  font-weight: 800;
+}
+
+html[lang='fa'] .challenge-preview h3 {
+  letter-spacing: 0;
+  font-weight: 700;
+}
+
+/* RTL layout fixes — flip the sidebar to the right and reflow gutters.
+   Code areas (arena editor, code blocks, terminal output) stay LTR
+   because Python source is always left-to-right. */
+html[dir='rtl'] .app-sidebar {
+  left: auto;
+  right: 0;
+  border-right: 0;
+  border-left: 1px solid var(--border);
+}
+
+html[dir='rtl'] .app-main {
+  margin-left: 0;
+  margin-right: 245px;
+}
+
+@media (max-width: 1000px) {
+  html[dir='rtl'] .app-main {
+    margin-right: 210px;
+  }
+}
+
+@media (max-width: 760px) {
+  html[dir='rtl'] .app-main {
+    margin-right: 0;
+  }
+}
+
+html[dir='rtl'] .sidebar-link.active::before {
+  left: auto;
+  right: 0;
+}
+
+html[dir='rtl'] .search-trigger kbd {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+html[dir='rtl'] .profile-info strong,
+html[dir='rtl'] .profile-info span {
+  text-align: right;
+}
+
+/* Dropdown anchoring for RTL lives in rtl.css (menus anchor to the
+   physical edge where the trigger ends up after mirroring). */
+
+html[dir='rtl'] .topbar-profile {
+  flex-direction: row;
+}
+
+/* Keep code areas always LTR even when the rest of the UI is Persian.
+   The Arena PAGE itself stays RTL (its objective text, side panel and
+   headers are localized) — only the code editor and test output are
+   forced LTR because Python source and terminal output read left-to-right. */
+html[dir='rtl'] .arena-code-editor,
+html[dir='rtl'] .editor-lines,
+html[dir='rtl'] .code-window,
+html[dir='rtl'] .code-window code,
+html[dir='rtl'] .code-toolbar,
+html[dir='rtl'] .test-output,
+html[dir='rtl'] .test-output-header,
+html[dir='rtl'] pre,
+html[dir='rtl'] code {
+  direction: ltr;
+  text-align: left;
+}
+
+html[dir='rtl'] .arena-side,
+html[dir='rtl'] .settings-page,
+html[dir='rtl'] .challenges-page,
+html[dir='rtl'] .home-page,
+html[dir='rtl'] .leaderboard-page,
+html[dir='rtl'] .profile-page,
+html[dir='rtl'] .achievements-page,
+html[dir='rtl'] .analytics-page,
+html[dir='rtl'] .replays-page,
+html[dir='rtl'] .system-page,
+html[dir='rtl'] .competitive-page {
+  direction: rtl;
+  text-align: right;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-error-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px;
+  background: var(--bg-primary);
+}
+
+.app-error-card {
+  width: min(520px, 100%);
+  padding: 36px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+}
+
+.app-error-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  opacity: 0.6;
+}
+
+.app-error-card h1 {
+  margin: 12px 0 8px;
+}
+
+.app-error-card p {
+  margin: 0 0 24px;
+  line-height: 1.6;
+  opacity: 0.72;
+}
+
+.app-error-card button {
+  border: 0;
+  padding: 12px 16px;
+  cursor: pointer;
+  font: inherit;
+}
+
+/* Smooth theme transition for major surfaces */
+.app-shell,
+.app-sidebar,
+.app-topbar,
+.landing,
+.auth-page,
+.home-page,
+.stat-card,
+.home-panel,
+.settings-card,
+.auth-card {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+/* =========================
+   THEME TOGGLE
+========================= */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.theme-toggle.icon {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+}
+
+.theme-toggle.pill {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.theme-toggle-track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+}
+
+.theme-toggle-thumb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-theme='dark'] .theme-toggle-thumb {
+  transform: rotate(0deg);
+}
+
+[data-theme='light'] .theme-toggle-thumb {
+  transform: rotate(180deg);
+}
+
+.theme-toggle-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+/* RTL: keep icon button symmetric, no flip needed */
+
+/* =========================
+   LIGHT THEME POLISH
+   These overrides adjust specific surfaces in light mode so they look
+   intentional rather than just inverted. Dark mode is the default
+   Bug Arena look and needs no extra polish.
+========================= */
+
+[data-theme='light'] .app-topbar {
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom-color: var(--border);
+}
+
+[data-theme='light'] .app-mobile-nav {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: var(--border);
+  box-shadow: 0 15px 50px rgba(var(--shadow-color), 0.12);
+}
+
+[data-theme='light'] .landing {
+  background:
+    radial-gradient(circle at 70% 20%, rgba(var(--accent-rgb), 0.06), transparent 35%),
+    radial-gradient(circle at 20% 80%, rgba(var(--accent-2-rgb), 0.05), transparent 40%),
+    var(--bg-primary);
+}
+
+[data-theme='light'] .auth-page {
+  background:
+    radial-gradient(circle at 70% 20%, rgba(var(--accent-rgb), 0.07), transparent 35%),
+    radial-gradient(circle at 20% 80%, rgba(var(--accent-3-rgb), 0.05), transparent 40%),
+    var(--bg-primary);
+}
+
+[data-theme='light'] .stat-card:hover,
+[data-theme='light'] .home-panel,
+[data-theme='light'] .settings-card,
+[data-theme='light'] .auth-card {
+  box-shadow: 0 1px 3px rgba(var(--shadow-color), 0.04);
+}
+
+[data-theme='light'] .stat-card:hover {
+  border-color: rgba(var(--accent-rgb), 0.35);
+  box-shadow: 0 6px 20px rgba(var(--accent-rgb), 0.08);
+}
+
+/* In light mode the success/win badges need stronger contrast */
+[data-theme='light'] .match-result.win {
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent);
+}
+
+[data-theme='light'] .match-result.loss {
+  background: rgba(var(--danger-rgb), 0.1);
+  color: var(--danger);
+}
+
+/* In light mode, the global search overlay needs a lighter scrim */
+[data-theme='light'] .global-search-overlay {
+  background: rgba(15, 23, 42, 0.45);
+}
+
+/* In light mode, notifications/user-menu shadow is softer */
+[data-theme='light'] .notification-panel,
+[data-theme='light'] .user-menu,
+[data-theme='light'] .global-search {
+  box-shadow: 0 20px 60px rgba(var(--shadow-color), 0.18);
+}
+
+/* In light mode, code-window (the demo on the landing) should keep a
+   dark editor feel so Python syntax reads naturally. */
+[data-theme='light'] .code-window {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-color: #1e293b;
+}
+
+[data-theme='light'] .code-header,
+[data-theme='light'] .code-footer {
+  background: #1e293b;
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+[data-theme='light'] .code-body {
+  background: #0f172a;
+}
+
+[data-theme='light'] .code-body code {
+  color: #e2e8f0;
+}
+
+[data-theme='light'] .code-body .error-line code {
+  color: #fca5a5;
+}
+
+[data-theme='light'] .demo-status {
+  color: #94a3b8;
+}
+
+/* In light mode, the demo-result box stays vibrant */
+[data-theme='light'] .demo-result {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+[data-theme='light'] .demo-result strong {
+  color: var(--accent);
+}
+
+/* =========================
+   DARK THEME POLISH
+   Adds subtle cyan/blue undertones to the previously black+green
+   palette, giving the dark mode more depth.
+========================= */
+
+[data-theme='dark'] .landing {
+  background:
+    radial-gradient(circle at 70% 20%, rgba(var(--accent-rgb), 0.08), transparent 35%),
+    radial-gradient(circle at 15% 90%, rgba(var(--accent-2-rgb), 0.05), transparent 45%),
+    var(--bg-primary);
+}
+
+[data-theme='dark'] .auth-page {
+  background:
+    radial-gradient(circle at 70% 20%, rgba(var(--accent-rgb), 0.08), transparent 35%),
+    radial-gradient(circle at 15% 90%, rgba(var(--accent-3-rgb), 0.04), transparent 45%),
+    var(--bg-primary);
+}
+
+[data-theme='dark'] .stat-card:hover {
+  border-color: rgba(var(--accent-rgb), 0.25);
+  box-shadow: 0 8px 24px rgba(var(--accent-rgb), 0.06);
+}
+
+/* ================================================================
+   BUG ARENA 2.0 VISUAL FOUNDATION
+   Semantic depth, richer color roles and consistent interactive states.
+================================================================ */
+:root {
+  --brand-500: #00c896;
+  --brand-400: #22e6b3;
+  --brand-600: #009f79;
+  --violet-500: #7c5cff;
+  --cyan-500: #21b6f3;
+  --amber-500: #f5a524;
+  --rose-500: #f05d78;
+  --surface-tint: rgba(255,255,255,.025);
+  --control-height: 42px;
+}
+
+[data-theme='dark'] {
+  --bg-primary: #080b10;
+  --bg-surface: #0d1219;
+  --bg-elevated: #141b24;
+  --bg-sunken: #05070a;
+  --bg-overlay: rgba(8,11,16,.92);
+  --border: #202b38;
+  --border-strong: #334252;
+  --border-subtle: #17212b;
+  --text-primary: #f4f7fb;
+  --text-secondary: #aab6c5;
+  --text-muted: #738195;
+  --text-disabled: #4c5969;
+  --text-invert: #07100d;
+  --primary: var(--brand-400);
+  --primary-rgb: 34,230,179;
+  --primary-soft: rgba(34,230,179,.09);
+  --primary-soft-strong: rgba(34,230,179,.16);
+  --accent: var(--brand-400);
+  --accent-rgb: 34,230,179;
+  --accent-hover: #54f0c9;
+  --accent-soft: rgba(34,230,179,.09);
+  --secondary: var(--violet-500);
+  --secondary-rgb: 124,92,255;
+  --secondary-soft: rgba(124,92,255,.12);
+  --tertiary: var(--cyan-500);
+  --tertiary-rgb: 33,182,243;
+  --tertiary-soft: rgba(33,182,243,.11);
+  --success: #31d58b;
+  --success-rgb: 49,213,139;
+  --success-soft: rgba(49,213,139,.11);
+  --warning: #f5a524;
+  --warning-rgb: 245,165,36;
+  --warning-soft: rgba(245,165,36,.12);
+  --danger: #f05d78;
+  --danger-rgb: 240,93,120;
+  --danger-soft: rgba(240,93,120,.11);
+  --info: #21b6f3;
+  --info-rgb: 33,182,243;
+  --info-soft: rgba(33,182,243,.11);
+  --code-bg: #090d12;
+  --code-border: #1b2631;
+  --code-text: #d6dee8;
+  --code-gutter: #536174;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,.24);
+  --shadow-sm: 0 6px 18px rgba(0,0,0,.25);
+  --shadow-md: 0 16px 42px rgba(0,0,0,.3);
+  --shadow-soft: 0 24px 70px rgba(0,0,0,.34);
+  --shadow-strong: 0 34px 100px rgba(0,0,0,.42);
+}
+
+[data-theme='light'] {
+  --bg-primary: #f1f5f9;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f8fafc;
+  --bg-sunken: #e7edf4;
+  --bg-overlay: rgba(241,245,249,.94);
+  --border: #d6dee8;
+  --border-strong: #b8c5d4;
+  --border-subtle: #e5ebf1;
+  --text-primary: #101828;
+  --text-secondary: #475467;
+  --text-muted: #66758a;
+  --text-disabled: #98a5b5;
+  --text-invert: #ffffff;
+  --primary: #008f70;
+  --primary-rgb: 0,143,112;
+  --primary-soft: rgba(0,143,112,.08);
+  --primary-soft-strong: rgba(0,143,112,.14);
+  --accent: #008f70;
+  --accent-rgb: 0,143,112;
+  --accent-hover: #00755c;
+  --accent-soft: rgba(0,143,112,.08);
+  --secondary: #6947e8;
+  --secondary-rgb: 105,71,232;
+  --secondary-soft: rgba(105,71,232,.08);
+  --tertiary: #078bc7;
+  --tertiary-rgb: 7,139,199;
+  --tertiary-soft: rgba(7,139,199,.08);
+  --success: #087f5b;
+  --success-rgb: 8,127,91;
+  --success-soft: rgba(8,127,91,.08);
+  --warning: #a86400;
+  --warning-rgb: 168,100,0;
+  --warning-soft: rgba(168,100,0,.09);
+  --danger: #c83b58;
+  --danger-rgb: 200,59,88;
+  --danger-soft: rgba(200,59,88,.08);
+  --info: #087fb5;
+  --info-rgb: 8,127,181;
+  --info-soft: rgba(8,127,181,.08);
+  --shadow-xs: 0 1px 2px rgba(16,24,40,.05);
+  --shadow-sm: 0 5px 16px rgba(16,24,40,.07);
+  --shadow-md: 0 14px 36px rgba(16,24,40,.1);
+  --shadow-soft: 0 24px 70px rgba(16,24,40,.11);
+  --shadow-strong: 0 34px 100px rgba(16,24,40,.15);
+}
+
+body { line-height: 1.5; }
+button, a, input, textarea, select { transition: border-color .2s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+/* Shared component language */
+.stat-card, .home-panel, .challenge-card, .settings-card, .profile-history, .profile-progress-panel,
+.analytics-card, .replay-card, .leaderboard, .competitive-card, .system-card, .auth-card,
+.mode-selector, .comparison-side, .final-cta, .app-error-card {
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme='light'] .app-topbar { background: rgba(255,255,255,.9); }
+[data-theme='dark'] .app-topbar { background: rgba(8,11,16,.9); }
+
+/* ================================================================
+   PREMIUM MOTION LAYER
+   JS provides pointer coordinates and subtle ambient drift. CSS does
+   the compositing so the browser can keep most of the work on the GPU.
+================================================================ */
+
+:root {
+  --scroll-progress: 0;
+}
+
+.motion-surface {
+  position: relative;
+  isolation: isolate;
+  --motion-x: 50%;
+  --motion-y: 50%;
+  --motion-delay: 0ms;
+  will-change: transform, box-shadow;
+  transition:
+    transform .32s cubic-bezier(.22,1,.36,1),
+    border-color .26s ease,
+    box-shadow .32s ease;
+}
+
+.motion-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    circle 180px at var(--motion-x) var(--motion-y),
+    var(--motion-highlight),
+    transparent 72%
+  );
+  border-radius: inherit;
+  transition: opacity .28s ease;
+}
+
+.motion-surface::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(var(--primary-rgb), .045) 48%,
+    transparent 66%
+  );
+  transform: translateX(-45%);
+  border-radius: inherit;
+  transition: opacity .3s ease, transform .8s var(--ease-out);
+}
+
+.motion-surface:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.motion-surface:hover::before,
+.motion-surface:hover::after {
+  opacity: 1;
+}
+
+.motion-surface:hover::after {
+  transform: translateX(45%);
+}
+
+@media (pointer: coarse) {
+  .motion-surface::before,
+  .motion-surface::after {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-surface {
+    will-change: auto;
+  }
+}
