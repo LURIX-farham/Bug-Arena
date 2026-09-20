@@ -67,8 +67,8 @@ function Profile() {
         <div className="profile-mark">{t('profile', 'lvl')} {progression.level}</div>
         <div className="profile-rating">
           <span>{RANK_KEYS[progression.rank] ? t('profile', RANK_KEYS[progression.rank]) : progression.rank}</span>
-          <strong>{progression.xp}</strong>
-          <small>{t('profile', 'xpTotal')}</small>
+          <strong>{player.score}</strong>
+          <small>{t('profile', 'score')}</small>
         </div>
       </div>
 
