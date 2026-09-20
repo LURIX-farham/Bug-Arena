@@ -9,7 +9,7 @@ use BugArena\Core\Response;
 use BugArena\Services\SeasonService;
 
 /**
- * Public read-only leaderboard (top players by rating, with real stats).
+ * Public read-only leaderboard (top players by XP, with real stats).
  */
 final class LeaderboardController
 {
@@ -29,7 +29,7 @@ final class LeaderboardController
              FROM users u
              LEFT JOIN player_statistics ps ON ps.user_id = u.id
              WHERE u.is_bot = 0 AND u.status = "active" AND u.deleted_at IS NULL
-             ORDER BY u.rating DESC, ps.total_score DESC, u.created_at ASC
+             ORDER BY COALESCE(ps.total_score, 0) + COALESCE(ps.duel_points, 0) DESC, COALESCE(ps.xp, 0) DESC, u.created_at ASC
              LIMIT ' . $limit
         );
         $stmt->execute();

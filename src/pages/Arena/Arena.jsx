@@ -350,10 +350,16 @@ function ArenaSession() {
     if (!isDuel || !duelMatchId || duelPostedRef.current) return
     duelPostedRef.current = true
 
-    const solveSeconds = Math.max(
-      0,
-      Math.round((challenge?.timeLimit || 0) - timeLeftRef.current),
-    )
+    // Prefer the shared server clock so both sides report the same elapsed window.
+    const limit = Number(duelMatch?.challenge?.timeLimit || challenge?.timeLimit || 0)
+    let remaining = Math.max(0, timeLeftRef.current)
+    if (duelMatch?.endsAt) {
+      const endMs = new Date(duelMatch.endsAt).getTime()
+      if (!Number.isNaN(endMs)) {
+        remaining = Math.max(0, Math.ceil((endMs - Date.now()) / 1000))
+      }
+    }
+    const solveSeconds = Math.max(0, Math.round(limit - remaining))
 
     submitDuelResult(duelMatchId, {
       solved,
@@ -361,7 +367,7 @@ function ArenaSession() {
       testsTotal: tests.length,
       attempts: Math.max(1, attempts),
       hardened: Boolean(solved && hardening),
-      timeLeft: Math.max(0, timeLeftRef.current),
+      timeLeft: remaining,
       solveSeconds,
     })
       .then((match) => {
@@ -409,6 +415,38 @@ function ArenaSession() {
 
   /*
    * --------------------------------------------------
+   * SHARED DUEL CLOCK
+   *
+   * Both players share one server deadline:
+   *   endsAt = started_at + challenge.time_limit
+   * Local countdown only interpolates between polls so
+   * neither side can stretch or shrink the match clock.
+   * --------------------------------------------------
+   */
+
+  const syncDuelClock = (match) => {
+    if (!match || match.status !== 'active') return
+    let remaining = null
+    if (typeof match.remainingSeconds === 'number') {
+      remaining = Math.max(0, Math.floor(match.remainingSeconds))
+    } else if (match.endsAt) {
+      const endMs = new Date(match.endsAt).getTime()
+      if (!Number.isNaN(endMs)) {
+        remaining = Math.max(0, Math.ceil((endMs - Date.now()) / 1000))
+      }
+    } else if (match.startedAt && match.challenge?.timeLimit) {
+      const startMs = new Date(match.startedAt).getTime()
+      const limit = Number(match.challenge.timeLimit) || 0
+      if (!Number.isNaN(startMs) && limit > 0) {
+        remaining = Math.max(0, Math.ceil((startMs + limit * 1000 - Date.now()) / 1000))
+      }
+    }
+    if (remaining === null) return
+    setTimeLeft((current) => (current === remaining ? current : remaining))
+  }
+
+  /*
+   * --------------------------------------------------
    * TIMER
    * --------------------------------------------------
    */
@@ -416,22 +454,32 @@ function ArenaSession() {
   useEffect(() => {
     if (submitted || timeLeft <= 0) return undefined
 
-    const timer = setTimeout(() => {
+    // In duel mode, prefer the shared endsAt clock so both UIs stay aligned
+    // even if a setTimeout drifts by a few hundred ms.
+    const tick = () => {
+      if (isDuel && duelMatch?.endsAt) {
+        const endMs = new Date(duelMatch.endsAt).getTime()
+        if (!Number.isNaN(endMs)) {
+          setTimeLeft(Math.max(0, Math.ceil((endMs - Date.now()) / 1000)))
+          return
+        }
+      }
       setTimeLeft((current) => Math.max(0, current - 1))
-    }, 1000)
+    }
 
+    const timer = setTimeout(tick, 1000)
     return () => clearTimeout(timer)
-  }, [submitted, timeLeft])
+  }, [submitted, timeLeft, isDuel, duelMatch?.endsAt])
 
 
   /*
    * --------------------------------------------------
    * DUEL MATCH POLLING
    *
-   * Mirrors the match from the server every ~2.5s. If our
-   * own result is already recorded (page reload mid-duel)
-   * the editor locks immediately — the first run is the
-   * one that counts.
+   * Mirrors the match from the server every ~2.5s and
+   * re-syncs the shared duel clock. If our own result is
+   * already recorded (page reload mid-duel) the editor
+   * locks immediately — the first run is the one that counts.
    * --------------------------------------------------
    */
 
@@ -443,6 +491,7 @@ function ArenaSession() {
         const fresh = await fetchDuelMatch(duelMatchId)
         if (!fresh) return
         setDuelMatch(fresh)
+        syncDuelClock(fresh)
         if (fresh.results?.[fresh.viewerRole] && !duelPostedRef.current) {
           setSubmitted(true)
         }
@@ -945,6 +994,9 @@ function ArenaSession() {
       attempts,
       hardened: hardening,
       timeLeft,
+      solveSeconds: Math.max(0, Math.round(Math.max(0, (challenge?.timeLimit || 0) * (competitionConfig?.timeMultiplier || 1)) - timeLeft)),
+      testsPassed: tests.filter((item) => item.status === 'passed').length,
+      testsTotal: tests.length,
       code,
       submittedAt: new Date().toISOString(),
     }

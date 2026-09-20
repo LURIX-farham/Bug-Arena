@@ -1,11 +1,8 @@
 .leaderboard-page {
   width: 100%;
   max-width: 1400px;
-
   margin: 0 auto;
-
   padding: 60px 40px 100px;
-
   color: var(--text-primary);
 }
 
@@ -16,83 +13,60 @@
 
 .leaderboard-header {
   display: flex;
-
   align-items: flex-end;
   justify-content: space-between;
-
   margin-bottom: 50px;
 }
 
 
 .leaderboard-eyebrow {
   display: block;
-
   margin-bottom: 12px;
-
   font-size: 10px;
   font-weight: 700;
-
   letter-spacing: 0.18em;
-
   color: var(--text-muted);
 }
 
 
 .leaderboard-header h1 {
   margin: 0;
-
   font-size: clamp(42px, 6vw, 72px);
-
   line-height: 0.95;
-
   letter-spacing: -0.05em;
-
   font-weight: 800;
 }
 
 
 .leaderboard-header p {
   margin: 18px 0 0;
-
   color: var(--text-secondary);
-
   font-size: 14px;
 }
 
 
 .leaderboard-count {
   min-width: 130px;
-
   padding: 20px 24px;
-
   border: 1px solid var(--border);
-
   border-radius: 14px;
-
   background: var(--bg-elevated);
-
   text-align: right;
 }
 
 
 .leaderboard-count span {
   display: block;
-
   margin-bottom: 5px;
-
   font-size: 9px;
-
   font-weight: 700;
-
   letter-spacing: 0.15em;
-
   color: var(--text-disabled);
 }
 
 
 .leaderboard-count strong {
   font-size: 28px;
-
   letter-spacing: -0.03em;
 }
 
@@ -102,75 +76,46 @@
 ========================= */
 
 .leaderboard-table {
-  border-top:
-    1px solid var(--border);
+  border-top: 1px solid var(--border);
 }
 
 
-/* =========================
-   TABLE HEAD
-========================= */
-
-.leaderboard-table-head {
-  display: grid;
-
-  grid-template-columns:
-    72px
-    minmax(200px, 1fr)
-    76px
-    100px
-    100px;
-
-  align-items: center;
-
-  gap: 16px;
-
-  padding: 15px 20px;
-
-  color: var(--text-disabled);
-
-  font-size: 9px;
-
-  font-weight: 700;
-
-  letter-spacing: 0.15em;
-}
-
-
-/* =========================
-   ROW
-========================= */
-
+/* rank | player | level | score | xp | w/l */
+.leaderboard-table-head,
 .leaderboard-row {
   display: grid;
-
   grid-template-columns:
+    64px
+    minmax(160px, 1.4fr)
     72px
-    minmax(200px, 1fr)
-    76px
     100px
-    100px;
-
+    100px
+    88px;
   align-items: center;
+  gap: 12px;
+}
 
-  gap: 16px;
 
+.leaderboard-table-head {
+  padding: 15px 20px;
+  color: var(--text-disabled);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+
+.leaderboard-row {
   min-height: 82px;
-
   padding: 0 20px;
-
-  border-top:
-    1px solid var(--border-subtle);
-
-  transition:
-    background 0.2s ease,
-    padding 0.2s ease;
+  border-top: 1px solid var(--border-subtle);
+  transition: background 0.2s ease, padding 0.2s ease;
 }
 
 
 .leaderboard-row:hover {
   background: var(--bg-elevated);
-
   padding-left: 26px;
 }
 
@@ -181,9 +126,7 @@
 
 .leaderboard-row.current-player {
   background: var(--primary-soft);
-
-  box-shadow:
-    inset 3px 0 0 var(--primary);
+  box-shadow: inset 3px 0 0 var(--primary);
 }
 
 
@@ -198,17 +141,13 @@
 
 .leaderboard-rank {
   font-size: 12px;
-
   font-weight: 700;
-
   color: var(--text-disabled);
-
   font-variant-numeric: tabular-nums;
 }
 
 
-.leaderboard-row:nth-child(2)
-.leaderboard-rank {
+.leaderboard-row:nth-child(2) .leaderboard-rank {
   color: var(--primary);
 }
 
@@ -219,69 +158,53 @@
 
 .leaderboard-player {
   display: flex;
-
   align-items: center;
-
   gap: 15px;
+  min-width: 0;
 }
 
 
 .player-avatar {
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   width: 38px;
   height: 38px;
-
   flex-shrink: 0;
-
-  border:
-    1px solid var(--border);
-
+  border: 1px solid var(--border);
   border-radius: 10px;
-
   background: var(--bg-elevated);
-
   font-size: 13px;
-
   font-weight: 800;
 }
 
 
 .leaderboard-player > div:last-child {
   display: flex;
-
   align-items: center;
-
   gap: 9px;
+  min-width: 0;
 }
 
 
 .leaderboard-player strong {
   font-size: 14px;
-
   font-weight: 650;
-
   color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 
 .leaderboard-player span {
+  flex-shrink: 0;
   padding: 3px 6px;
-
-  border:
-    1px solid var(--border-strong);
-
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
-
   font-size: 7px;
-
   font-weight: 800;
-
   letter-spacing: 0.12em;
-
   color: var(--text-secondary);
 }
 
@@ -290,21 +213,38 @@
    VALUES
 ========================= */
 
-.leaderboard-rating,
-.leaderboard-score,
-.leaderboard-solved {
-  font-size: 14px;
-
-  font-weight: 650;
-
-  color: var(--text-secondary);
-
+.leaderboard-level {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   font-variant-numeric: tabular-nums;
 }
 
 
-.leaderboard-rating {
+.leaderboard-score,
+.leaderboard-xp,
+.leaderboard-solved {
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+
+.leaderboard-score {
   color: var(--primary);
+  font-weight: 700;
+}
+
+
+.leaderboard-xp {
+  color: var(--text-muted);
+}
+
+
+.leaderboard-solved {
+  text-align: left;
 }
 
 
@@ -312,77 +252,81 @@
    MOBILE
 ========================= */
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
+  .leaderboard-table-head,
+  .leaderboard-row {
+    grid-template-columns:
+      52px
+      minmax(120px, 1fr)
+      80px
+      80px;
+  }
 
+  .leaderboard-level,
+  .leaderboard-solved {
+    display: none;
+  }
+
+  .leaderboard-table-head span:nth-child(3),
+  .leaderboard-table-head span:nth-child(6) {
+    display: none;
+  }
+}
+
+
+@media (max-width: 800px) {
   .leaderboard-page {
     padding: 40px 18px 80px;
   }
 
-
   .leaderboard-header {
     align-items: flex-start;
-
     flex-direction: column;
-
     gap: 25px;
   }
 
-
   .leaderboard-count {
     width: 100%;
-
     text-align: left;
   }
-
 
   .leaderboard-table-head {
     display: none;
   }
 
-
   .leaderboard-row {
     grid-template-columns:
-      45px
+      40px
       minmax(0, 1fr)
-      70px;
-
-    gap: 12px;
-
+      72px;
+    gap: 10px;
     min-height: 72px;
-
     padding: 0 10px;
   }
 
-
-  .leaderboard-rating {
-    text-align: right;
-  }
-
-
-  .leaderboard-score,
+  .leaderboard-level,
+  .leaderboard-xp,
   .leaderboard-solved {
     display: none;
   }
 
+  .leaderboard-score {
+    text-align: right;
+  }
 }
 
 
 @media (max-width: 500px) {
-
   .leaderboard-header h1 {
     font-size: 48px;
   }
-
 
   .leaderboard-player strong {
     font-size: 13px;
   }
 
-
   .player-avatar {
     width: 34px;
     height: 34px;
   }
-
 }
-.leaderboard-level { color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; }

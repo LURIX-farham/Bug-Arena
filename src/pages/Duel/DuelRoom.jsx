@@ -42,7 +42,11 @@ function DuelRoom() {
   const [notFound, setNotFound] = useState(false)
   const [phase, setPhase] = useState('vs') // vs | spin | reveal
   const [slotTitle, setSlotTitle] = useState('')
+  // Snapshot of the locked challenge used for the final navigate (timeout callback only).
+  const [lockedChallenge, setLockedChallenge] = useState(null)
+
   const navigatedRef = useRef(false)
+  const ceremonyStartedRef = useRef(false)
 
   const catalogue = useMemo(() => Object.values(challenges), [])
 
@@ -59,25 +63,66 @@ function DuelRoom() {
     return () => poller.stop()
   }, [matchId])
 
-  const active = match?.status === 'active' && match.challenge
+  const hasChallenge = Boolean(
+    match?.status === 'active' &&
+    match?.challenge &&
+    match.challenge.id != null &&
+    match.challenge.title,
+  )
 
   // Intro ceremony timeline → straight into the arena editor.
+  // Start exactly once when we first observe a fully-formed active match.
+  // Previous implementation depended on match.challenge.id in the effect deps;
+  // the poller calls setMatch with a fresh object every 2.5s which, combined
+  // with React 18 StrictMode double-mount in dev, could clear/restart the
+  // timeouts and leave the UI frozen on the VS / spin screen with no console error.
   useEffect(() => {
-    if (!active || navigatedRef.current) return undefined
+    if (!hasChallenge || ceremonyStartedRef.current || navigatedRef.current) return undefined
+    if (!match?.challenge) return undefined
+
+    ceremonyStartedRef.current = true
+
+    const challengeId = match.challenge.id
+    const matchPublicId = match.id
+    const snapshot = {
+      id: challengeId,
+      title: match.challenge.title,
+      difficulty: match.challenge.difficulty || 'Easy',
+      bugType: match.challenge.bugType || 'logic',
+      baseScore: match.challenge.baseScore ?? 0,
+    }
+
+    // Defer state update to avoid synchronous setState-in-effect lint.
+    const lockTimer = setTimeout(() => {
+      setLockedChallenge(snapshot)
+    }, 0)
+
     const timers = [
       setTimeout(() => setPhase('spin'), VS_PHASE_MS),
       setTimeout(() => setPhase('reveal'), VS_PHASE_MS + SPIN_PHASE_MS),
       setTimeout(() => {
+        if (navigatedRef.current) return
         navigatedRef.current = true
-        navigate(`/arena/${match.challenge.id}?mode=duel&match=${match.id}`)
+        if (challengeId != null && matchPublicId) {
+          navigate(`/arena/${challengeId}?mode=duel&match=${matchPublicId}`)
+        }
       }, VS_PHASE_MS + SPIN_PHASE_MS + REVEAL_PHASE_MS),
     ]
-    return () => timers.forEach(clearTimeout)
-  }, [active, match?.challenge?.id, match?.id, navigate])
+
+    return () => {
+      clearTimeout(lockTimer)
+      timers.forEach(clearTimeout)
+    }
+    // Only depend on the boolean gate + navigate. Snapshot values are captured
+    // from the render where hasChallenge first becomes true; later poller
+    // updates must not re-enter or their cleanup would kill the timers.
+  }, [hasChallenge, navigate]) // eslint-disable-line react-hooks/exhaustive-deps -- intentional one-shot
 
   // Slot machine roulette over the catalogue titles.
   useEffect(() => {
     if (phase !== 'spin') return undefined
+    if (!catalogue.length) return undefined
+
     const roller = setInterval(() => {
       setSlotTitle(catalogue[Math.floor(Math.random() * catalogue.length)]?.title || '')
     }, 90)
@@ -125,8 +170,29 @@ function DuelRoom() {
     )
   }
 
+  // Active match but challenge payload is incomplete (should not happen after
+  // a successful accept). Keep the room alive instead of crashing on
+  // difficulty.toLowerCase() / undefined title.
+  if (!match.challenge || match.challenge.id == null) {
+    return (
+      <div className="duel-room">
+        <div className="duel-panel duel-room-message">
+          <h2>{t('duel', 'selecting')}…</h2>
+          <p className="duel-online-empty">Waiting for challenge assignment…</p>
+        </div>
+      </div>
+    )
+  }
+
   const spinning = phase === 'spin'
   const revealed = phase === 'reveal'
+
+  // Prefer live match payload; fall back to the one-shot locked snapshot.
+  const displayChallenge = match.challenge || lockedChallenge || {}
+  const displayTitle = displayChallenge.title || '…'
+  const displayDifficulty = String(displayChallenge.difficulty || 'Easy')
+  const displayBugType = String(displayChallenge.bugType || 'logic')
+  const displayScore = displayChallenge.baseScore ?? 0
 
   return (
     <div className="duel-room">
@@ -156,13 +222,13 @@ function DuelRoom() {
           <div className={`duel-slot ${revealed ? 'duel-slot-locked' : ''}`}>
             {revealed ? (
               <>
-                <strong className="duel-slot-title">{match.challenge.title}</strong>
+                <strong className="duel-slot-title">{displayTitle}</strong>
                 <div className="duel-slot-meta">
-                  <span className={`duel-slot-diff difficulty-${match.challenge.difficulty.toLowerCase()}`}>
-                    {match.challenge.difficulty.toUpperCase()}
+                  <span className={`duel-slot-diff difficulty-${displayDifficulty.toLowerCase()}`}>
+                    {displayDifficulty.toUpperCase()}
                   </span>
-                  <span>{match.challenge.bugType.toUpperCase()}</span>
-                  <span>{match.challenge.baseScore} PTS</span>
+                  <span>{displayBugType.toUpperCase()}</span>
+                  <span>{displayScore} PTS</span>
                 </div>
               </>
             ) : (

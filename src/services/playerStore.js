@@ -1,5 +1,5 @@
 import { getCompletedChallenges, getTotalScore } from './submissionStore.js'
-import { getProgressionStats } from './progressionStore.js'
+import { getProgressionStats, getRankForLevel, getLevelProgress } from './progressionStore.js'
 import { getCompetitiveStats } from './competitiveStore.js'
 import { getIdentity, updateIdentity, resetIdentity } from './identityStore.js'
 import { emitArenaEvent, ARENA_EVENTS } from './eventBus.js'
@@ -90,6 +90,56 @@ function hydrateLocalUser(user) {
     id: user.id,
     username: user.username,
     displayName: user.displayName,
+    serverStats: user.stats || null,
+  })
+}
+
+function applyServerStats(stats) {
+  if (!stats || typeof stats !== 'object' || !canUseStorage()) return false
+  try {
+    const player = JSON.parse(window.localStorage.getItem(PLAYER_KEY) || 'null')
+    if (!player) return false
+    // Merge rather than replace so a partial stats payload cannot wipe fields.
+    const previous = player.serverStats && typeof player.serverStats === 'object'
+      ? player.serverStats
+      : {}
+    return writeLocalPlayer({
+      ...player,
+      serverStats: { ...previous, ...stats },
+    })
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Optimistic bump of totalScore / xp after a local submission is accepted,
+ * so the topbar updates immediately even before the server responds.
+ */
+export function bumpLocalServerStats({ scoreDelta = 0, xpDelta = 0 } = {}) {
+  if (!canUseStorage() || (scoreDelta <= 0 && xpDelta <= 0)) return false
+  try {
+    const player = JSON.parse(window.localStorage.getItem(PLAYER_KEY) || 'null')
+    if (!player) return false
+    const prev = player.serverStats && typeof player.serverStats === 'object'
+      ? player.serverStats
+      : {}
+    const next = {
+      ...prev,
+      totalScore: Math.max(0, (Number(prev.totalScore) || 0) + scoreDelta),
+      xp: Math.max(0, (Number(prev.xp) || 0) + (xpDelta || scoreDelta)),
+    }
+    return writeLocalPlayer({ ...player, serverStats: next })
+  } catch {
+    return false
+  }
+}
+
+if (typeof window !== 'undefined') {
+  // submissionStore forwards the authoritative stats snapshot of every
+  // accepted submission so XP updates without waiting for a page refresh.
+  window.addEventListener('bug-arena:server-stats', (event) => {
+    applyServerStats(event.detail)
   })
 }
 
@@ -122,19 +172,37 @@ export function resetPlayer() {
 
 export function getCurrentPlayer() {
   const submissions = getCompletedChallenges()
-  const progression = getProgressionStats(submissions)
+  const localProgression = getProgressionStats(submissions)
   const competitive = getCompetitiveStats()
+  const stored = getStoredPlayer()
+
+  // Server statistics are preferred for XP/level, but total score must never
+  // lag behind the locally accepted submissions. A successful server response
+  // will raise serverStats; until then (or on offline/API failure) we take
+  // the higher of the two so the topbar / profile stay live.
+  const serverStats = stored.serverStats || stored.stats || null
+  const localScore = getTotalScore()
+  const serverScore = serverStats?.totalScore
+  const score = serverScore != null
+    ? Math.max(Number(serverScore) || 0, localScore)
+    : localScore
+
+  // XP is still server-first (it drives level/rank). When serverStats is
+  // missing we fall back to local progression which uses score as XP.
+  const xp = serverStats?.xp ?? localProgression.xp
+  const level = serverStats?.level ?? localProgression.level
 
   return {
-    ...getStoredPlayer(),
-    score: getTotalScore(),
-    solved: submissions.length,
-    attempts: progression.attempts,
-    xp: progression.xp,
-    level: progression.level,
-    rank: progression.rank,
-    streak: progression.streak,
-    bestStreak: progression.bestStreak,
+    ...stored,
+    score,
+    solved: Math.max(submissions.length, Number(serverStats?.solvedChallenges) || 0),
+    attempts: localProgression.attempts,
+    xp,
+    level,
+    levelProgress: getLevelProgress(xp),
+    rank: getRankForLevel(level).title,
+    streak: localProgression.streak,
+    bestStreak: localProgression.bestStreak,
     rating: competitive.rating,
     wins: competitive.wins,
     losses: competitive.losses,

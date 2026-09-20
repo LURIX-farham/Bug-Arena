@@ -75,6 +75,12 @@ final class SubmissionController
         $testStmt->execute([$challengeId]);
         $expectedTests = (int) $testStmt->fetchColumn();
 
+        $coreStmt = $pdo->prepare(
+            'SELECT COUNT(*) FROM challenge_tests WHERE challenge_id = ? AND test_type = "core"'
+        );
+        $coreStmt->execute([$challengeId]);
+        $coreTests = (int) $coreStmt->fetchColumn();
+
         $attempts = Helpers::clampInt($body['attempts'] ?? 1, 1, 99);
         $hardened = (bool) ($body['hardened'] ?? false);
         $timeLeft = min((float) $challenge['time_limit'], max(0.0, (float) ($body['timeLeft'] ?? 0)));
@@ -83,10 +89,12 @@ final class SubmissionController
         $testsTotal = Helpers::clampInt($body['testsTotal'] ?? 0, 0, 999);
 
         // Server-side scoring (throws 409 test_integrity_failed on mismatch).
+        // Accepts core-only or full suite; forces hardened=false for core-only.
         $scoreParts = ScoringService::compute(
-            $challenge, $attempts, $hardened, $timeLeft, $testsPassed, $testsTotal, $expectedTests
+            $challenge, $attempts, $hardened, $timeLeft, $testsPassed, $testsTotal, $expectedTests, $coreTests
         );
         $score = $scoreParts['score'];
+        $hardened = (bool) ($scoreParts['hardened'] ?? $hardened);
 
         $result = Database::transaction(function () use (
             $pdo, $userId, $challenge, $challengeId, $score, $scoreParts,
@@ -146,7 +154,12 @@ final class SubmissionController
         return ['http' => 201, 'payload' => [
             'ok' => true,
             'challengeId' => $challengeId,
-            'submission' => $scoreParts + [
+            'submission' => [
+                'score' => $scoreParts['score'],
+                'baseScore' => $scoreParts['baseScore'],
+                'speedBonus' => $scoreParts['speedBonus'],
+                'attemptBonus' => $scoreParts['attemptBonus'],
+                'hardeningBonus' => $scoreParts['hardeningBonus'],
                 'attempts' => $attempts,
                 'hardened' => $hardened,
                 'submittedAt' => date('Y-m-d H:i:s'),

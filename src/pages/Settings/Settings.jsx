@@ -86,7 +86,7 @@ function Settings() {
         <div>
           <span className="settings-label">{t('settings', 'accountStatus')}</span>
           <h2>{player.displayName}</h2>
-          <p>{player.username} · {player.rating} {t('competitive', 'rating')}</p>
+          <p>{player.username} · {player.xp} XP</p>
         </div>
         <span className="settings-saved">{saved ? t('settings', 'savedAccount') : t('settings', 'accountReady')}</span>
       </section>

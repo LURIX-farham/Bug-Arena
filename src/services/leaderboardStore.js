@@ -11,9 +11,10 @@ export async function hydrateLeaderboardFromServer() {
     if (!Array.isArray(result?.players)) return false
     leaderboardCache = result.players.map((player) => ({
       ...player,
-      level: 1,
-      score: 0,
-      solved: 0,
+      level: player.level || 1,
+      score: player.score || 0,
+      solved: player.solved || 0,
+      xp: player.xp || 0,
     }))
     loaded = true
     if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('bug-arena:leaderboard-updated'))

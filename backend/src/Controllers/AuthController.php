@@ -136,10 +136,20 @@ final class AuthController
         $stats = StatisticsService::get($userId);
         $rankStmt = $pdo->prepare(
             'SELECT 1 + COUNT(*) AS position FROM users u
+             LEFT JOIN player_statistics ps ON ps.user_id = u.id
              WHERE u.is_bot = 0 AND u.status = "active" AND u.deleted_at IS NULL
-               AND (u.rating > ? OR (u.rating = ? AND u.id < ?))'
+               AND (
+                 COALESCE(ps.xp, 0) > ?
+                 OR (COALESCE(ps.xp, 0) = ? AND COALESCE(ps.total_score, 0) + COALESCE(ps.duel_points, 0) > ?)
+                 OR (COALESCE(ps.xp, 0) = ? AND COALESCE(ps.total_score, 0) + COALESCE(ps.duel_points, 0) = ? AND u.created_at < ?)
+               )'
         );
-        $rankStmt->execute([(int) $user['rating'], (int) $user['rating'], $userId]);
+        $rankStmt->execute([
+            (int) $stats['xp'], (int) $stats['xp'],
+            (int) $stats['totalScore'],
+            (int) $stats['xp'], (int) $stats['totalScore'],
+            (string) $user['created_at'],
+        ]);
         $stats['leaderboardRank'] = (int) $rankStmt->fetchColumn();
 
         $payload = Helpers::publicUser($user, $stats);

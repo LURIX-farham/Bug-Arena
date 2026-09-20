@@ -137,23 +137,7 @@ function AppSidebar() {
 
       </nav>
 
-      <div className="sidebar-bottom">
-
-        <div className="sidebar-status">
-
-          <span className="status-dot" />
-
-          <div>
-            <strong>
-              {t('nav', 'systemOnline')}
-            </strong>
-
-            <small>
-              {t('nav', 'allSystems')}
-            </small>
-          </div>
-
-        </div>
+      {/* <div className="sidebar-bottom">
 
         <NavLink
           to="/system"
@@ -171,7 +155,7 @@ function AppSidebar() {
           {t('nav', 'settings')}
         </NavLink>
 
-      </div>
+      </div> */}
 
     </aside>
   )

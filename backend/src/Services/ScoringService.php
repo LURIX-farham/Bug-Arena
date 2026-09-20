@@ -12,7 +12,8 @@ final class ScoringService
 {
     /**
      * @param array $challenge row from challenges table
-     * @return array{score:int, baseScore:int, speedBonus:int, attemptBonus:int, hardeningBonus:int}
+     * @param int $coreTests number of core (non-hidden) tests for this challenge
+     * @return array{score:int, baseScore:int, speedBonus:int, attemptBonus:int, hardeningBonus:int, hardened:bool}
      */
     public static function compute(
         array $challenge,
@@ -21,7 +22,8 @@ final class ScoringService
         float $timeLeft,
         int $testsPassed,
         int $testsTotal,
-        int $expectedTests
+        int $expectedTests,
+        int $coreTests = 0
     ): array {
         $base = (int) $challenge['base_score'];
         $timeLimit = (int) $challenge['time_limit'];
@@ -38,20 +40,34 @@ final class ScoringService
             default => 0,
         };
 
-        $hardeningBonus = $hardened
+        // Integrity: accept either the full suite (core + hidden) or the
+        // core-only suite. Core-only solves cannot claim the hardening bonus.
+        // Any other testsTotal value is rejected as tampering / stale client.
+        $effectiveHardened = $hardened;
+        if ($expectedTests > 0) {
+            $isFullSuite = ($testsTotal === $expectedTests && $testsPassed === $expectedTests);
+            $isCoreOnly = ($coreTests > 0
+                && $testsTotal === $coreTests
+                && $testsPassed === $coreTests);
+
+            if ($isFullSuite) {
+                // Full suite passed — hardening flag from client is trusted.
+            } elseif ($isCoreOnly) {
+                // Core fixed without hidden tests — force non-hardened scoring.
+                $effectiveHardened = false;
+            } else {
+                \BugArena\Utils\Helpers::fail('test_integrity_failed', 409, [
+                    'testsTotal' => $testsTotal,
+                    'testsPassed' => $testsPassed,
+                    'expectedTests' => $expectedTests,
+                    'coreTests' => $coreTests,
+                ]);
+            }
+        }
+
+        $hardeningBonus = $effectiveHardened
             ? (int) min((int) $challenge['hardening_bonus'], (int) round($base * 0.6))
             : 0;
-
-        // Solving with a partial test suite is impossible: the reported test
-        // counts must match the canonical registry, otherwise the run is
-        // rejected (not merely re-scored).
-        if ($expectedTests > 0 && ($testsTotal !== $expectedTests || $testsPassed !== $expectedTests)) {
-            \BugArena\Utils\Helpers::fail('test_integrity_failed', 409, [
-                'testsTotal' => $testsTotal,
-                'testsPassed' => $testsPassed,
-                'expectedTests' => $expectedTests,
-            ]);
-        }
 
         $score = $base + $speedBonus + $attemptBonus + $hardeningBonus;
         return [
@@ -60,6 +76,7 @@ final class ScoringService
             'speedBonus' => $speedBonus,
             'attemptBonus' => $attemptBonus,
             'hardeningBonus' => $hardeningBonus,
+            'hardened' => $effectiveHardened,
         ];
     }
 }

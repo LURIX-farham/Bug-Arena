@@ -100,15 +100,18 @@ export function calculateScore({
    * -----------------------------------------
    * HARDENING BONUS
    * -----------------------------------------
+   *
+   * Matches server ScoringService: use the
+   * challenge's hardeningBonus when present,
+   * otherwise ~50% of base, capped at 60%.
    */
 
   const hardeningBonus =
     hardened
-      ? (
+      ? Math.min(
           challenge.hardeningBonus
-          ?? Math.round(
-            baseScore * 0.5
-          )
+            ?? Math.round(baseScore * 0.5),
+          Math.round(baseScore * 0.6),
         )
       : 0
 

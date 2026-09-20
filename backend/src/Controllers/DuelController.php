@@ -85,9 +85,18 @@ final class DuelController
 
         self::lazyExpire();
 
-        $difficulty = ucfirst(strtolower(trim((string) ($request->body['difficulty'] ?? 'any'))));
-        if ($difficulty !== 'Any' && !in_array($difficulty, self::DIFFICULTIES, true)) {
+        // Normalize difficulty to either 'any' or one of Easy/Medium/Hard/Expert.
+        // Previous code turned client 'any' into stored 'Any', which then failed
+        // the pickChallenge filter (compared against lowercase 'any') and relied
+        // only on the fallback path. Keep the stored value consistent.
+        $difficultyRaw = strtolower(trim((string) ($request->body['difficulty'] ?? 'any')));
+        if ($difficultyRaw === 'any' || $difficultyRaw === '') {
             $difficulty = 'any';
+        } else {
+            $difficulty = ucfirst($difficultyRaw);
+            if (!in_array($difficulty, self::DIFFICULTIES, true)) {
+                $difficulty = 'any';
+            }
         }
         $bugType = Helpers::cleanEnum($request->body['bugType'] ?? 'any', 'any');
         if (strtolower($bugType) === 'any') {
@@ -248,13 +257,16 @@ final class DuelController
         $pdo = Database::pdo();
         $conditions = ['is_active = 1'];
         $params = [];
-        if ($difficulty !== 'any') {
+        $difficultyNorm = strtolower(trim($difficulty));
+        $bugTypeNorm = strtolower(trim($bugType));
+        if ($difficultyNorm !== 'any' && $difficultyNorm !== '') {
+            // DB stores canonical title-case (Easy/Medium/Hard/Expert)
             $conditions[] = 'difficulty = ?';
-            $params[] = $difficulty;
+            $params[] = ucfirst($difficultyNorm);
         }
-        if ($bugType !== 'any') {
+        if ($bugTypeNorm !== 'any' && $bugTypeNorm !== '') {
             $conditions[] = 'bug_type = ?';
-            $params[] = $bugType;
+            $params[] = $bugType; // keep original casing for bug_type values
         }
         $stmt = $pdo->prepare(
             'SELECT id FROM challenges WHERE ' . implode(' AND ', $conditions) . ' ORDER BY RAND() LIMIT 1'
@@ -280,11 +292,17 @@ final class DuelController
 
         $match = self::findMatchForViewer((string) ($params['id'] ?? ''), $userId);
         $match = self::lazyResolve($match);
+
+        $payload = [
+            'ok' => true,
+            'match' => self::matchPayload($match, $userId),
+        ];
         if ($match['status'] === 'finished') {
             AchievementService::evaluate($userId);
+            $payload['stats'] = \BugArena\Services\StatisticsService::get($userId);
         }
 
-        Response::json(['ok' => true, 'match' => self::matchPayload($match, $userId)]);
+        Response::json($payload);
     }
 
     /** POST /duel/matches/{id}/cancel — host aborts while nobody joined. */
@@ -312,11 +330,20 @@ final class DuelController
         self::storeResult($publicId, $userId, $request->body);
         $match = self::findMatchForViewer($publicId, $userId);
         $match = self::lazyResolve($match);
+
+        $payload = [
+            'ok' => true,
+            'match' => self::matchPayload($match, $userId),
+        ];
+
+        // When the duel is resolved, return authoritative stats so the client
+        // can update topbar / leaderboard without a separate round-trip.
         if ($match['status'] === 'finished') {
             AchievementService::evaluate($userId);
+            $payload['stats'] = \BugArena\Services\StatisticsService::get($userId);
         }
 
-        Response::json(['ok' => true, 'match' => self::matchPayload($match, $userId)]);
+        Response::json($payload);
     }
 
     private static function storeResult(string $publicId, int $userId, array $body): void
@@ -357,8 +384,27 @@ final class DuelController
             $testsTotal = Helpers::clampInt($body['testsTotal'] ?? 0, 0, 999);
             $attempts = Helpers::clampInt($body['attempts'] ?? 1, 1, 99);
             $hardened = (bool) ($body['hardened'] ?? false);
-            $timeLeft = min((float) $match['time_limit'], max(0.0, (float) ($body['timeLeft'] ?? 0)));
-            $solveSeconds = Helpers::clampInt((int) round((float) ($body['solveSeconds'] ?? 0)), 0, 86400);
+
+            // Shared clock: remaining time is derived from started_at so neither
+            // client can claim more (or less) time than the official window.
+            $limit = (float) $match['time_limit'];
+            $serverRemaining = $limit;
+            if (!empty($match['started_at'])) {
+                $startTs = strtotime((string) $match['started_at']);
+                if ($startTs !== false) {
+                    $elapsed = max(0.0, (float) (time() - $startTs));
+                    $serverRemaining = max(0.0, $limit - $elapsed);
+                }
+            }
+            $clientRemaining = max(0.0, (float) ($body['timeLeft'] ?? 0));
+            // Trust the tighter (more conservative) of the two so a lagging
+            // client cannot invent extra timeLeft for a bigger speed bonus.
+            $timeLeft = min($limit, $serverRemaining, $clientRemaining);
+            $solveSeconds = Helpers::clampInt(
+                (int) round($limit - $timeLeft),
+                0,
+                86400
+            );
 
             // A full solve is re-scored server-side from the raw inputs. The
             // registry test count cannot gate this duel path: the client
@@ -509,7 +555,10 @@ final class DuelController
         ], JSON_UNESCAPED_UNICODE)]);
     }
 
-    /** Duel earnings: xp + a dedicated duel_points counter (never derived away). */
+    /**
+     * Duel earnings: xp + dedicated duel_points (never wiped by refreshDerived).
+     * Also recomputes level from the new XP so leaderboard/profile stay in sync.
+     */
     private static function applyDuelPoints(\PDO $pdo, int $userId, int $points): void
     {
         if ($points <= 0) {
@@ -518,6 +567,12 @@ final class DuelController
         $pdo->prepare('INSERT IGNORE INTO player_statistics (user_id) VALUES (?)')->execute([$userId]);
         $pdo->prepare('UPDATE player_statistics SET xp = xp + ?, duel_points = duel_points + ? WHERE user_id = ?')
             ->execute([$points, $points, $userId]);
+
+        $stmt = $pdo->prepare('SELECT xp FROM player_statistics WHERE user_id = ?');
+        $stmt->execute([$userId]);
+        $xp = (int) ($stmt->fetchColumn() ?: 0);
+        $pdo->prepare('UPDATE player_statistics SET level = ? WHERE user_id = ?')
+            ->execute([\BugArena\Services\ProgressionService::levelFromXp($xp), $userId]);
     }
 
     // ------------------------------------------------------------------
@@ -681,6 +736,21 @@ final class DuelController
             $results[$rivalRole] = null;
         }
 
+        // Shared duel clock: both clients must count down from the same
+        // server-side deadline (started_at + challenge time_limit).
+        $timeLimit = (int) ($match['c_time_limit'] ?? 0);
+        $startedAt = $match['started_at'] ?? null;
+        $endsAt = null;
+        $remainingSeconds = null;
+        if ($startedAt !== null && $timeLimit > 0) {
+            $startTs = strtotime((string) $startedAt);
+            if ($startTs !== false) {
+                $endTs = $startTs + $timeLimit;
+                $endsAt = date('c', $endTs);
+                $remainingSeconds = max(0, $endTs - time());
+            }
+        }
+
         return [
             'id' => $match['public_id'],
             'status' => $match['status'],
@@ -690,7 +760,10 @@ final class DuelController
             'host' => $host,
             'guest' => $guest,
             'challenge' => $challenge,
-            'startedAt' => $match['started_at'],
+            'startedAt' => $startedAt,
+            'endsAt' => $endsAt,
+            'remainingSeconds' => $remainingSeconds,
+            'serverTime' => date('c'),
             'createdAt' => $match['created_at'],
             'finishedAt' => $match['finished_at'],
             'isDraw' => (bool) $match['is_draw'],
@@ -701,7 +774,6 @@ final class DuelController
             ],
             'progress' => $progress,
             'results' => $results,
-            'serverTime' => date('Y-m-d H:i:s'),
         ];
     }
 }

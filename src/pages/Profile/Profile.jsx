@@ -30,14 +30,24 @@ function Profile() {
     window.addEventListener('bug-arena:submission-updated', refresh)
     window.addEventListener('bug-arena:player-updated', refresh)
     window.addEventListener('bug-arena:competitive-updated', refresh)
+    window.addEventListener('bug-arena:server-stats', refresh)
     return () => {
       window.removeEventListener('bug-arena:submission-updated', refresh)
       window.removeEventListener('bug-arena:player-updated', refresh)
       window.removeEventListener('bug-arena:competitive-updated', refresh)
+      window.removeEventListener('bug-arena:server-stats', refresh)
     }
   }, [])
 
-  const progression = useMemo(() => getProgressionStats(submissions), [submissions])
+  // XP/level/rank come from the player snapshot (server-authoritative);
+  // activity stats are derived from the local submission list.
+  const progression = useMemo(() => ({
+    ...getProgressionStats(submissions),
+    xp: player.xp,
+    level: player.level,
+    rank: player.rank,
+    levelProgress: player.levelProgress,
+  }), [submissions, player])
 
   const formatDate = (date) => {
     if (!date) return t('profile', 'unknown')
@@ -83,7 +93,7 @@ function Profile() {
         <div className="profile-stat"><span>{t('profile', 'bestStreak')}</span><strong>{progression.bestStreak} {t('profile', 'daysUnit')}</strong></div>
         <div className="profile-stat"><span>{t('profile', 'avgAttempts')}</span><strong>{progression.averageAttempts}</strong></div>
         <div className="profile-stat"><span>{t('profile', 'avgScore')}</span><strong>{progression.averageScore}</strong></div>
-        <div className="profile-stat competitive-profile-stat"><span>{t('competitive', 'rating')}</span><strong>{player.rating}</strong></div>
+        <div className="profile-stat competitive-profile-stat"><span>{t('profile', 'score')}</span><strong>{player.score}</strong></div>
         <div className="profile-stat competitive-profile-stat"><span>{t('competitive', 'winRate')}</span><strong>{player.winRate}%</strong></div>
       </section>
 

@@ -1,5 +1,6 @@
 import { apiRequest } from './apiClient.js'
 import { isAuthenticated } from './authStore.js'
+import { hydrateLeaderboardFromServer } from './leaderboardStore.js'
 
 // 1v1 duel client: thin wrappers over the poll-based duel API plus a small
 // reusable poller. Every consumer owns its poller and must stop() it on
@@ -34,14 +35,27 @@ export function declineInvitation(invitationId) {
 
 export function fetchMatch(matchId) {
   return apiRequest(`/duel/matches/${matchId}`)
-    .then((data) => data?.match ?? null)
+    .then((data) => {
+      if (data?.stats && typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('bug-arena:server-stats', { detail: data.stats }))
+        hydrateLeaderboardFromServer().catch(() => undefined)
+      }
+      return data?.match ?? null
+    })
 }
 
 export function submitDuelResult(matchId, payload) {
   return apiRequest(`/duel/matches/${matchId}/result`, {
     method: 'POST',
     body: JSON.stringify(payload),
-  }).then((data) => data?.match ?? null)
+  }).then((data) => {
+    // Authoritative stats arrive once the duel is finished (both sides in).
+    if (data?.stats && typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('bug-arena:server-stats', { detail: data.stats }))
+      hydrateLeaderboardFromServer().catch(() => undefined)
+    }
+    return data?.match ?? null
+  })
 }
 
 export function cancelDuel(matchId) {

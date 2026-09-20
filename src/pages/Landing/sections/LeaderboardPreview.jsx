@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom'
 import { useI18n } from '../../../i18n/useI18n'
 
 const players = [
-  { rank: '01', name: 'ALEX', rating: '2418', win: '82%' },
-  { rank: '02', name: 'REZA', rating: '2371', win: '79%' },
-  { rank: '03', name: 'SARAH', rating: '2314', win: '77%' },
-  { rank: '04', name: 'AMIR', rating: '2287', win: '75%' },
+  { rank: '01', name: 'ALEX', xp: '12,480', win: '82%' },
+  { rank: '02', name: 'REZA', xp: '11,290', win: '79%' },
+  { rank: '03', name: 'SARAH', xp: '10,470', win: '77%' },
+  { rank: '04', name: 'AMIR', xp: '9,860', win: '75%' },
 ]
 
 function LeaderboardPreview() {
@@ -44,7 +44,7 @@ function LeaderboardPreview() {
         <div className="leaderboard-columns">
           <span>{t('landing', 'colRank')}</span>
           <span>{t('landing', 'colPlayer')}</span>
-          <span>{t('landing', 'colRating')}</span>
+          <span>{t('landing', 'colXp')}</span>
           <span>{t('landing', 'colWinRate')}</span>
         </div>
 
@@ -59,7 +59,7 @@ function LeaderboardPreview() {
 
             <strong>{player.name}</strong>
 
-            <span>{player.rating}</span>
+            <span>{player.xp}</span>
 
             <span className="player-win">
               {player.win}
@@ -78,7 +78,7 @@ function LeaderboardPreview() {
 
           <strong>{t('landing', 'lbYou')}</strong>
 
-          <span>1842</span>
+          <span>8,420</span>
 
           <span className="player-win">
             68%
