@@ -4,6 +4,16 @@ import { useNavigate } from 'react-router-dom'
 import { challenges } from '../../data/challenges'
 import { canDuel, cancelDuel, createDuel, createPoller, DUEL_DIFFICULTIES, fetchMatch, heartbeat } from '../../services/duelStore.js'
 import { useI18n } from '../../i18n/useI18n'
+import {
+  AnimatedCounter,
+  AnimatedList,
+  Aurora,
+  BlurText,
+  Magnet,
+  ShinyText,
+  SpotlightCard,
+} from '../../components/reactbits'
+import { useTheme } from '../../theme/useTheme'
 import './Duel.css'
 
 /**
@@ -14,6 +24,7 @@ import './Duel.css'
  */
 function DuelLobby() {
   const { t } = useI18n()
+  const { isDark } = useTheme()
   const navigate = useNavigate()
 
   const bugTypes = useMemo(
@@ -83,17 +94,59 @@ function DuelLobby() {
     cancelDuel(current).catch(() => undefined)
   }
 
+  // Aurora stops must be HEX — ogl's Color parser rejects rgba() strings.
+  const auroraStops = isDark
+    ? ['#7cff6b', '#7c5cff', '#22c7d9']
+    : ['#008f70', '#6947e8', '#087fb5']
+
   return (
-    <div className="duel-lobby">
-      <header className="duel-lobby-head">
-        <span className="duel-eyebrow">{t('duel', 'roomTitle')}</span>
-        <h1>{t('duel', 'title')}</h1>
-        <p>{t('duel', 'subtitle')}</p>
-        <small className="duel-reward">{t('duel', 'rewardHint')}</small>
+    <div className="duel-lobby duel-lobby--stage">
+
+      {/* ============ HEADER — DUEL FIELD ============ */}
+      <header className="duel-lobby-head duel-hero">
+        <div className="duel-hero-layers" aria-hidden="true">
+          <div className="duel-hero-aurora">
+            <Aurora
+              colorStops={auroraStops}
+              amplitude={0.6}
+              blend={0.5}
+              lightMode={!isDark}
+            />
+          </div>
+          <div className="duel-hero-vignette" />
+        </div>
+
+        <div className="duel-hero-copy">
+          <BlurText
+            as="span"
+            className="duel-eyebrow"
+            text={t('duel', 'roomTitle')}
+            animateBy="words"
+            delay={24}
+            direction="bottom"
+            stepDuration={0.2}
+          />
+          <h1>{t('duel', 'title')}</h1>
+          <BlurText
+            as="p"
+            text={t('duel', 'subtitle')}
+            animateBy="words"
+            delay={28}
+            direction="bottom"
+            stepDuration={0.3}
+          />
+          <small className="duel-reward">
+            <ShinyText text={t('duel', 'rewardHint')} speed={4.2} />
+          </small>
+        </div>
       </header>
 
       {phase === 'idle' ? (
-        <section className="duel-panel duel-setup">
+        <SpotlightCard
+          as="section"
+          className="duel-panel duel-setup"
+          spotlightColor="rgba(var(--accent-rgb), 0.14)"
+        >
           <span className="duel-panel-label">{t('duel', 'settings')}</span>
 
           <div className="duel-setup-row">
@@ -128,37 +181,55 @@ function DuelLobby() {
             </div>
           </div>
 
-          <button
-            type="button"
-            className="duel-start"
-            onClick={handleStart}
-            disabled={starting}
-          >
-            {starting ? '…' : t('duel', 'start')}
-          </button>
+          <Magnet padding={26} magnetStrength={4} maxOffset={6}>
+            <button
+              type="button"
+              className="duel-start"
+              onClick={handleStart}
+              disabled={starting}
+            >
+              {starting ? '…' : t('duel', 'start')}
+            </button>
+          </Magnet>
 
           {error && <p className="duel-error" role="alert">{error}</p>}
-        </section>
+        </SpotlightCard>
       ) : (
-        <section className="duel-panel duel-searching">
+        <SpotlightCard
+          as="section"
+          className="duel-panel duel-searching"
+          spotlightColor="rgba(var(--accent-rgb), 0.18)"
+        >
           <div className="duel-radar" aria-hidden="true">
             <span /><span /><span />
             <strong>⚔</strong>
           </div>
-          <h2>{t('duel', 'searching')}</h2>
+          <h2>
+            <ShinyText text={t('duel', 'searching')} speed={2.6} />
+          </h2>
           <p>{t('duel', 'searchingHint')}</p>
           <button type="button" className="duel-cancel" onClick={handleCancel}>
             {t('duel', 'cancel')}
           </button>
-        </section>
+        </SpotlightCard>
       )}
 
-      <section className="duel-panel duel-online">
+      <SpotlightCard
+        as="section"
+        className="duel-panel duel-online"
+        spotlightColor="rgba(var(--secondary-rgb), 0.12)"
+      >
         <div className="duel-online-head">
-          <span className="duel-panel-label">{t('duel', 'onlineTitle')}</span>
+          <span className="duel-panel-label">
+            <ShinyText text={t('duel', 'onlineTitle')} speed={4.4} />
+          </span>
           {online.length > 0 && (
             <strong className="duel-online-count">
-              {online.length} <small>{t('duel', 'onlineCount')}</small>
+              <AnimatedCounter
+                value={online.length}
+                duration={1.2}
+              />
+              <small>{t('duel', 'onlineCount')}</small>
             </strong>
           )}
         </div>
@@ -166,9 +237,9 @@ function DuelLobby() {
         {online.length === 0 ? (
           <p className="duel-online-empty">{t('duel', 'onlineEmpty')}</p>
         ) : (
-          <ul className="duel-online-list">
+          <AnimatedList className="duel-online-list" delay={80} initialDelay={120}>
             {online.map((user) => (
-              <li key={user.id} className="duel-online-user">
+              <div key={user.id} className="duel-online-user">
                 <span className="duel-online-dot" />
                 <span
                   className="duel-online-avatar"
@@ -179,11 +250,11 @@ function DuelLobby() {
                 <strong>{user.displayName}</strong>
                 <small>@{user.username}</small>
                 <em>{user.rating}</em>
-              </li>
+              </div>
             ))}
-          </ul>
+          </AnimatedList>
         )}
-      </section>
+      </SpotlightCard>
     </div>
   )
 }

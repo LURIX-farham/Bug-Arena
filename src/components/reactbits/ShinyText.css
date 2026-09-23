@@ -1,0 +1,29 @@
+.shiny-text {
+  display: inline-block;
+  color: var(--shiny-base, rgba(200, 200, 200, 0.65));
+  background: linear-gradient(
+    120deg,
+    var(--shiny-base, rgba(200, 200, 200, 0.65)) 40%,
+    var(--shiny-shine, rgba(255, 255, 255, 0.92)) 50%,
+    var(--shiny-base, rgba(200, 200, 200, 0.65)) 60%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shiny-text-sweep var(--shiny-speed, 4s) linear infinite;
+}
+
+.shiny-text--disabled {
+  animation: none;
+}
+
+@keyframes shiny-text-sweep {
+  from { background-position: 220% 0; }
+  to { background-position: -120% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shiny-text {
+    animation: none;
+  }
+}

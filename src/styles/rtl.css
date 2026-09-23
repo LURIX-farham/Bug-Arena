@@ -131,12 +131,69 @@ html[dir='rtl'] .code-window {
 }
 
 /* Home page: panels, stats, matches should respect RTL */
-html[dir='rtl'] .home-header {
+html[dir='rtl'] .home-hero,
+html[dir='rtl'] .home-hero-copy {
   text-align: right;
+}
+
+html[dir='rtl'] .home-hero-actions-block {
+  align-items: flex-end;
 }
 
 html[dir='rtl'] .home-header-actions {
   flex-direction: row-reverse;
+}
+
+/* Identity card: meta rows and streak mirror in RTL so the visual
+   rhythm matches the Persian reading direction. The XP track itself
+   is direction-agnostic (it grows from inline-start via width:%). */
+html[dir='rtl'] .identity-header,
+html[dir='rtl'] .identity-xp-meta {
+  flex-direction: row-reverse;
+}
+
+html[dir='rtl'] .identity-streak {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+html[dir='rtl'] .identity-streak-body {
+  align-items: flex-end;
+}
+
+/* Action glyph icons sit before the label in LTR; in RTL they should
+   still lead visually but on the right side. row-reverse handles this. */
+html[dir='rtl'] .primary-action,
+html[dir='rtl'] .secondary-action {
+  flex-direction: row-reverse;
+}
+
+/* Persian numerals in the hero score value and identity card: keep
+   them on Vazirmatn so digits look native. */
+html[lang='fa'] .home-hero-score-value,
+html[lang='fa'] .identity-level-value,
+html[lang='fa'] .identity-streak-count,
+html[lang='fa'] .identity-xp-current,
+html[lang='fa'] .identity-xp-progress {
+  font-family: var(--font-fa);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+/* Persian labels in the identity card switch to Vazirmatn for the
+   same reason — monospace letter-spacing fights Persian glyphs. */
+html[lang='fa'] .identity-eyebrow,
+html[lang='fa'] .identity-level-label,
+html[lang='fa'] .home-hero-score-label,
+html[lang='fa'] .home-hero-score-suffix,
+html[lang='fa'] .home-hero-actions-label,
+html[lang='fa'] .identity-streak-unit,
+html[lang='fa'] .identity-streak-best,
+html[lang='fa'] .identity-streak-idle,
+html[lang='fa'] .identity-xp-progress-soft {
+  font-family: var(--font-fa);
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 html[dir='rtl'] .challenge-top,
@@ -489,7 +546,7 @@ html[dir='rtl'] .navbar-links { flex-direction: row-reverse; }
 html[lang='fa'] .hero h1,
 html[lang='fa'] .section-heading h2,
 html[lang='fa'] .final-cta-content h2,
-html[lang='fa'] .home-header h1,
+html[lang='fa'] .home-hero-title,
 html[lang='fa'] .challenges-header h1 {
   line-height: 1.25;
   font-weight: 800;
@@ -498,7 +555,30 @@ html[lang='fa'] .challenges-header h1 {
 html[lang='fa'] .hero-description,
 html[lang='fa'] .section-heading p,
 html[lang='fa'] .final-cta-content p,
-html[lang='fa'] .home-header p,
+html[lang='fa'] .home-header-body,
 html[lang='fa'] .challenges-header p {
   line-height: 2;
+}
+
+\n/* VibeFarsi integration: Persian controls use logical alignment and Vazirmatn. */
+html[dir='rtl'] .vf-button,
+html[dir='rtl'] .vf-dialog,
+html[dir='rtl'] .vf-toast {
+  direction: rtl;
+}
+
+html[lang='fa'] .vf-dialog-heading,
+html[lang='fa'] .vf-toast-content {
+  font-family: var(--font-fa);
+  letter-spacing: 0;
+}
+
+html[lang='fa'] .vf-button,
+html[lang='fa'] .vf-toast-action {
+  font-family: var(--font-fa);
+  letter-spacing: 0;
+}
+
+html[dir='rtl'] .vf-dialog-footer {
+  flex-direction: row;
 }

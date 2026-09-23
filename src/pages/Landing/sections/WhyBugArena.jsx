@@ -1,4 +1,5 @@
 import { useI18n } from '../../../i18n/useI18n'
+import SpotlightCard from '../../../components/reactbits/SpotlightCard'
 
 function WhyBugArena() {
   const { t } = useI18n()
@@ -22,7 +23,7 @@ function WhyBugArena() {
 
       <div className="comparison">
 
-        <div className="comparison-side traditional">
+        <SpotlightCard className="comparison-side traditional" spotlightColor="rgba(148, 163, 184, 0.15)">
           <div className="comparison-header">
             <span>{t('landing', 'comparisonTraditional')}</span>
             <span>01</span>
@@ -37,13 +38,13 @@ function WhyBugArena() {
             <span>↓</span>
             <div>{t('landing', 'flowDone')}</div>
           </div>
-        </div>
+        </SpotlightCard>
 
         <div className="comparison-divider">
           {t('landing', 'comparisonVs')}
         </div>
 
-        <div className="comparison-side arena">
+        <SpotlightCard className="comparison-side arena" spotlightColor="rgba(99, 102, 241, 0.22)">
           <div className="comparison-header">
             <span>BUG//ARENA</span>
             <span>02</span>
@@ -66,7 +67,7 @@ function WhyBugArena() {
             <span>↓</span>
             <div>{t('landing', 'flowCompete')}</div>
           </div>
-        </div>
+        </SpotlightCard>
 
       </div>
 

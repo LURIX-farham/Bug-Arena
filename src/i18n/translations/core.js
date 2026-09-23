@@ -15,7 +15,7 @@ export const core = {
       english: 'English', persian: 'فارسی', save: 'Save', back: 'Back', search: 'Search', clear: 'Clear filters',
       available: 'AVAILABLE', completed: 'COMPLETED', availableTitle: 'Available',
       easy: 'EASY', medium: 'MEDIUM', hard: 'HARD', all: 'ALL',
-      loading: 'LOADING', close: 'Close', open: 'OPEN', view: 'VIEW', yes: 'YES', no: 'NO',
+      loading: 'LOADING', close: 'Close', dismissAll: 'Dismiss all', open: 'OPEN', view: 'VIEW', yes: 'YES', no: 'NO',
     },
     search: { placeholder: 'Search anything...', hint: 'Navigate with ↑ ↓ and Enter', noResults: 'No results found.' },
     language: { title: 'Language', subtitle: 'Choose the interface language. Your choice is saved on this device.', interface: 'Interface language', direction: 'Layout direction' },
@@ -48,7 +48,7 @@ export const core = {
     challenges: {
       eyebrow: 'CHALLENGE ARCHIVE · v2', title1: 'Find something', title2: 'worth breaking.', description: 'Every challenge is a structured Python debugging contract with metadata, deterministic tests, and a clear difficulty profile.', showing: 'SHOWING', searchPlaceholder: 'Search title, tag, category...', searchAria: 'Search challenges', sort: 'SORT',
       default: 'Default', difficulty: 'Difficulty', highestScore: 'Highest score', shortestTime: 'Shortest time', allTopics: 'ALL TOPICS', core: 'CORE', hidden: 'HIDDEN', pts: 'PTS', min: 'MIN', noFound: 'No challenges found.', noFoundBody: 'Try a different search, topic, or difficulty.',
-      completed: '✓ COMPLETED', bug: 'BUG', expert: 'EXPERT',
+      completed: '✓ COMPLETED', bug: 'BUG', expert: 'EXPERT', nextUp: 'NEXT UP',
     },
     challengeDetails: {
       back: '← BACK TO CHALLENGES', available: 'AVAILABLE', completed: 'COMPLETED', replay: 'REPLAY CHALLENGE', enter: 'ENTER ARENA', timeLimit: 'TIME LIMIT', challengeBrief: 'CHALLENGE BRIEF', fixTheBug: 'Fix the bug', fixCode: 'FIX THE CODE', automatedTests: 'Your solution is evaluated by running automated tests against your code.', scoring: 'SCORING', scoringTitle: 'Solve more. Earn more.', coreFixLabel: 'Core Fix', coreFixBody: 'Required to complete the challenge', speedLabel: 'Speed', speedBody: 'Faster solutions can earn more', attemptsLabel: 'Attempts', attemptsBody: 'Fewer failed attempts are better', hardeningLabel: 'Hardening', hardeningBody: 'Optional edge-case protection', skills: 'SKILLS', skillsTitle: 'What this challenge tests', debugging: 'Debugging', debuggingBody: 'Identify the real source of the bug', logic: 'Logic', logicBody: 'Understand how the code behaves', pythonBody: 'Read and modify the provided code', problemSolving: 'Problem Solving', problemSolvingBody: 'Build a correct and reliable solution', tags: 'TAGS', tagsTitle: 'Challenge topics', data: 'DATA', statsTitle: 'Challenge stats', difficulty: 'DIFFICULTY', language: 'LANGUAGE', points: 'POINTS', baseScore: 'BASE SCORE', hardeningBonus: 'HARDENING BONUS', evaluation: 'EVALUATION', coverageTitle: 'Test coverage', visibleTests: 'VISIBLE TESTS', hiddenTests: 'HIDDEN TESTS', readyTitle: 'READY FOR THE ARENA?', readyBody: 'The timer starts when you enter. Fix the core bug, run the tests, and submit when you are ready.', optionalHardening: 'OPTIONAL HARDENING', optionalHardeningBody: 'Protect your solution against additional edge cases for a potential bonus.', notFound: 'Challenge not found.', min: 'MIN',
@@ -71,6 +71,18 @@ export const core = {
       noSubmissions: 'No submissions yet.', noSubmissionsBody: 'Enter your first challenge to start building your score.',
       rankingEyebrow: 'RANKING', rankingTitle: 'Global position', rank: 'RANK',
       forYouEyebrow: 'FOR YOU', forYouTitle: 'Recommended',
+      heroIdentityEyebrow: 'ARENA IDENTITY',
+      heroLevel: 'LEVEL',
+      heroXp: 'XP',
+      heroXpProgress: 'to next level',
+      heroStreak: 'DAY STREAK',
+      heroStreakBest: 'BEST',
+      heroStreakIdle: 'NO ACTIVE STREAK',
+      heroRankLocked: 'UNRANKED',
+      heroQuickActions: 'QUICK ACTIONS',
+      liveLeaderboard: 'LIVE LEADERBOARD',
+      youTag: 'YOU',
+      accuracy: 'ACCURACY',
     },
     theme: {
       label: 'THEME', title: 'Appearance', description: 'Switch between the dark and light themes. Your choice is saved on this device.',
@@ -90,7 +102,7 @@ export const core = {
       english: 'English', persian: 'فارسی', save: 'ذخیره', back: 'بازگشت', search: 'جست‌وجو', clear: 'پاک کردن فیلترها',
       available: 'در دسترس', completed: 'تکمیل شده', availableTitle: 'در دسترس',
       easy: 'آسان', medium: 'متوسط', hard: 'سخت', all: 'همه',
-      loading: 'در حال بارگذاری', close: 'بستن', open: 'بازکردن', view: 'مشاهده', yes: 'بله', no: 'خیر',
+      loading: 'در حال بارگذاری', close: 'بستن', dismissAll: 'بستن همه', open: 'بازکردن', view: 'مشاهده', yes: 'بله', no: 'خیر',
     },
     search: { placeholder: 'جست‌وجوی هر چیزی...', hint: 'با ↑ ↓ حرکت کنید و Enter بزنید', noResults: 'نتیجه‌ای پیدا نشد.' },
     language: { title: 'زبان', subtitle: 'زبان رابط کاربری را انتخاب کنید. انتخاب شما روی این دستگاه ذخیره می‌شود.', interface: 'زبان رابط', direction: 'جهت چیدمان' },
@@ -123,7 +135,7 @@ export const core = {
     challenges: {
       eyebrow: 'آرشیو چالش‌ها · نسخه ۲', title1: 'چیزی پیدا کن', title2: 'که ارزش خراب کردن داشته باشد.', description: 'هر چالش یک قرارداد ساختاریافته برای دیباگ Python با متادیتا، تست‌های قطعی و سطح سختی مشخص است.', showing: 'نمایش', searchPlaceholder: 'عنوان، تگ یا دسته را جست‌وجو کن...', searchAria: 'جست‌وجوی چالش‌ها', sort: 'مرتب‌سازی',
       default: 'پیش‌فرض', difficulty: 'سختی', highestScore: 'بیشترین امتیاز', shortestTime: 'کمترین زمان', allTopics: 'همه موضوعات', core: 'اصلی', hidden: 'مخفی', pts: 'امتیاز', min: 'دقیقه', noFound: 'چالشی پیدا نشد.', noFoundBody: 'جست‌وجو، موضوع یا سطح سختی دیگری را امتحان کن.',
-      completed: '✓ تکمیل شده', bug: 'باگ', expert: 'حرفه‌ای',
+      completed: '✓ تکمیل شده', bug: 'باگ', expert: 'حرفه‌ای', nextUp: 'چالش بعدی',
     },
     challengeDetails: {
       back: '← بازگشت به چالش‌ها', available: 'در دسترس', completed: 'تکمیل شده', replay: 'اجرای دوباره چالش', enter: 'ورود به Arena', timeLimit: 'محدودیت زمان', challengeBrief: 'شرح چالش', fixTheBug: 'باگ را برطرف کن', fixCode: 'کد را اصلاح کن', automatedTests: 'راه‌حل شما با اجرای تست‌های خودکار روی کدتان ارزیابی می‌شود.', scoring: 'امتیازدهی', scoringTitle: 'بیشتر حل کن، بیشتر امتیاز بگیر.', coreFixLabel: 'رفع باگ اصلی', coreFixBody: 'برای تکمیل چالش ضروری است', speedLabel: 'سرعت', speedBody: 'راه‌حل سریع‌تر امتیاز بیشتری می‌گیرد', attemptsLabel: 'تلاش‌ها', attemptsBody: 'تلاش‌های ناموفق کمتر بهتر است', hardeningLabel: 'تقویت راه‌حل', hardeningBody: 'محافظت اختیاری در برابر موارد مرزی', skills: 'مهارت‌ها', skillsTitle: 'این چالش چه چیزی را می‌سنجد', debugging: 'دیباگ', debuggingBody: 'منبع واقعی باگ را پیدا کن', logic: 'منطق', logicBody: 'رفتار کد را درک کن', pythonBody: 'کد ارائه‌شده را بخوان و تغییر بده', problemSolving: 'حل مسئله', problemSolvingBody: 'یک راه‌حل درست و قابل اعتماد بساز', tags: 'برچسب‌ها', tagsTitle: 'موضوعات چالش', data: 'داده', statsTitle: 'آمار چالش', difficulty: 'سختی', language: 'زبان', points: 'امتیاز', baseScore: 'امتیاز پایه', hardeningBonus: 'امتیاز تقویت', evaluation: 'ارزیابی', coverageTitle: 'پوشش تست', visibleTests: 'تست‌های قابل مشاهده', hiddenTests: 'تست‌های مخفی', readyTitle: 'آماده ورود به Arena هستی؟', readyBody: 'با ورود تایمر شروع می‌شود. باگ اصلی را برطرف کن، تست‌ها را اجرا کن و وقتی آماده بودی راه‌حل را ثبت کن.', optionalHardening: 'تقویت اختیاری', optionalHardeningBody: 'راه‌حل را در برابر موارد مرزی بیشتر مقاوم کن تا امتیاز اضافه بگیری.', notFound: 'چالش پیدا نشد.', min: 'دقیقه',
@@ -146,6 +158,18 @@ export const core = {
       noSubmissions: 'هنوز ثبت‌ای نداری.', noSubmissionsBody: 'اولین چالش را شروع کن تا امتیاز بسازی.',
       rankingEyebrow: 'رتبه‌بندی', rankingTitle: 'جایگاه سراسری', rank: 'رتبه',
       forYouEyebrow: 'برای تو', forYouTitle: 'پیشنهاد شده',
+      heroIdentityEyebrow: 'هویت آرنا',
+      heroLevel: 'سطح',
+      heroXp: 'XP',
+      heroXpProgress: 'تا سطح بعد',
+      heroStreak: 'روز پیاپی',
+      heroStreakBest: 'بهترین',
+      heroStreakIdle: 'استریک فعالی نداری',
+      heroRankLocked: 'بدون رتبه',
+      heroQuickActions: 'دسترسی سریع',
+      liveLeaderboard: 'رده‌بندی زنده',
+      youTag: 'شما',
+      accuracy: 'دقت',
     },
     theme: {
       label: 'تم', title: 'حالت نمایش', description: 'بین تم تیره و روشن جابه‌جا شو. انتخاب شما روی همین دستگاه ذخیره می‌شود.',
@@ -154,5 +178,9 @@ export const core = {
       saved: 'انتخاب تم به‌صورت خودکار ذخیره می‌شود.',
     },
     boot: { connecting: 'در حال اتصال به ARENA...' },
+    // en:
+    collapseSidebar: 'Collapse sidebar', expandSidebar: 'Expand sidebar',
+    // fa:
+    collapseSidebar: 'جمع کردن منو', expandSidebar: 'باز کردن منو',
   },
 }

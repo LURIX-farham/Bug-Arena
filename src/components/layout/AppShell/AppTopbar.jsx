@@ -9,6 +9,7 @@ import { getCompletedChallenges } from '../../../services/submissionStore'
 import { useI18n } from '../../../i18n/useI18n'
 import ThemeToggle from '../../ui/ThemeToggle'
 import LanguageToggle from '../../ui/LanguageToggle'
+import { SpotlightCard, ShinyText, AnimatedCounter } from '../../reactbits'
 
 function AppTopbar() {
   const { t } = useI18n()
@@ -88,8 +89,8 @@ function AppTopbar() {
       <div className="topbar-right">
 
         <div className="topbar-status">
-          <span />
-          {t('nav', 'systemOnline')}
+          <span className="topbar-status-dot" />
+          <ShinyText text={t('nav', 'systemOnline')} speed={3.4} />
         </div>
 
         <div className="notification-wrapper">
@@ -154,9 +155,11 @@ function AppTopbar() {
 
         <div className="user-menu-wrapper">
 
-          <button
+          <SpotlightCard
+            as="button"
             type="button"
             className="topbar-profile"
+            spotlightColor="rgba(var(--accent-rgb), 0.25)"
             onClick={() =>
               setUserMenuOpen(!userMenuOpen)
             }
@@ -171,12 +174,16 @@ function AppTopbar() {
                 {player.displayName}
               </strong>
 
-              <span>
-                {player.score}
+              <span className="profile-info-score">
+                <AnimatedCounter
+                  value={player.score}
+                  duration={1.5}
+                  delay={0.2}
+                />
               </span>
 
             </div>
-          </button>
+          </SpotlightCard>
 
           {userMenuOpen && (
             <div className="user-menu">

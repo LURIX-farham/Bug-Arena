@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { challenges } from '../../data/challenges'
 import { createPoller, fetchMatch } from '../../services/duelStore.js'
 import { useI18n } from '../../i18n/useI18n'
+import { ShinyText, SpotlightCard, StarBorder } from '../../components/reactbits'
 import './Duel.css'
 
 const VS_PHASE_MS = 3200
@@ -202,7 +203,11 @@ function DuelRoom() {
       </header>
 
       {/* VS stage */}
-      <section className={`duel-stage ${phase !== 'vs' ? 'duel-stage-selecting' : ''}`}>
+      <SpotlightCard
+        as="section"
+        className={`duel-stage ${phase !== 'vs' ? 'duel-stage-selecting' : ''}`}
+        spotlightColor="rgba(var(--accent-rgb), 0.1)"
+      >
         <DuelerCard player={match.host} side="host" />
 
         <div className="duel-divider" aria-hidden="true">
@@ -210,7 +215,7 @@ function DuelRoom() {
         </div>
 
         <DuelerCard player={match.guest} side="guest" />
-      </section>
+      </SpotlightCard>
 
       {/* Challenge selection */}
       {phase !== 'vs' && (
@@ -219,9 +224,14 @@ function DuelRoom() {
             {revealed ? t('duel', 'lockedIn') : t('duel', 'selecting')}
           </span>
 
-          <div className={`duel-slot ${revealed ? 'duel-slot-locked' : ''}`}>
-            {revealed ? (
-              <>
+          {revealed ? (
+            <StarBorder
+              className="duel-slot-arena"
+              speed={6}
+              color="rgba(var(--accent-rgb), 0.85)"
+              secondaryColor="rgba(var(--secondary-rgb), 0.4)"
+            >
+              <div className={`duel-slot duel-slot-locked`}>
                 <strong className="duel-slot-title">{displayTitle}</strong>
                 <div className="duel-slot-meta">
                   <span className={`duel-slot-diff difficulty-${displayDifficulty.toLowerCase()}`}>
@@ -230,13 +240,15 @@ function DuelRoom() {
                   <span>{displayBugType.toUpperCase()}</span>
                   <span>{displayScore} PTS</span>
                 </div>
-              </>
-            ) : (
+              </div>
+            </StarBorder>
+          ) : (
+            <div className="duel-slot">
               <strong className="duel-slot-title duel-slot-spinning">{slotTitle || '…'}</strong>
-            )}
-          </div>
+            </div>
+          )}
 
-          {revealed && <p className="duel-entering">{t('duel', 'entering')}…</p>}
+          {revealed && <p className="duel-entering"><ShinyText text={`${t('duel', 'entering')}…`} speed={2.2} /></p>}
         </section>
       )}
     </div>

@@ -3,10 +3,13 @@ import { getCurrentPlayer, savePlayer } from '../../services/playerStore'
 import { useI18n } from '../../i18n/useI18n'
 import { useTheme } from '../../theme/useTheme'
 import './Settings.css'
+import Button from '../../components/ui/vibefarsi/Button'
+import { useToast } from '../../components/ui/vibefarsi/useToast.js'
 
 function Settings() {
   const { t } = useI18n()
   const { setTheme, isDark, isLight } = useTheme()
+  const { toast } = useToast()
   const [player, setPlayer] = useState(getCurrentPlayer)
   const [username, setUsername] = useState(player.username || '')
   const [displayName, setDisplayName] = useState(player.displayName || '')
@@ -30,6 +33,11 @@ function Settings() {
       setSaved(true)
       setTimeout(() => setSaved(false), 2200)
       setPlayer(getCurrentPlayer())
+      toast({
+        title: t('settings', 'savedAccount'),
+        description: t('settings', 'accountReady'),
+        variant: 'success',
+      })
     }
   }
 
@@ -56,9 +64,9 @@ function Settings() {
             <span>{t('settings', 'displayName')}</span>
             <input value={displayName} onChange={(event) => setDisplayName(event.target.value)} maxLength={24} autoComplete="nickname" />
           </label>
-          <button className="settings-save-button" type="submit">
+          <Button className="settings-save-button" type="submit" variant="brand">
             {saved ? t('settings', 'savedAccount') : t('common', 'save')}
-          </button>
+          </Button>
         </div>
       </form>
 

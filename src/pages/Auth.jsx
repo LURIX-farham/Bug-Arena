@@ -5,6 +5,7 @@ import { loginAccount, registerAccount } from '../services/authStore.js'
 import { useI18n } from '../i18n/useI18n'
 import { refreshDatabase } from '../services/databaseSync.js'
 import './Auth.css'
+import Button from '../components/ui/vibefarsi/Button'
 
 function authMessage(error, t) {
   const messageKeys = {
@@ -67,7 +68,10 @@ function Auth() {
           {isRegister && <label>{t('auth', 'displayName')}<input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="PROGRAMMER" autoComplete="name" /></label>}
           <label>{t('auth', 'password')}<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete={isRegister ? 'new-password' : 'current-password'} required minLength={8} /></label>
           {error && <div className="auth-error">{error}</div>}
-          <button type="submit" disabled={loading}>{loading ? t('auth', 'connecting') : (isRegister ? t('auth', 'createAccount') : t('auth', 'signIn'))} →</button>
+          <Button type="submit" variant="brand" size="lg" disabled={loading}>
+            {loading ? t('auth', 'connecting') : (isRegister ? t('auth', 'createAccount') : t('auth', 'signIn'))}
+            <span className="vf-directional-arrow" aria-hidden="true">→</span>
+          </Button>
         </form>
         <div className="auth-footer">{isRegister ? <>{t('auth', 'alreadyRegistered')} <Link to="/login">{t('auth', 'signInLink')}</Link></> : <>{t('auth', 'newHere')} <Link to="/register">{t('auth', 'createAccountLink')}</Link></>}</div>
       </div>

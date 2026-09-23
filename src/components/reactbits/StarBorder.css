@@ -1,0 +1,62 @@
+.star-border {
+  position: relative;
+  padding: 1px;
+  border-radius: var(--radius-md, 10px);
+  isolation: isolate;
+}
+
+.star-border__beams {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.star-border__beam {
+  position: absolute;
+  inset: -120%;
+  display: block;
+}
+
+.star-border__beam--a {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 318deg,
+    var(--sb-color) 348deg,
+    transparent 360deg
+  );
+  animation: star-border-spin var(--sb-speed, 7s) linear infinite;
+}
+
+.star-border__beam--b {
+  background: conic-gradient(
+    from 180deg,
+    transparent 0deg 330deg,
+    var(--sb-color-2) 352deg,
+    transparent 360deg
+  );
+  animation: star-border-spin calc(var(--sb-speed, 7s) * 1.7) linear infinite reverse;
+}
+
+@keyframes star-border-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.star-border__content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  border-radius: calc(var(--radius-md, 10px) - 1px);
+  /* The surface color is provided by the page that mounts the border,
+     so it stays theme-aware. */
+  background: var(--bg-surface);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star-border__beam {
+    animation: none;
+    opacity: 0.25;
+  }
+}

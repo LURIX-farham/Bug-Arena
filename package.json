@@ -17,6 +17,9 @@
     "qa:database": "node scripts/qaDatabaseFoundation.mjs"
   },
   "dependencies": {
+    "lucide-react": "^1.47.0",
+    "motion": "^12.23.12",
+    "ogl": "^1.0.11",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.2"

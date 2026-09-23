@@ -80,7 +80,7 @@ html[lang='fa'] .rank-position {
 }
 
 /* Persian numerals look better with regular weight; tighten letter-spacing */
-html[lang='fa'] .home-header h1 {
+html[lang='fa'] .home-hero-title {
   letter-spacing: -1px;
   font-weight: 800;
 }

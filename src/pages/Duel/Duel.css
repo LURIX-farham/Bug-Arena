@@ -481,3 +481,178 @@
     to   { width: 80%; opacity: 1; }
   }
 }
+
+/* =====================================================================
+   DUEL MOTION PASS — aurora field, spotlight panels, beam-locked slot.
+   Logical properties + tokens only.
+===================================================================== */
+
+/* ---- Lobby hero: aurora behind the ceremony title ---- */
+.duel-hero {
+  position: relative;
+
+  padding: var(--space-8) var(--space-6);
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+
+  overflow: hidden;
+
+  background: var(--bg-surface);
+
+  box-shadow: var(--shadow-sm);
+}
+
+.duel-hero-layers {
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events: none;
+}
+
+.duel-hero-aurora {
+  position: absolute;
+
+  inset: -20% -10%;
+
+  opacity: 0.55;
+}
+
+.duel-hero-vignette {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    radial-gradient(120% 100% at 50% 0%, transparent 42%, var(--bg-surface) 96%);
+}
+
+.duel-hero-copy {
+  position: relative;
+
+  z-index: 1;
+
+  display: grid;
+
+  justify-items: start;
+}
+
+.duel-hero-copy h1 {
+  margin: var(--space-1) 0 0;
+
+  font-size: var(--text-3xl);
+  letter-spacing: 0.02em;
+}
+
+.duel-hero-copy p {
+  margin: var(--space-2) 0 0;
+
+  max-width: 56ch;
+
+  color: var(--text-secondary);
+}
+
+.duel-hero-copy .duel-reward {
+  margin-top: var(--space-3);
+}
+
+/* ---- Spotlight panels keep their surface above the glow ---- */
+.duel-panel.card-spotlight {
+  overflow: hidden;
+}
+
+/* ---- Locked slot wrapped in orbiting beams ---- */
+.duel-slot-arena {
+  border-radius: var(--radius-md);
+}
+
+.duel-slot-arena .duel-slot {
+  border-color: transparent;
+
+  background:
+    radial-gradient(90% 120% at 50% 0%, rgba(var(--primary-rgb), 0.08), transparent 70%),
+    var(--code-bg);
+}
+
+.duel-entering .shiny-text {
+  font-weight: 800;
+
+  --shiny-base: var(--primary);
+  --shiny-shine: var(--text-primary);
+}
+
+/* ---- Searching headline shimmer ---- */
+.duel-searching h2 .shiny-text {
+  font-size: inherit;
+
+  --shiny-base: var(--text-primary);
+  --shiny-shine: var(--accent);
+}
+
+/* ---- Online panel: shimmering label, glowing count ---- */
+.duel-online-count {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+
+  color: var(--primary);
+}
+
+.duel-online-count small {
+  color: var(--text-muted);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.12em;
+}
+
+/* ---- Staggered rows stretch full-width ---- */
+.duel-online-list .animated-list__item {
+  display: grid;
+}
+
+.duel-online-user {
+  transition: border-color var(--duration-base) ease, transform var(--duration-base) var(--ease-out);
+}
+
+.duel-online-user:hover {
+  border-color: rgba(var(--primary-rgb), 0.35);
+
+  transform: translateX(3px);
+}
+
+html[dir='rtl'] .duel-online-user:hover {
+  transform: translateX(-3px);
+}
+
+/* ---- Light theme: keep aurora subtle, not washed out ---- */
+[data-theme='light'] .duel-hero-aurora {
+  opacity: 0.4;
+}
+
+[data-theme='light'] .duel-hero {
+  background: linear-gradient(180deg, rgba(var(--primary-rgb), 0.05), var(--bg-surface) 70%);
+}
+
+@media (max-width: 720px) {
+  .duel-hero {
+    padding: var(--space-6) var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .duel-hero-aurora {
+    display: none;
+  }
+}
+
+/* Reward chip: keep the amber identity while shimmering */
+.duel-reward .shiny-text {
+  --shiny-base: var(--warning);
+  --shiny-shine: var(--text-primary);
+}

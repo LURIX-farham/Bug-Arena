@@ -6,11 +6,23 @@ import { DIFFICULTIES, filterChallenges, getChallengeTags, sortChallenges } from
 import { isChallengeCompleted } from '../../services/submissionStore'
 import { useI18n } from '../../i18n/useI18n'
 import { getLocalizedChallenge } from '../../i18n/languageUtils'
-
+import {
+  AnimatedCounter,
+  AnimatedList,
+  BlurText,
+  DotGrid,
+  GradientText,
+  Magnet,
+  ShinyText,
+  SpotlightCard,
+  StarBorder,
+} from '../../components/reactbits'
+import { useTheme } from '../../theme/useTheme'
 import './Challenges.css'
 
 function Challenges() {
   const { t, language } = useI18n()
+  const { isDark } = useTheme()
   const [activeDifficulty, setActiveDifficulty] = useState('ALL')
   const [activeTag, setActiveTag] = useState('ALL')
   const [sort, setSort] = useState('DEFAULT')
@@ -33,26 +45,157 @@ function Challenges() {
     setQuery('')
   }
 
-  return (
-    <div className="challenges-page">
-      <div className="challenges-header">
-        <div>
-          <span className="eyebrow">{t('challenges', 'eyebrow')}</span>
-          <h1>
-            {t('challenges', 'title1')}
-            <br />
-            {t('challenges', 'title2')}
-          </h1>
-          <p>
-            {t('challenges', 'description')}
-          </p>
+  // Featured hunt — the first unsolved bug in the catalogue, independent
+  // of the active filters so the "next up" card never flickers while
+  // the player narrows the archive.
+  const featured = allChallenges.find((item) => !isChallengeCompleted(item.id)) || null
+  const solvedCount = allChallenges.filter((item) => isChallengeCompleted(item.id)).length
+  const solvedPercent = allChallenges.length
+    ? Math.round((solvedCount / allChallenges.length) * 100)
+    : 0
+
+  // DotGrid palette — canvas can't resolve CSS vars, pass concrete colors.
+  const dotBase = isDark ? 'rgba(154, 161, 172, 0.16)' : 'rgba(71, 85, 105, 0.13)'
+  const dotActive = isDark ? 'rgba(124, 255, 107, 0.7)' : 'rgba(37, 99, 235, 0.45)'
+
+  const renderCard = (rawChallenge) => {
+    const challenge = getLocalizedChallenge(rawChallenge, language)
+    const completed = isChallengeCompleted(challenge.id)
+    const coreTests = challenge.evaluation.tests.filter((test) => test.type === 'core').length
+    const hiddenTests = challenge.evaluation.tests.filter((test) => test.type === 'hidden').length
+    const isFeatured = featured && challenge.id === featured.id
+
+    const card = (
+      <SpotlightCard
+        as={Link}
+        to={`/challenges/${challenge.id}`}
+        key={challenge.id}
+        className={`challenge-card ${completed ? 'challenge-completed-card' : ''}${isFeatured ? ' challenge-featured-card' : ''}`}
+        spotlightColor={
+          completed
+            ? 'rgba(52, 211, 153, 0.16)'
+            : 'rgba(var(--accent-rgb), 0.2)'
+        }
+      >
+        <div className="challenge-card-top">
+          <span>{t('challenges', 'bug')} #{challenge.id}</span>
+          <div className="challenge-card-status">
+            <span className="challenge-difficulty">{challenge.difficulty.toUpperCase()}</span>
+            {completed && <span className="challenge-completed">{t('challenges', 'completed')}</span>}
+            {isFeatured && <span className="challenge-next-chip"><ShinyText text={t('challenges', 'nextUp')} speed={3.2} /></span>}
+          </div>
         </div>
 
-        <div className="challenge-count">
-          <span>{t('challenges', 'showing')}</span>
-          <strong>{filteredChallenges.length}</strong>
+        <div className="challenge-card-body">
+          <span className="challenge-category">{challenge.category.toUpperCase()}</span>
+          <h2>{challenge.title}</h2>
+          <p>{challenge.description}</p>
         </div>
-      </div>
+
+        <div className="challenge-card-stats">
+          <span>{coreTests} {t('challenges', 'core')}</span>
+          <span>{hiddenTests} {t('challenges', 'hidden')}</span>
+          <span>{challenge.baseScore} {t('challenges', 'pts')}</span>
+          <span>{Math.floor(challenge.timeLimit / 60)} {t('challenges', 'min')}</span>
+        </div>
+
+        <div className="challenge-card-bottom">
+          <div className="challenge-tags">
+            {challenge.tags.map((tag) => <span key={tag}>#{tag}</span>)}
+          </div>
+          <span className="challenge-arrow">→</span>
+        </div>
+      </SpotlightCard>
+    )
+
+    // The featured hunt gets the orbiting border beams.
+    return isFeatured ? (
+      <StarBorder
+        key={challenge.id}
+        className="challenge-featured"
+        speed={9}
+        color="rgba(var(--accent-rgb), 0.85)"
+        secondaryColor="rgba(var(--secondary-rgb), 0.4)"
+      >
+        {card}
+      </StarBorder>
+    ) : card
+  }
+
+  return (
+    <div className="challenges-page">
+
+      {/* ============ HERO — ARCHIVE FIELD ============ */}
+      <section className="challenges-hero" aria-labelledby="challenges-hero-title">
+        <div className="challenges-hero-layers" aria-hidden="true">
+          <DotGrid
+            className="challenges-hero-dots"
+            gap={24}
+            dotSize={1.4}
+            baseColor={dotBase}
+            activeColor={dotActive}
+            proximity={120}
+          />
+          <div className="challenges-hero-vignette" />
+        </div>
+
+        <div className="challenges-header">
+          <div>
+            <BlurText
+              as="span"
+              className="eyebrow challenges-hero-eyebrow"
+              text={t('challenges', 'eyebrow')}
+              animateBy="words"
+              delay={22}
+              direction="bottom"
+              stepDuration={0.2}
+            />
+            <h1 id="challenges-hero-title">
+              {t('challenges', 'title1')}
+              <br />
+              <GradientText
+                as="span"
+                colors={['var(--accent)', '#59f3c4', '#7c5cff']}
+                animationSpeed={7}
+                pauseOnHover
+              >
+                {t('challenges', 'title2')}
+              </GradientText>
+            </h1>
+            <BlurText
+              as="p"
+              text={t('challenges', 'description')}
+              animateBy="words"
+              delay={26}
+              direction="bottom"
+              stepDuration={0.3}
+            />
+          </div>
+
+          <div className="challenge-count">
+            <span>{t('challenges', 'showing')}</span>
+            <strong>
+              <AnimatedCounter
+                value={filteredChallenges.length}
+                duration={1.2}
+              />
+            </strong>
+            <div
+              className="challenge-count-track"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={solvedPercent}
+              aria-label={`${t('home', 'statsSolved')} ${solvedPercent}%`}
+            >
+              <span className="challenge-count-fill" style={{ width: `${solvedPercent}%` }} />
+            </div>
+            <small className="challenge-count-meta">
+              {solvedCount}/{allChallenges.length} {t('home', 'statsSolved')}
+            </small>
+          </div>
+        </div>
+      </section>
 
       <div className="challenge-toolbar">
         <label className="challenge-search">
@@ -108,57 +251,23 @@ function Challenges() {
         ))}
       </div>
 
-      <div className="challenge-grid">
-        {filteredChallenges.map((rawChallenge) => {
-          const challenge = getLocalizedChallenge(rawChallenge, language)
-          const completed = isChallengeCompleted(challenge.id)
-          const coreTests = challenge.evaluation.tests.filter((test) => test.type === 'core').length
-          const hiddenTests = challenge.evaluation.tests.filter((test) => test.type === 'hidden').length
-
-          return (
-            <Link
-              to={`/challenges/${challenge.id}`}
-              className={`challenge-card ${completed ? 'challenge-completed-card' : ''}`}
-              key={challenge.id}
-            >
-              <div className="challenge-card-top">
-                <span>{t('challenges', 'bug')} #{challenge.id}</span>
-                <div className="challenge-card-status">
-                  <span className="challenge-difficulty">{challenge.difficulty.toUpperCase()}</span>
-                  {completed && <span className="challenge-completed">{t('challenges', 'completed')}</span>}
-                </div>
-              </div>
-
-              <div className="challenge-card-body">
-                <span className="challenge-category">{challenge.category.toUpperCase()}</span>
-                <h2>{challenge.title}</h2>
-                <p>{challenge.description}</p>
-              </div>
-
-              <div className="challenge-card-stats">
-                <span>{coreTests} {t('challenges', 'core')}</span>
-                <span>{hiddenTests} {t('challenges', 'hidden')}</span>
-                <span>{challenge.baseScore} {t('challenges', 'pts')}</span>
-                <span>{Math.floor(challenge.timeLimit / 60)} {t('challenges', 'min')}</span>
-              </div>
-
-              <div className="challenge-card-bottom">
-                <div className="challenge-tags">
-                  {challenge.tags.map((tag) => <span key={tag}>#{tag}</span>)}
-                </div>
-                <span className="challenge-arrow">→</span>
-              </div>
-            </Link>
-          )
-        })}
-      </div>
+      <AnimatedList
+        className="challenge-grid"
+        delay={60}
+        initialDelay={120}
+        as="div"
+      >
+        {filteredChallenges.map(renderCard)}
+      </AnimatedList>
 
       {filteredChallenges.length === 0 && (
         <div className="challenges-empty">
           <span>◌</span>
           <strong>{t('challenges', 'noFound')}</strong>
           <p>{t('challenges', 'noFoundBody')}</p>
-          <button className="filter active" onClick={clearFilters}>{t('common', 'clear')}</button>
+          <Magnet padding={24} magnetStrength={5} maxOffset={5}>
+            <button className="filter active" onClick={clearFilters}>{t('common', 'clear')}</button>
+          </Magnet>
         </div>
       )}
     </div>

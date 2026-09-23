@@ -28,6 +28,7 @@ import { runMigrations } from './services/migrations.js'
 import { bootstrapDatabase, refreshDatabase } from './services/databaseSync.js'
 import { isAuthenticated } from './services/authStore.js'
 import usePremiumMotion from './hooks/usePremiumMotion'
+import { ToastProvider } from './components/ui/vibefarsi/Toast'
 
 
 function ArenaRoute() {
@@ -69,8 +70,9 @@ function App() {
   return (
     <ThemeProvider>
       <I18nProvider>
-        <ErrorBoundary>
-          <Routes>
+        <ToastProvider>
+          <ErrorBoundary>
+            <Routes>
             <Route path="/" element={<Landing />} />
 
             <Route element={<ProtectedShell ready={ready} />}>
@@ -99,8 +101,9 @@ function App() {
             <Route path="/terms" element={<ComingSoon title="Terms" />} />
 
             <Route path="*" element={<Navigate to="/home" replace />} />
-          </Routes>
-        </ErrorBoundary>
+            </Routes>
+          </ErrorBoundary>
+        </ToastProvider>
       </I18nProvider>
     </ThemeProvider>
   )

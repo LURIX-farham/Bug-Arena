@@ -1,0 +1,24 @@
+.animated-list__item {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.animated-list--visible .animated-list__item {
+  animation: animated-list-enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--anim-delay, 0ms);
+}
+
+@keyframes animated-list-enter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-list__item {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}

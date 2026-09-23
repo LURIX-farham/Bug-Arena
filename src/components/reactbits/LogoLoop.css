@@ -1,0 +1,40 @@
+.logo-loop {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+
+  /* Soft edge fades so items dissolve instead of clipping hard. */
+  mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+}
+
+.logo-loop__track {
+  display: flex;
+  width: max-content;
+  animation: logo-loop-scroll var(--loop-duration, 34s) linear infinite;
+}
+
+.logo-loop--reverse .logo-loop__track {
+  animation-direction: reverse;
+}
+
+.logo-loop--pause:hover .logo-loop__track {
+  animation-play-state: paused;
+}
+
+.logo-loop__content {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+@keyframes logo-loop-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-loop__track {
+    animation: none;
+  }
+}

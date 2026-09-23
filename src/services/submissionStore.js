@@ -2,6 +2,8 @@ import { emitArenaEvent, ARENA_EVENTS } from './eventBus.js'
 import { enqueueSyncAction, removeSyncAction } from './syncQueue.js'
 import { apiRequest } from './apiClient.js'
 import { isAuthenticated } from './authStore.js'
+import { bumpLocalServerStats } from './playerStore.js'
+import { hydrateLeaderboardFromServer } from './leaderboardStore.js'
 
 const STORAGE_KEY = 'bug-arena-submissions'
 const MAX_CODE_LENGTH = 200_000
@@ -102,9 +104,7 @@ export function saveSubmission(submission) {
     : 0
   const delta = Math.max(0, incoming.score - previousBest)
   if (delta > 0) {
-    import('./playerStore.js')
-      .then((mod) => mod.bumpLocalServerStats?.({ scoreDelta: delta, xpDelta: delta }))
-      .catch(() => undefined)
+    bumpLocalServerStats?.({ scoreDelta: delta, xpDelta: delta })
   }
 
   if (isAuthenticated()) {
@@ -139,9 +139,7 @@ export function saveSubmission(submission) {
           }
         }
         // Refresh leaderboard so ranking reflects the new score immediately.
-        import('./leaderboardStore.js')
-          .then((mod) => mod.hydrateLeaderboardFromServer?.())
-          .catch(() => undefined)
+        hydrateLeaderboardFromServer().catch(() => undefined)
       })
       .catch(() => undefined)
   }

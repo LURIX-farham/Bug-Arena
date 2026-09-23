@@ -1,0 +1,19 @@
+.animated-counter {
+  /* Inherits font-family / size / weight from parent so it slots into
+     stat values, rating numbers, and inline labels without overrides. */
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+}
+
+/* Persian digits use Vazirmatn via globals.css; counter stays consistent. */
+html[lang='fa'] .animated-counter {
+  font-family: var(--font-fa);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-counter {
+    /* Nothing to disable — the JS path already snaps to final value. */
+  }
+}

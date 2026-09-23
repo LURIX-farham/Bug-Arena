@@ -2879,3 +2879,86 @@ section[id] {
     animation: none !important;
   }
 }
+
+/* ========== React Bits: Aurora + Text animations ========== */
+
+.hero-with-aurora {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-aurora-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.55;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, black 40%, transparent 95%);
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 95%);
+}
+
+.hero-with-aurora .hero-content,
+.hero-with-aurora .hero-demo {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-title-animated {
+  display: block;
+}
+
+.hero-title-animated .hero-blur-line {
+  margin: 0;
+  display: inline-flex;
+  flex-wrap: wrap;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+.hero-title-animated .hero-gradient-accent {
+  display: inline-block;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+.hero-title-animated .hero-gradient-accent .text-content {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+/* Soften GradientText border look for hero */
+.hero-title-animated .animated-gradient-text {
+  background: transparent;
+  backdrop-filter: none;
+  border-radius: 0;
+  cursor: default;
+}
+
+.hero-title-animated .animated-gradient-text.with-border {
+  padding: 0;
+}
+
+/* Reduced motion: disable heavy effects */
+@media (prefers-reduced-motion: reduce) {
+  .hero-aurora-bg {
+    display: none;
+  }
+
+  .hero-title-animated .hero-blur-line span {
+    filter: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Dark / light theme adjustments for aurora intensity */
+[data-theme='light'] .hero-aurora-bg {
+  opacity: 0.35;
+}
