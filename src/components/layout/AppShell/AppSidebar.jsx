@@ -75,6 +75,32 @@ function writeCollapsedPreference(collapsed) {
   }
 }
 
+/* Panel-collapse glyph for the inline (expanded-state) trigger.
+   stroke="currentColor" -> inherits theme colors; the RTL flip is
+   handled in CSS (html[dir='rtl']) instead of utility classes. */
+function SidebarCollapseIcon() {
+  return (
+    <svg
+      className="sidebar-collapse-icon"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M6 2V14M5.2 2H10.8C11.9201 2 12.4802 2 12.908 2.21799C13.2843 2.40973 13.5903 2.71569 13.782 3.09202C14 3.51984 14 4.0799 14 5.2V10.8C14 11.9201 14 12.4802 13.782 12.908C13.5903 13.2843 13.2843 13.5903 12.908 13.782C12.4802 14 11.9201 14 10.8 14H5.2C4.07989 14 3.51984 14 3.09202 13.782C2.71569 13.5903 2.40973 13.2843 2.21799 12.908C2 12.4802 2 11.9201 2 10.8V5.2C2 4.07989 2 3.51984 2.21799 3.09202C2.40973 2.71569 2.71569 2.40973 3.09202 2.21799C3.51984 2 4.0799 2 5.2 2Z"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.33"
+      />
+    </svg>
+  )
+}
+
 function AppSidebar() {
   const { t } = useI18n()
   const [collapsed, setCollapsed] = useState(readCollapsedPreference)
@@ -108,18 +134,20 @@ function AppSidebar() {
   return (
     <aside className={`app-sidebar${collapsed ? ' collapsed' : ''}`}>
 
-      {/* Edge-mounted collapse toggle — straddles the sidebar border,
-          so it never eats into the content width of either state. */}
-      <button
-        type="button"
-        className="sidebar-collapse"
-        onClick={toggleCollapsed}
-        aria-label={collapsed ? t('nav', 'expandSidebar') : t('nav', 'collapseSidebar')}
-        aria-expanded={!collapsed}
-        title={collapsed ? t('nav', 'expandSidebar') : t('nav', 'collapseSidebar')}
-      >
-        <span className="sidebar-collapse-chevron" aria-hidden="true">❮</span>
-      </button>
+      {/* Collapsed state only: the floating edge toggle comes back —
+          it straddles the rail border and expands the sidebar again. */}
+      {collapsed && (
+        <button
+          type="button"
+          className="sidebar-collapse"
+          onClick={toggleCollapsed}
+          aria-label={t('nav', 'expandSidebar')}
+          aria-expanded="false"
+          title={t('nav', 'expandSidebar')}
+        >
+          <span className="sidebar-collapse-chevron" aria-hidden="true">❮</span>
+        </button>
+      )}
 
       <div className="sidebar-top">
 
@@ -129,7 +157,6 @@ function AppSidebar() {
           aria-label="Bug Arena"
         >
           <span className="app-logo-full">
-            
             <GradientText
               as="span"
               className="app-logo-arena"
@@ -139,18 +166,31 @@ function AppSidebar() {
             >
               BUG<span>//</span>ARENA
             </GradientText>
-            
           </span>
 
-          {/* فقط در حالت جمع‌شده دیده می‌شود */}
           <span className="app-logo-mini" aria-hidden="true">
             B<span>//</span>A
           </span>
         </Link>
 
-        <span className="sidebar-version">
-          <ShinyText text="v1.9" speed={5.5} />
-        </span>
+        {/* Expanded state only: the inline panel-collapse trigger
+            (SVG glyph) lives inside the sidebar, beside the version. */}
+        {!collapsed && (
+          <div className="sidebar-top-actions">
+            
+
+            <button
+              type="button"
+              className="sidebar-collapse-inline"
+              onClick={toggleCollapsed}
+              aria-label={t('nav', 'collapseSidebar')}
+              aria-expanded="true"
+              title={t('nav', 'collapseSidebar')}
+            >
+              <SidebarCollapseIcon />
+            </button>
+          </div>
+        )}
 
       </div>
 

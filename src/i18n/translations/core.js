@@ -10,6 +10,8 @@ export const core = {
       home: 'Home', challenges: 'Challenges', leaderboard: 'Leaderboard', competePage: 'Compete', duelPage: 'Duel', replays: 'Replays', analytics: 'Analytics', profile: 'Profile',
       tournaments: 'Tournaments', achievements: 'Achievements', settings: 'Settings', main: 'MAIN', compete: 'COMPETE',
       systemOnline: 'SYSTEM ONLINE', systemOffline: 'OFFLINE MODE', allSystems: 'ALL SYSTEMS OPERATIONAL', offlineMode: 'LOCAL DATA ONLY', system: 'System',
+      collapseSidebar: 'Collapse sidebar', expandSidebar: 'Expand sidebar',
+      
     },
     common: {
       english: 'English', persian: 'فارسی', save: 'Save', back: 'Back', search: 'Search', clear: 'Clear filters',
@@ -97,6 +99,7 @@ export const core = {
       home: 'خانه', challenges: 'چالش‌ها', leaderboard: 'رتبه‌بندی', competePage: 'رقابت', duelPage: 'دوئل', replays: 'بازپخش‌ها', analytics: 'تحلیل‌ها', profile: 'پروفایل',
       tournaments: 'مسابقات', achievements: 'دستاوردها', settings: 'تنظیمات', main: 'اصلی', compete: 'رقابت',
       systemOnline: 'سیستم آنلاین', systemOffline: 'حالت آفلاین', allSystems: 'همه سیستم‌ها فعال هستند', offlineMode: 'فقط داده‌های محلی', system: 'سیستم',
+      collapseSidebar: 'جمع کردن منو', expandSidebar: 'باز کردن منو',
     },
     common: {
       english: 'English', persian: 'فارسی', save: 'ذخیره', back: 'بازگشت', search: 'جست‌وجو', clear: 'پاک کردن فیلترها',
@@ -178,9 +181,5 @@ export const core = {
       saved: 'انتخاب تم به‌صورت خودکار ذخیره می‌شود.',
     },
     boot: { connecting: 'در حال اتصال به ARENA...' },
-    // en:
-    collapseSidebar: 'Collapse sidebar', expandSidebar: 'Expand sidebar',
-    // fa:
-    collapseSidebar: 'جمع کردن منو', expandSidebar: 'باز کردن منو',
   },
 }
