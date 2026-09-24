@@ -1201,7 +1201,7 @@ html[dir='rtl'] .sidebar-link:hover .sidebar-text {
   align-items: center;
   gap: 10px;
 
-  margin-top: 10px;
+  margin-top: auto;
   padding: 12px;
 
   border: 1px solid var(--border);
@@ -1458,182 +1458,290 @@ html[dir='rtl'] .sidebar-link:hover .sidebar-text {
   }
 }
 
-
 /* =====================================================================
-   SIDEBAR COLLAPSE — انیمیشن جمع‌شدن (سازگار با RTL)
+   SIDEBAR COLLAPSE — animated minimal rail (edge toggle + tooltips)
+   All rules logical-property safe: RTL mirrors automatically.
 ===================================================================== */
+
+/* ---- Sidebar animates between the two widths ---- */
 .app-sidebar {
   transition:
     width var(--duration-slow) var(--ease-out),
     padding var(--duration-slow) var(--ease-out);
 }
 
-/* ---- دکمه لبه‌ای ---- */
+/* ---- Edge-mounted toggle: straddles the sidebar border ---- */
 .sidebar-collapse {
   position: absolute;
+
   top: 38px;
   inset-inline-end: -11px;
+
   z-index: 5;
+
   width: 22px;
   height: 22px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   padding: 0;
+
   border: 1px solid var(--border-strong);
   border-radius: 50%;
+
   background: var(--bg-surface);
+
   color: var(--text-muted);
+
   cursor: pointer;
+
   box-shadow: 0 2px 10px rgba(var(--shadow-color), 0.35);
+
   transition:
     color var(--duration-base) ease,
     border-color var(--duration-base) ease,
     box-shadow var(--duration-base) ease,
     transform var(--duration-base) var(--ease-spring);
 }
+
 .sidebar-collapse:hover {
   color: var(--accent);
+
   border-color: rgba(var(--accent-rgb), 0.55);
+
   box-shadow: 0 0 16px rgba(var(--accent-rgb), 0.3);
+
   transform: scale(1.12);
 }
-.sidebar-collapse:active { transform: scale(0.94); }
+
+.sidebar-collapse:active {
+  transform: scale(0.94);
+}
+
 .sidebar-collapse:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
 .sidebar-collapse-chevron {
   display: block;
+
   font-size: 9px;
   line-height: 1;
+
   transition: transform var(--duration-slow) var(--ease-out);
 }
-.app-sidebar.collapsed .sidebar-collapse-chevron { transform: rotate(180deg); }
-html[dir='rtl'] .sidebar-collapse-chevron { transform: rotate(180deg); }
-html[dir='rtl'] .app-sidebar.collapsed .sidebar-collapse-chevron { transform: rotate(0deg); }
 
-/* ---- حالت جمع‌شده: ریل ۷۶ پیکسلی ---- */
+/* Chevron semantics: it always points toward the sidebar edge while
+   expanded ("pull the rail in") and toward the content when collapsed. */
+.app-sidebar.collapsed .sidebar-collapse-chevron {
+  transform: rotate(180deg);
+}
+
+/* RTL: the sidebar sits on the physical right, so the base glyph is
+   already mirrored. */
+html[dir='rtl'] .sidebar-collapse-chevron {
+  transform: rotate(180deg);
+}
+
+html[dir='rtl'] .app-sidebar.collapsed .sidebar-collapse-chevron {
+  transform: rotate(0deg);
+}
+
+/* ---- Collapsed rail: 76px icon column ---- */
 .app-sidebar.collapsed {
   width: 76px;
+
   padding: 25px 13px;
 }
 
-/* محتوای اصلی دنبال سایدبار می‌آید */
+/* Main content follows the rail (sidebar precedes .app-main in the DOM) */
 .app-sidebar.collapsed + .app-main {
   width: calc(100% - 76px);
+
   margin-left: 76px;
 }
+
 html[dir='rtl'] .app-sidebar.collapsed + .app-main {
   margin-left: 0;
   margin-right: 76px;
 }
 
-/* ---- لوگو: مونوگرام جای وردمارک ---- */
+/* ---- Top area: monogram replaces the wordmark ---- */
 .app-logo-mini {
   display: none;
+
   color: var(--text-primary);
+
   font-size: 13px;
   font-weight: 800;
 }
+
 .app-sidebar.collapsed .sidebar-top {
   justify-content: center;
+
   padding: 0 0 26px;
 }
+
 .app-sidebar.collapsed .app-logo-full,
 .app-sidebar.collapsed .sidebar-version {
   display: none;
 }
+
 .app-sidebar.collapsed .app-logo-mini {
   display: inline-flex;
+
   animation: collapseFadeIn var(--duration-slow) var(--ease-out);
 }
+
 @keyframes collapseFadeIn {
-  from { opacity: 0; transform: scale(0.6); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-/* ---- لینک‌ها فقط آیکون ---- */
+/* ---- Links become centered icon rows ---- */
 .sidebar-icon {
   position: relative;
+
   flex-shrink: 0;
 }
-.sidebar-text { white-space: nowrap; }
+
+.sidebar-text {
+  white-space: nowrap;
+}
 
 .app-sidebar.collapsed .sidebar-link {
   justify-content: center;
+
   gap: 0;
+
   padding-inline: 0;
-  overflow: visible;
+
+  overflow: visible; /* let hover tooltips escape the row */
 }
+
+/* Labels/index collapse out of the flow and fade — no clipped-text
+   artifacts while the width animates. */
 .app-sidebar.collapsed .sidebar-text {
   position: absolute;
+
   inset-inline-start: 12px;
+
   opacity: 0;
+
   pointer-events: none;
+
   transition: opacity 0.12s ease;
 }
-.app-sidebar.collapsed .sidebar-index { display: none; }
+
+.app-sidebar.collapsed .sidebar-index {
+  display: none;
+}
+
+/* Section labels fade away and keep acting as vertical rhythm */
 .app-sidebar.collapsed .sidebar-label {
   opacity: 0;
+
   margin: 14px 0 10px;
+
   font-size: 0;
+
   pointer-events: none;
+
   transition: opacity 0.12s ease;
 }
+
+/* Expanding: labels/text re-enter with a soft fade */
 .app-sidebar:not(.collapsed) .sidebar-text {
   animation: collapseFadeIn var(--duration-slow) var(--ease-out);
 }
 
-/* ---- تولتیپ هنگام هاور روی آیکون‌ها ---- */
+/* ---- Hover tooltip on icons (collapsed rail only) ---- */
 .app-sidebar.collapsed .sidebar-link:hover .sidebar-icon::after {
   content: attr(data-tip);
+
   position: absolute;
+
   top: 50%;
   inset-inline-start: calc(100% + 14px);
+
   transform: translateY(-50%);
+
   z-index: 20;
+
   padding: 7px 12px;
+
   border: 1px solid var(--border-strong);
   border-radius: 8px;
+
   background: var(--bg-surface);
+
   color: var(--text-primary);
+
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.04em;
+
   white-space: nowrap;
+
   box-shadow: var(--shadow-md);
+
   animation: collapseTooltipIn var(--duration-fast) ease;
+
   pointer-events: none;
 }
+
 @keyframes collapseTooltipIn {
-  from { opacity: 0; transform: translateY(-50%) translateX(4px); }
-  to   { opacity: 1; transform: translateY(-50%) translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
 }
 
-/* ---- کارت بازیکن: فقط آواتار ---- */
+/* ---- Player card collapses to the bare avatar ---- */
 .app-sidebar.collapsed .sidebar-player {
   justify-content: center;
+
   padding: 6px;
+
   border-color: transparent;
+
   background: transparent;
 }
+
 .app-sidebar.collapsed .sidebar-player:hover {
   border-color: rgba(var(--accent-rgb), 0.4);
+
   background: rgba(var(--accent-rgb), 0.06);
 }
+
 .app-sidebar.collapsed .sidebar-player-body,
 .app-sidebar.collapsed .sidebar-player-state {
   display: none;
 }
 
-/* ---- کاهش حرکت ---- */
+/* ---- Reduced motion: collapse instantly, no travel ---- */
 @media (prefers-reduced-motion: reduce) {
   .app-sidebar,
   .sidebar-collapse,
   .sidebar-collapse-chevron {
     transition: none;
   }
+
   .app-sidebar.collapsed .app-logo-mini,
   .app-sidebar:not(.collapsed) .sidebar-text,
   .app-sidebar.collapsed .sidebar-link:hover .sidebar-icon::after {

@@ -177,7 +177,6 @@ function AppSidebar() {
             (SVG glyph) lives inside the sidebar, beside the version. */}
         {!collapsed && (
           <div className="sidebar-top-actions">
-            
 
             <button
               type="button"

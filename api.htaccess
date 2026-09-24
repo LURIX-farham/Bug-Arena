@@ -1,0 +1,35 @@
+# =====================================================================
+# Bug Arena — api/.htaccess  (inside the uploaded backend folder)
+# Place at  public_html/api/.htaccess
+# Every request under /api is routed through the single front
+# controller (public/index.php). Direct access to internals, logs,
+# the installer and test files is denied outright.
+# =====================================================================
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /api
+
+  # ---- Hard-deny sensitive paths and files (defense in depth) ----
+  RewriteRule ^(src|config|database|logs|routes)(/|$) - [F,L]
+  RewriteRule ^(setup\.php|test_api\.php|test-cli\.php)$ - [F,L]
+  RewriteRule (^|/)\. - [F,L]
+
+  # ---- Everything goes through the front controller ----
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ public/index.php [L]
+</IfModule>
+
+# ---- PHP files outside public/ can never be executed directly ----
+<FilesMatch "^(setup\.php|test_api\.php|test-cli\.php)$">
+  Require all denied
+</FilesMatch>
+<FilesMatch "\.(sql|log|md|env)$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+</IfModule>

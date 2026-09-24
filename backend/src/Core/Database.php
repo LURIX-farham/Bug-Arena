@@ -77,12 +77,15 @@ final class Database
             }
 
             // Make sure the browser receives the real 503 JSON instead of a
-            // CORS-blocked opaque "Failed to fetch" network error.
+            // CORS-blocked opaque "Failed to fetch" network error. The raw
+            // PDO message is production-sensitive (it can name the DB host
+            // or user), so it is only exposed when debug mode is on.
             \BugArena\Middleware\CorsMiddleware::emitHeaders();
+            $debug = (bool) ($GLOBALS['bug_arena_config']['app']['debug'] ?? false);
             Response::json([
                 'ok' => false,
                 'error' => 'database_unavailable',
-                'reason' => self::$lastError,
+                'reason' => $debug ? self::$lastError : null,
             ], 503);
         }
         return self::$pdo;

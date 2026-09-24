@@ -81,7 +81,7 @@ function Profile() {
   const dotActive = isDark ? 'rgba(124, 255, 107, 0.7)' : 'rgba(37, 99, 235, 0.45)'
 
   const statCards = [
-    { label: t('profile', 'score'), value: player.score, tone: 'accent' },
+    { label: t('profile', 'totalXp'), value: progression.xp, tone: 'accent' },
     { label: t('profile', 'solvedChallenges'), value: progression.solved, tone: 'secondary' },
     { label: t('profile', 'hardened'), value: progression.hardened, tone: 'tertiary' },
     { label: t('profile', 'bestStreak'), value: progression.bestStreak, tone: 'success' },
@@ -187,7 +187,7 @@ function Profile() {
                     duration={1.6}
                     delay={0.2}
                   />
-                  <small> {t('profile', 'score')}</small>
+                  <small> {t('profile', 'xpTotal')}</small>
                 </strong>
                 <span>{t('profile', 'xpToNext').replace('{xp}', levelProgress.remainingXp ?? 0)}</span>
               </div>

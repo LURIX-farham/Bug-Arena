@@ -1,0 +1,71 @@
+# =====================================================================
+# Bug Arena — public_html/.htaccess  (site root)
+# Put this file NEXT TO index.html of the built SPA (public_html).
+# Requires Apache with mod_rewrite + AllowOverride All (cPanel default).
+# =====================================================================
+
+Options -Indexes
+
+# ---------------------------------------------------------------------
+# 1) HTTPS — force TLS for every request (enable after SSL is active)
+# ---------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ---------------------------------------------------------------------
+# 2) Never serve dotfiles or environment files (.env holds DB creds)
+# ---------------------------------------------------------------------
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+<FilesMatch "\.(env|sql|log|md)$">
+  Require all denied
+</FilesMatch>
+
+# ---------------------------------------------------------------------
+# 3) Security headers
+# ---------------------------------------------------------------------
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  # Moderate CSP: 'unsafe-inline' for styles is required by React inline styles.
+  # If everything works you can tighten script-src further later.
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+  # HSTS — uncomment ONLY when HTTPS works end-to-end
+  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# ---------------------------------------------------------------------
+# 4) The API lives in /api — never send those paths to the SPA
+# ---------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^api/ - [L]
+</IfModule>
+
+# ---------------------------------------------------------------------
+# 5) SPA fallback — every non-file path serves index.html
+# ---------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# ---------------------------------------------------------------------
+# 6) Cache hashed build assets aggressively; keep HTML fresh
+# ---------------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>

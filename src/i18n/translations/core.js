@@ -11,7 +11,6 @@ export const core = {
       tournaments: 'Tournaments', achievements: 'Achievements', settings: 'Settings', main: 'MAIN', compete: 'COMPETE',
       systemOnline: 'SYSTEM ONLINE', systemOffline: 'OFFLINE MODE', allSystems: 'ALL SYSTEMS OPERATIONAL', offlineMode: 'LOCAL DATA ONLY', system: 'System',
       collapseSidebar: 'Collapse sidebar', expandSidebar: 'Expand sidebar',
-      
     },
     common: {
       english: 'English', persian: 'فارسی', save: 'Save', back: 'Back', search: 'Search', clear: 'Clear filters',
