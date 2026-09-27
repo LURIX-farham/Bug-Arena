@@ -13,6 +13,14 @@ import balancedBrackets from './balanced-brackets.js'
 import normalizeEmail from './normalize-email.js'
 import rollingErrors from './rolling-errors.js'
 import priorityQueue from './priority-queue.js'
+import offByOneSlice from './off-by-one-slice.js'
+import mutableDefault from './mutable-default.js'
+import integerDivision from './integer-division.js'
+import shallowCopyBug from './shallow-copy-bug.js'
+import floatEquality from './float-equality.js'
+import closureLateBinding from './closure-late-binding.js'
+import recursionBaseCase from './recursion-base-case.js'
+import dictKeyError from './dict-key-error.js'
 
 const challengeList = [
   brokenFilter,
@@ -22,6 +30,8 @@ const challengeList = [
   cacheKeyCollision,
   boundaryWindow, quotaGuard, casefoldIndex, mergeIntervals, frequencyRank, parseVersion,
   balancedBrackets, normalizeEmail, rollingErrors, priorityQueue,
+  offByOneSlice, mutableDefault, integerDivision, shallowCopyBug,
+  floatEquality, closureLateBinding, recursionBaseCase, dictKeyError,
 ]
 
 export const challengeRegistry =

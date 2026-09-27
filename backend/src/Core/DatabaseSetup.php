@@ -83,6 +83,19 @@ final class DatabaseSetup
                 self::runSqlFile($server, dirname(__DIR__, 2) . '/database/seed_challenges.sql');
                 Logger::info('db_setup', 'seed_challenges.sql imported');
             }
+
+            // Ensure admin column + seeded ladder players exist on every boot.
+            // Migration is idempotent (IF NOT EXISTS / WHERE NOT EXISTS).
+            $adminCol = $server->query("SHOW COLUMNS FROM users LIKE 'is_admin'")->fetch();
+            $seedPath = dirname(__DIR__, 2) . '/database/migrations/004_admin_and_seed_users.sql';
+            if ($adminCol === false || is_readable($seedPath)) {
+                try {
+                    self::runSqlFile($server, $seedPath);
+                    Logger::info('db_setup', '004_admin_and_seed_users applied');
+                } catch (Throwable $migrationError) {
+                    Logger::error('db_setup', 'migration 004: ' . $migrationError->getMessage());
+                }
+            }
         } catch (Throwable $e) {
             Logger::error('db_setup', $e->getMessage());
             return null;

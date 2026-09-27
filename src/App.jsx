@@ -22,6 +22,7 @@ import { ThemeProvider } from './theme/ThemeProvider'
 import Settings from './pages/Settings/Settings'
 import Competitive from './pages/Competitive/Competitive'
 import System from './pages/System/System'
+import Admin from './pages/Admin/Admin'
 import DuelLobby from './pages/Duel/DuelLobby'
 import DuelRoom from './pages/Duel/DuelRoom'
 import { runMigrations } from './services/migrations.js'
@@ -93,6 +94,7 @@ function App() {
               <Route path="/achievements" element={<Achievements />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/system" element={<System />} />
+              <Route path="/admin" element={<Admin />} />
             </Route>
 
             <Route path="/login" element={<Auth />} />

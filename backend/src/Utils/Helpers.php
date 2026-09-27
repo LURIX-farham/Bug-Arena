@@ -75,6 +75,7 @@ final class Helpers
             'wins' => (int) $user['wins'],
             'losses' => (int) $user['losses'],
             'draws' => (int) $user['draws'],
+            'isAdmin' => (int) ($user['is_admin'] ?? 0) === 1,
             'createdAt' => $user['created_at'],
         ];
         if ($stats !== []) {

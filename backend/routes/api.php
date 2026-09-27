@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use BugArena\Controllers\AdminController;
 use BugArena\Controllers\AchievementController;
 use BugArena\Controllers\AnalyticsController;
 use BugArena\Controllers\AuthController;
@@ -25,6 +26,7 @@ return static function (Router $router): void {
     $replays = new ReplayController();
     $competitive = new CompetitiveController();
     $achievements = new AchievementController();
+    $admin = new AdminController();
     $leaderboard = new LeaderboardController();
     $analytics = new AnalyticsController();
     $events = new EventController();
@@ -105,4 +107,13 @@ return static function (Router $router): void {
 
     // Offline sync batch (idempotent via sync_actions)
     $router->post('/sync', $write(fn ($req) => $sync->store($req)));
+
+    // Admin (requires is_admin session)
+    $router->get('/admin/overview', fn ($req) => $admin->overview($req));
+    $router->get('/admin/users', fn ($req) => $admin->listUsers($req));
+    $router->post('/admin/users/{id}', $write(fn ($req, $params) => $admin->updateUser($req, $params)));
+    $router->get('/admin/challenges', fn ($req) => $admin->listChallenges($req));
+    $router->post('/admin/challenges/{id}/toggle', $write(fn ($req, $params) => $admin->toggleChallenge($req, $params)));
+    $router->get('/admin/submissions', fn ($req) => $admin->listSubmissions($req));
+
 };

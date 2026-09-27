@@ -13,11 +13,6 @@ const navigation = [
     path: '/challenges',
   },
   {
-    label: 'Compete',
-    icon: '⚔',
-    path: '/compete',
-  },
-  {
     label: 'Duel',
     icon: '⚔',
     path: '/duel',
@@ -36,10 +31,15 @@ const navigation = [
 
 function AppMobileNav() {
   const { t } = useI18n()
-  const labels = { Home: t('nav', 'home'), Challenges: t('nav', 'challenges'), Compete: t('nav', 'competePage'), Duel: t('nav', 'duelPage'), Ranks: t('nav', 'leaderboard'), Profile: t('nav', 'profile') }
+  const labels = {
+    Home: t('nav', 'home'),
+    Challenges: t('nav', 'challenges'),
+    Duel: t('nav', 'duelPage'),
+    Ranks: t('nav', 'leaderboard'),
+    Profile: t('nav', 'profile'),
+  }
   return (
     <nav className="app-mobile-nav">
-
       {navigation.map((item) => (
         <NavLink
           key={`${item.path}-${labels[item.label] || item.label}`}
@@ -59,7 +59,6 @@ function AppMobileNav() {
           </small>
         </NavLink>
       ))}
-
     </nav>
   )
 }

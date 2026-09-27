@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
   display_name   VARCHAR(24) NOT NULL,
   password_hash  VARCHAR(255) NOT NULL,
   is_bot         TINYINT(1) NOT NULL DEFAULT 0,
+  is_admin       TINYINT(1) NOT NULL DEFAULT 0,
   rating         INT NOT NULL DEFAULT 1000,
   wins           INT UNSIGNED NOT NULL DEFAULT 0,
   losses         INT UNSIGNED NOT NULL DEFAULT 0,

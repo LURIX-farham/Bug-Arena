@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import { useI18n } from '../../../i18n/useI18n'
 import { getCurrentPlayer } from '../../../services/playerStore'
-import { GradientText, ShinyText, AnimatedCounter } from '../../reactbits'
+import { getAuthUser } from '../../../services/authStore.js'
+import { GradientText , AnimatedCounter } from '../../reactbits'
 
 const mainNavigation = [
   {
@@ -121,9 +122,13 @@ function AppSidebar() {
     return () => { window.removeEventListener('online', update); window.removeEventListener('offline', update) }
   }, [setOnline])
 
-  const labels = { home: t('nav', 'home'), challenges: t('nav', 'challenges'), duel: t('nav', 'duelPage'), leaderboard: t('nav', 'leaderboard'), compete: t('nav', 'competePage'), replays: t('nav', 'replays'), profile: t('nav', 'profile'), analytics: t('nav', 'analytics'), tournaments: t('nav', 'tournaments'), achievements: t('nav', 'achievements') }
+  const labels = { home: t('nav', 'home'), challenges: t('nav', 'challenges'), duel: t('nav', 'duelPage'), leaderboard: t('nav', 'leaderboard'), compete: t('nav', 'competePage'), replays: t('nav', 'replays'), profile: t('nav', 'profile'), analytics: t('nav', 'analytics'), tournaments: t('nav', 'tournaments'), achievements: t('nav', 'achievements'), admin: t('nav', 'admin') || 'Admin' }
   const main = mainNavigation.map((item) => ({ ...item, label: labels[item.label.toLowerCase()] || item.label }))
   const secondary = secondaryNavigation.map((item) => ({ ...item, label: labels[item.label.toLowerCase()] || item.label }))
+  const authUser = getAuthUser()
+  if (authUser?.isAdmin) {
+    secondary.push({ label: labels.admin || 'Admin', icon: '⚙', path: '/admin' })
+  }
 
   // Real player identity — same server-backed snapshot the topbar uses.
   const player = getCurrentPlayer()
