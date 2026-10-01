@@ -50,6 +50,7 @@ final class Database
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES => false,
             ]);
+            self::applySessionDefaults(self::$pdo);
         } catch (Throwable $e) {
             self::$lastError = $e->getMessage();
             Logger::error('db_connect', $e->getMessage());
@@ -67,10 +68,12 @@ final class Database
                             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                             PDO::ATTR_EMULATE_PREPARES => false,
                         ]);
+                        self::applySessionDefaults(self::$pdo);
                     } catch (Throwable $e2) {
                         // Server reachable but retry failed — reuse provisioned handle.
                         self::$lastError = $e2->getMessage();
                         self::$pdo = $provisioned;
+                        self::applySessionDefaults(self::$pdo);
                     }
                     return self::$pdo;
                 }
@@ -105,6 +108,35 @@ final class Database
                 $pdo->rollBack();
             }
             throw $e;
+        }
+    }
+
+    /**
+     * Pin the MySQL session to UTC. NOW(), CURRENT_TIMESTAMP and every
+     * DATETIME column then read back as UTC wall time — the exact frame of
+     * reference that PHP uses after date_default_timezone_set('UTC') in
+     * App::boot(). A shared host often leaves the MySQL server in the system
+     * timezone (UTC), but a per-session SET is the only guarantee that does
+     * not depend on the global my.cnf. The previous code compared MySQL-side
+     * NOW() with PHP-side strtotime()/time() — when the two clocks were in
+     * different timezones, every freshly written duel invitation looked
+     * already expired, so the guest's accept returned 410 "invitation_expired"
+     * and the host's lobby poll flipped the match to "expired" instantly.
+     *
+     * The SET is wrapped in a try/catch: some cPanel users run without
+     * access to the timezone tables, and a hard failure here would break
+     * every request. Falling back to the server's default timezone is still
+     * strictly better than a 500, and the SQL-level comparisons in
+     * DuelController (NOW()-based) keep working regardless of the session tz.
+     */
+    private static function applySessionDefaults(PDO $pdo): void
+    {
+        try {
+            $pdo->exec("SET time_zone = '+00:00'");
+        } catch (\Throwable $e) {
+            // Offset syntax like '+00:00' does not require the tz tables,
+            // so this should never fail in practice — but be defensive.
+            Logger::error('db_session_defaults', 'SET time_zone failed: ' . $e->getMessage());
         }
     }
 }
