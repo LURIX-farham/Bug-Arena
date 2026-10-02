@@ -84,16 +84,10 @@ final class App
     {
         $config = self::boot();
 
-        $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-        $base = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/');
-        if ($base !== '' && $base !== '.' && str_starts_with($path, $base)) {
-            $path = substr($path, strlen($base)) ?: '/';
-        }
-        if ($path === '') {
-            $path = '/';
-        }
+        $path = self::resolveRequestPath();
 
         $request = new Request($path);
+
         (new CorsMiddleware(array_merge(
             $config['cors']['allowed_origins'] ?? [],
             [$config['cors_origin'] ?? '']
@@ -102,5 +96,79 @@ final class App
         $router = new Router();
         (require dirname(__DIR__, 2) . '/routes/api.php')($router);
         $router->dispatch($request);
+    }
+
+    /**
+     * Resolve the route path for hosts that mount the API under /api
+     * (cPanel/LiteSpeed/Apache variants differ in REQUEST_URI / SCRIPT_NAME).
+     */
+    private static function resolveRequestPath(): string
+    {
+        // Prefer values that survive Apache/LiteSpeed rewrites to the front controller.
+        $candidates = [
+            $_SERVER['PATH_INFO'] ?? null,
+            $_SERVER['ORIG_PATH_INFO'] ?? null,
+            $_SERVER['REDIRECT_URL'] ?? null,
+            $_SERVER['REDIRECT_REQUEST_URI'] ?? null,
+            $_SERVER['HTTP_X_ORIGINAL_URL'] ?? null,
+            $_SERVER['HTTP_X_REWRITE_URL'] ?? null,
+            $_SERVER['REQUEST_URI'] ?? null,
+        ];
+
+        $path = '/';
+        foreach ($candidates as $candidate) {
+            if (!is_string($candidate) || $candidate === '') {
+                continue;
+            }
+            $candidatePath = parse_url($candidate, PHP_URL_PATH);
+            if (!is_string($candidatePath) || $candidatePath === '') {
+                continue;
+            }
+            // Skip pure front-controller paths with no route info.
+            $normalized = rtrim($candidatePath, '/');
+            if ($normalized === '' || str_ends_with($normalized, '/index.php') || $normalized === '/index.php') {
+                continue;
+            }
+            $path = $candidatePath;
+            break;
+        }
+
+        // Fallback: SCRIPT_NAME dirname strip on REQUEST_URI
+        if ($path === '/' || $path === '') {
+            $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+            $scriptName = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? ''));
+            $base = rtrim(dirname($scriptName), '/');
+            if ($base !== '' && $base !== '/' && $base !== '.' && str_starts_with($path, $base)) {
+                $remainder = substr($path, strlen($base)) ?: '/';
+                if ($remainder !== '/index.php' && $remainder !== 'index.php') {
+                    $path = $remainder;
+                }
+            }
+        }
+
+        $path = rawurldecode($path);
+
+        foreach (['/api/public', '/api'] as $mount) {
+            if ($path === $mount || str_starts_with($path, $mount . '/')) {
+                $path = substr($path, strlen($mount)) ?: '/';
+            }
+        }
+
+        if (str_starts_with($path, '/index.php/')) {
+            $path = substr($path, strlen('/index.php')) ?: '/';
+        } elseif ($path === '/index.php') {
+            $path = '/';
+        }
+
+        // Drop probe scripts if they ever reach the router
+        if (str_starts_with($path, '/probe-')) {
+            $path = '/';
+        }
+
+        $path = '/' . trim($path, '/');
+        if ($path !== '/') {
+            $path = rtrim($path, '/') ?: '/';
+        }
+        return $path;
     }
 }

@@ -94,6 +94,22 @@ final class Database
         return self::$pdo;
     }
 
+
+    /**
+     * Align MySQL session with PHP UTC so DATETIME comparisons (duel expiry,
+     * sessions, timestamps) are consistent across host php.ini timezones.
+     */
+    private static function applySessionDefaults(PDO $pdo): void
+    {
+        try {
+            $pdo->exec("SET time_zone = '+00:00'");
+            $pdo->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
+        } catch (Throwable $e) {
+            // Non-fatal: connection still usable even if host forbids SET time_zone.
+            Logger::error('db_session_defaults', $e->getMessage());
+        }
+    }
+
     /** Run a callable inside a transaction, rolling back on any throwable. */
     public static function transaction(callable $fn): mixed
     {

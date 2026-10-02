@@ -1,20 +1,33 @@
-# Bug Arena API front controller. Do not hard-code the WAMP project folder here.
+# =====================================================================
+# Bug Arena — api/.htaccess  (inside the uploaded backend folder)
+# Place at  public_html/api/.htaccess
+# =====================================================================
+
 Options -Indexes
 
 <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^ index.php [END,QSA]
+  RewriteEngine On
+  RewriteBase /api
+
+  # ---- Hard-deny sensitive paths and files ----
+  RewriteRule ^(src|config|database|logs|routes)(/|$) - [F,L]
+  RewriteRule ^(setup\.php|test_api\.php|test-cli\.php)$ - [F,L]
+  RewriteRule (^|/)\. - [F,L]
+
+  # ---- Pass pretty URLs to front controller WITH path info ----
+  # PATH_INFO=/auth/login when request is /api/auth/login
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ public/index.php/$1 [L,QSA]
 </IfModule>
+
+<FilesMatch "^(setup\.php|test_api\.php|test-cli\.php)$">
+  Require all denied
+</FilesMatch>
+<FilesMatch "\.(sql|log|md|env)$">
+  Require all denied
+</FilesMatch>
 
 <IfModule mod_headers.c>
-    Header always set X-Content-Type-Options "nosniff"
-    Header always set X-Frame-Options "DENY"
-    Header always set Referrer-Policy "same-origin"
-    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set X-Content-Type-Options "nosniff"
 </IfModule>
-
-<FilesMatch "\.(sql|md|env|log)$">
-    Require all denied
-</FilesMatch>

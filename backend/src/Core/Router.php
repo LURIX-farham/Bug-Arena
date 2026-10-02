@@ -63,11 +63,40 @@ final class Router
         }
 
         // Path matched but wrong verb?
+        $allowed = [];
         foreach ($this->routes as $route) {
             if (preg_match($route['regex'], $request->path) === 1) {
-                header('Allow: ' . $route['method']);
-                Response::error('method_not_allowed', 405);
+                $allowed[] = $route['method'];
             }
+        }
+        if ($allowed !== []) {
+            header('Allow: ' . implode(', ', array_unique($allowed)));
+            $debug = (bool) (($GLOBALS['bug_arena_config']['app']['debug'] ?? false));
+            if ($debug) {
+                Response::json([
+                    'ok' => false,
+                    'error' => 'method_not_allowed',
+                    'path' => $request->path,
+                    'method' => $request->method,
+                    'allowed' => array_values(array_unique($allowed)),
+                    'requestUri' => $_SERVER['REQUEST_URI'] ?? null,
+                    'scriptName' => $_SERVER['SCRIPT_NAME'] ?? null,
+                    'pathInfo' => $_SERVER['PATH_INFO'] ?? null,
+                    'redirectUrl' => $_SERVER['REDIRECT_URL'] ?? null,
+                ], 405);
+            }
+            Response::error('method_not_allowed', 405);
+        }
+        $debug = (bool) (($GLOBALS['bug_arena_config']['app']['debug'] ?? false));
+        if ($debug) {
+            Response::json([
+                'ok' => false,
+                'error' => 'not_found',
+                'path' => $request->path,
+                'method' => $request->method,
+                'requestUri' => $_SERVER['REQUEST_URI'] ?? null,
+                'scriptName' => $_SERVER['SCRIPT_NAME'] ?? null,
+            ], 404);
         }
         Response::error('not_found', 404);
     }
