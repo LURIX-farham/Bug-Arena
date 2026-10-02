@@ -114,6 +114,11 @@ return static function (Router $router): void {
     $router->post('/admin/users/{id}', $write(fn ($req, $params) => $admin->updateUser($req, $params)));
     $router->get('/admin/challenges', fn ($req) => $admin->listChallenges($req));
     $router->post('/admin/challenges/{id}/toggle', $write(fn ($req, $params) => $admin->toggleChallenge($req, $params)));
+    $router->post('/admin/challenges/{id}', $write(fn ($req, $params) => $admin->updateChallenge($req, $params)));
     $router->get('/admin/submissions', fn ($req) => $admin->listSubmissions($req));
+    $router->get('/admin/duels', fn ($req) => $admin->listDuels($req));
+    $router->post('/admin/duels/{id}/cancel', $write(fn ($req, $params) => $admin->cancelDuel($req, $params)));
+    $router->get('/admin/events', fn ($req) => $admin->listEvents($req));
+    $router->get('/admin/system', fn ($req) => $admin->systemHealth($req));
 
 };

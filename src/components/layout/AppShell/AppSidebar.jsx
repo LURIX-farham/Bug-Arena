@@ -3,7 +3,8 @@ import { NavLink, Link } from 'react-router-dom'
 import { useI18n } from '../../../i18n/useI18n'
 import { getCurrentPlayer } from '../../../services/playerStore'
 import { getAuthUser } from '../../../services/authStore.js'
-import { GradientText , AnimatedCounter } from '../../reactbits'
+import { AnimatedCounter } from '../../reactbits'
+import BrandLogo from '../../brand/BrandLogo'
 
 const mainNavigation = [
   {
@@ -156,27 +157,12 @@ function AppSidebar() {
 
       <div className="sidebar-top">
 
-        <Link
-          to="/home"
-          className="app-logo"
-          aria-label="Bug Arena"
-        >
-          <span className="app-logo-full">
-            <GradientText
-              as="span"
-              className="app-logo-arena"
-              colors={['var(--accent)', 'var(--secondary)', 'var(--tertiary)']}
-              animationSpeed={8}
-              pauseOnHover
-            >
-              BUG<span>//</span>ARENA
-            </GradientText>
-          </span>
-
-          <span className="app-logo-mini" aria-hidden="true">
-            B<span>//</span>A
-          </span>
-        </Link>
+        <span className="app-logo-full">
+          <BrandLogo to="/home" size="md" className="app-logo" />
+        </span>
+        <span className="app-logo-mini" aria-hidden="true">
+          <BrandLogo to="/home" size="sm" compact className="app-logo" />
+        </span>
 
         {/* Expanded state only: the inline panel-collapse trigger
             (SVG glyph) lives inside the sidebar, beside the version. */}

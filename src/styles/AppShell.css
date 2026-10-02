@@ -642,7 +642,7 @@
     height: 62px;
 
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, 1fr);
 
     padding: 6px;
 
@@ -1817,5 +1817,40 @@ html[dir='rtl'] .sidebar-collapse-inline svg {
 @media (prefers-reduced-motion: reduce) {
   .sidebar-collapse-inline {
     transition: none;
+  }
+}
+
+
+/* ---- Topbar mobile brand mark (left of search) ---- */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.topbar-mobile-logo {
+  display: none;
+  flex-shrink: 0;
+}
+
+@media (max-width: 760px) {
+  .topbar-mobile-logo {
+    display: inline-flex;
+  }
+
+  .topbar-mobile-logo .brand-logo-mark {
+    width: 30px;
+    height: 30px;
+  }
+
+  .topbar-left {
+    gap: 10px;
+  }
+
+  /* 5 items after removing Compete */
+  .app-mobile-nav {
+    grid-template-columns: repeat(5, 1fr) !important;
   }
 }

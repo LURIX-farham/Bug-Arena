@@ -43,13 +43,15 @@ function Auth() {
     setError('')
     setLoading(true)
     try {
+      let user
       if (isRegister) {
-        await registerAccount({ username, displayName, password })
+        user = await registerAccount({ username, displayName, password })
       } else {
-        await loginAccount({ username, password })
+        user = await loginAccount({ username, password })
       }
       await refreshDatabase()
-      navigate('/home', { replace: true })
+      // Admins land in the exclusive control plane, not the player arena.
+      navigate(user?.isAdmin ? '/admin' : '/home', { replace: true })
     } catch (requestError) {
       setError(authMessage(requestError?.data?.error || requestError?.message, t))
     } finally {
@@ -66,7 +68,7 @@ function Auth() {
         <form onSubmit={submit}>
           <label>{t('auth', 'username')}<input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="programmer" autoComplete="username" required /></label>
           {isRegister && <label>{t('auth', 'displayName')}<input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="PROGRAMMER" autoComplete="name" /></label>}
-          <label>{t('auth', 'password')}<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete={isRegister ? 'new-password' : 'current-password'} required minLength={8} /></label>
+          <label>{t('auth', 'password')}<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete={isRegister ? 'new-password' : 'current-password'} required minLength={5} /></label>
           {error && <div className="auth-error">{error}</div>}
           <Button type="submit" variant="brand" size="lg" disabled={loading}>
             {loading ? t('auth', 'connecting') : (isRegister ? t('auth', 'createAccount') : t('auth', 'signIn'))}

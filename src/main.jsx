@@ -10,6 +10,7 @@ import './styles/components.css'
 import './styles/AppShell.css'
 import './styles/rtl.css'
 import './styles/vibefarsi.css'
+import './components/brand/BrandLogo.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

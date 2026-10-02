@@ -28,7 +28,7 @@ final class LeaderboardController
                     COALESCE(ps.xp, 0) AS xp
              FROM users u
              LEFT JOIN player_statistics ps ON ps.user_id = u.id
-             WHERE u.is_bot = 0 AND u.status = "active" AND u.deleted_at IS NULL
+             WHERE u.is_bot = 0 AND COALESCE(u.is_admin, 0) = 0 AND u.status = "active" AND u.deleted_at IS NULL
              ORDER BY COALESCE(ps.total_score, 0) + COALESCE(ps.duel_points, 0) DESC, COALESCE(ps.xp, 0) DESC, u.created_at ASC
              LIMIT ' . $limit
         );
@@ -54,7 +54,7 @@ final class LeaderboardController
         }
 
         $totalStmt = $pdo->query(
-            'SELECT COUNT(*) FROM users WHERE is_bot = 0 AND status = "active" AND deleted_at IS NULL'
+            'SELECT COUNT(*) FROM users WHERE is_bot = 0 AND COALESCE(is_admin, 0) = 0 AND status = "active" AND deleted_at IS NULL'
         );
         Response::json([
             'ok' => true,

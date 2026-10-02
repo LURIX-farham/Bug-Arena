@@ -23,6 +23,7 @@ import Settings from './pages/Settings/Settings'
 import Competitive from './pages/Competitive/Competitive'
 import System from './pages/System/System'
 import Admin from './pages/Admin/Admin'
+import AdminShell from './components/layout/AdminShell/AdminShell'
 import DuelLobby from './pages/Duel/DuelLobby'
 import DuelRoom from './pages/Duel/DuelRoom'
 import { runMigrations } from './services/migrations.js'
@@ -94,9 +95,14 @@ function App() {
               <Route path="/achievements" element={<Achievements />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/system" element={<System />} />
-              <Route path="/admin" element={<Admin />} />
             </Route>
 
+
+            {/* Exclusive admin control plane — not the player AppShell */}
+            <Route path="/admin" element={<AdminShell />}>
+              <Route index element={<Admin />} />
+              <Route path=":section" element={<Admin />} />
+            </Route>
             <Route path="/login" element={<Auth />} />
             <Route path="/register" element={<Auth />} />
             <Route path="/privacy" element={<ComingSoon title="Privacy" />} />

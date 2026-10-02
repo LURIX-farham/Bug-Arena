@@ -137,7 +137,7 @@ final class AuthController
         $rankStmt = $pdo->prepare(
             'SELECT 1 + COUNT(*) AS position FROM users u
              LEFT JOIN player_statistics ps ON ps.user_id = u.id
-             WHERE u.is_bot = 0 AND u.status = "active" AND u.deleted_at IS NULL
+             WHERE u.is_bot = 0 AND COALESCE(u.is_admin, 0) = 0 AND u.status = "active" AND u.deleted_at IS NULL
                AND (
                  COALESCE(ps.xp, 0) > ?
                  OR (COALESCE(ps.xp, 0) = ? AND COALESCE(ps.total_score, 0) + COALESCE(ps.duel_points, 0) > ?)

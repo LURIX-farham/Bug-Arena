@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 
 import { useI18n } from '../../../i18n/useI18n'
+import BrandLogo from '../../../components/brand/BrandLogo'
 
 function LandingFooter() {
   const { t } = useI18n()
@@ -45,12 +46,7 @@ function LandingFooter() {
 
           <div className="footer-brand">
 
-            <Link
-              to="/"
-              className="footer-logo"
-            >
-              BUG<span>//</span>ARENA
-            </Link>
+            <BrandLogo to="/" size="lg" className="footer-logo" />
 
             <p>
               {t('landing', 'heroTitle1')}

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useI18n } from '../../i18n/useI18n'
 import ThemeToggle from '../ui/ThemeToggle'
 import LanguageToggle from '../ui/LanguageToggle'
+import BrandLogo from '../brand/BrandLogo'
 
 function Navbar() {
   const { t } = useI18n()
@@ -32,9 +33,7 @@ function Navbar() {
     >
       <div className="navbar-inner">
 
-        <Link to="/" className="navbar-logo">
-          BUG<span>//</span>ARENA
-        </Link>
+        <BrandLogo to="/" size="md" className="navbar-logo" />
 
         <nav
           className={

@@ -183,7 +183,8 @@ final class DuelController
         $payload = Database::transaction(function (\PDO $pdo) use ($userId, $invitationId) {
             $stmt = $pdo->prepare(
                 'SELECT i.id AS inv_pk, i.to_user_id, i.match_id AS match_pk, i.status AS inv_status, i.expires_at,
-                        m.public_id AS match_id, m.status AS match_status, m.guest_id, m.difficulty, m.bug_type
+                        m.public_id AS match_id, m.status AS match_status, m.guest_id, m.difficulty, m.bug_type,
+                        (i.expires_at >= NOW()) AS is_still_valid
                  FROM duel_invitations i
                  JOIN duel_matches m ON m.id = i.match_id
                  WHERE i.public_id = ?
@@ -197,7 +198,15 @@ final class DuelController
             if ($row['inv_status'] === 'accepted') {
                 return ['existing' => true, 'matchId' => $row['match_id']];
             }
-            if ($row['inv_status'] !== 'sent' || strtotime((string) $row['expires_at']) < time()
+            // Expiry is checked with MySQL's NOW() (is_still_valid column)
+            // instead of PHP's time()/strtotime(). When the PHP and MySQL
+            // session timezones disagreed (the original bug), the PHP check
+            // treated freshly created invitations as already expired and
+            // returned 410 "invitation_expired" the instant the guest tried
+            // to accept — even though listInvites() (which uses
+            // i.expires_at >= NOW()) had just shown it as live.
+            if ($row['inv_status'] !== 'sent'
+                || !(isset($row['is_still_valid']) && (int) $row['is_still_valid'] === 1)
                 || $row['match_status'] !== 'pending') {
                 Helpers::fail('invitation_expired', 410);
             }
@@ -387,12 +396,19 @@ final class DuelController
 
             // Shared clock: remaining time is derived from started_at so neither
             // client can claim more (or less) time than the official window.
+            // Compute the elapsed seconds via SQL so PHP's timezone can never
+            // disagree with the timezone that wrote started_at.
             $limit = (float) $match['time_limit'];
             $serverRemaining = $limit;
             if (!empty($match['started_at'])) {
-                $startTs = strtotime((string) $match['started_at']);
-                if ($startTs !== false) {
-                    $elapsed = max(0.0, (float) (time() - $startTs));
+                $elapsedStmt = $pdo->prepare(
+                    'SELECT GREATEST(0, TIMESTAMPDIFF(SECOND, started_at, NOW())) AS elapsed_seconds
+                     FROM duel_matches WHERE id = ?'
+                );
+                $elapsedStmt->execute([(int) $match['id']]);
+                $elapsedRow = $elapsedStmt->fetch();
+                if ($elapsedRow !== false) {
+                    $elapsed = max(0.0, (float) $elapsedRow['elapsed_seconds']);
                     $serverRemaining = max(0.0, $limit - $elapsed);
                 }
             }
@@ -600,15 +616,36 @@ final class DuelController
     /** Lazy state transitions so abandoned matches never block anyone. */
     private static function lazyResolve(array $match): array
     {
-        if ($match['status'] === 'pending'
-            && strtotime((string) $match['created_at']) < time() - self::INVITATION_TTL_SECONDS - self::EXPIRE_GRACE_SECONDS) {
-            Database::pdo()->prepare('UPDATE duel_matches SET status = "expired" WHERE id = ? AND status = "pending"')
-                ->execute([(int) $match['id']]);
-            $match['status'] = 'expired';
+        // All comparisons use MySQL's NOW() (single SQL query) instead of
+        // PHP's time()/strtotime(). The original code compared a UTC DATETIME
+        // column against PHP's clock; when php.ini left PHP in Asia/Tehran
+        // but MySQL was in UTC, PHP thought the match had been pending
+        // ~3.5h longer than reality, so lazyResolve() flipped a freshly
+        // created match to "expired" on the very first GET /duel/matches/{id}
+        // poll — the host saw "The duel expired with no opponent." even
+        // though the invitation was seconds old.
+        if ($match['status'] === 'pending') {
+            $ageStmt = Database::pdo()->prepare(
+                'SELECT (created_at < NOW() - INTERVAL ' . (self::INVITATION_TTL_SECONDS + self::EXPIRE_GRACE_SECONDS) . ' SECOND) AS is_old
+                 FROM duel_matches WHERE id = ?'
+            );
+            $ageStmt->execute([(int) $match['id']]);
+            $ageRow = $ageStmt->fetch();
+            if ($ageRow && (int) $ageRow['is_old'] === 1) {
+                Database::pdo()->prepare('UPDATE duel_matches SET status = "expired" WHERE id = ? AND status = "pending"')
+                    ->execute([(int) $match['id']]);
+                $match['status'] = 'expired';
+            }
         }
         if ($match['status'] === 'active' && $match['started_at'] !== null) {
-            $deadline = strtotime((string) $match['started_at']) + (int) $match['c_time_limit'] + self::TIMEOUT_GRACE_SECONDS;
-            if (time() > $deadline) {
+            // started_at + time_limit + grace < NOW()  ⇒ deadline has passed.
+            $deadlineStmt = Database::pdo()->prepare(
+                'SELECT (started_at + INTERVAL ' . ((int) $match['c_time_limit'] + self::TIMEOUT_GRACE_SECONDS) . ' SECOND < NOW()) AS is_past_deadline
+                 FROM duel_matches WHERE id = ?'
+            );
+            $deadlineStmt->execute([(int) $match['id']]);
+            $deadlineRow = $deadlineStmt->fetch();
+            if ($deadlineRow && (int) $deadlineRow['is_past_deadline'] === 1) {
                 $stmt = Database::pdo()->prepare(
                     'SELECT host_result, guest_result FROM duel_matches WHERE id = ? FOR UPDATE'
                 );
@@ -737,17 +774,33 @@ final class DuelController
         }
 
         // Shared duel clock: both clients must count down from the same
-        // server-side deadline (started_at + challenge time_limit).
+        // server-side deadline (started_at + challenge time_limit). Both the
+        // deadline timestamp and remaining seconds come from a single SQL
+        // query so PHP's timezone setting never disagrees with the timezone
+        // that wrote started_at. (Previously strtotime()/time() computed a
+        // deadline that immediately returned 0 remaining seconds when the
+        // PHP and MySQL clocks were in different timezones.)
         $timeLimit = (int) ($match['c_time_limit'] ?? 0);
         $startedAt = $match['started_at'] ?? null;
         $endsAt = null;
         $remainingSeconds = null;
         if ($startedAt !== null && $timeLimit > 0) {
-            $startTs = strtotime((string) $startedAt);
-            if ($startTs !== false) {
-                $endTs = $startTs + $timeLimit;
-                $endsAt = date('c', $endTs);
-                $remainingSeconds = max(0, $endTs - time());
+            $clockStmt = Database::pdo()->prepare(
+                'SELECT
+                    UNIX_TIMESTAMP(started_at + INTERVAL ? SECOND) AS end_ts,
+                    UNIX_TIMESTAMP(started_at + INTERVAL ? SECOND - NOW()) AS remaining_seconds,
+                    DATE_FORMAT(started_at + INTERVAL ? SECOND, "%Y-%m-%dT%H:%i:%sZ") AS ends_at_iso
+                 FROM duel_matches WHERE id = ?'
+            );
+            $clockStmt->execute([$timeLimit, $timeLimit, $timeLimit, (int) $match['id']]);
+            $clockRow = $clockStmt->fetch();
+            if ($clockRow !== false) {
+                $remainingSeconds = max(0, (int) $clockRow['remaining_seconds']);
+                // Convert the Unix timestamp to an ISO-8601 string using PHP
+                // for the timezone suffix only; the timestamp itself came
+                // from MySQL so it is already UTC-aligned with started_at.
+                $endTs = (int) $clockRow['end_ts'];
+                $endsAt = $endTs > 0 ? date('c', $endTs) : ((string) $clockRow['ends_at_iso'] ?: null);
             }
         }
 

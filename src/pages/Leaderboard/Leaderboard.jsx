@@ -37,7 +37,7 @@ function Leaderboard() {
   }, [])
 
   const me = getCurrentPlayer()
-  const remote = getLeaderboard()
+  const remote = getLeaderboard().filter((p) => !p.isAdmin && p.username !== 'admin')
 
   // Server rows are the single source of truth. Local player is only appended
   // when the API list does not yet include them (e.g. brand-new account), and

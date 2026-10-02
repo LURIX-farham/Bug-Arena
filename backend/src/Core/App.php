@@ -21,6 +21,14 @@ final class App
         ini_set('log_errors', '1');
         error_reporting(E_ALL);
 
+        // Force PHP to UTC so every strtotime()/time()/date() call uses the
+        // same frame of reference as MySQL NOW(). Without this, a php.ini
+        // default like Asia/Tehran makes PHP interpret a UTC DATETIME column
+        // as local wall time — so duel invitations look already expired the
+        // moment they are written. Database::pdo() mirrors this on the MySQL
+        // side with `SET time_zone = '+00:00'`.
+        date_default_timezone_set('UTC');
+
         $logDir = dirname(__DIR__, 2) . '/logs';
         if (!is_dir($logDir)) {
             @mkdir($logDir, 0775, true);

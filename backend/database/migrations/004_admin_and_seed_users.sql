@@ -20,14 +20,14 @@ DEALLOCATE PREPARE stmt;
 
 -- -----------------------------------------------------------------------------
 -- Platform admin: username admin / password 12345
--- password_hash below is PHP password_hash('12345', PASSWORD_DEFAULT) bcrypt.
+-- password_hash below is PHP password_hash('admin123', PASSWORD_DEFAULT) bcrypt.
 -- -----------------------------------------------------------------------------
 INSERT INTO users (public_id, username, display_name, password_hash, is_bot, is_admin, rating, wins, losses, status)
 SELECT
   '00000000-0000-4000-8000-000000000001',
   'admin',
   'Admin',
-  '$2y$10$2Xlnl5MBLj0BlCNmkXAGIeXuyWjFjB4EEQ5SRyN7DxTIUgWvoU08K',
+  '$2y$10$2W9eQwhukVf/RuTvkXqegeO0LywRZV/WoGPptkUhM4X66JtWQojoW',
   0,
   1,
   1500,
@@ -38,7 +38,9 @@ FROM DUAL
 WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin' LIMIT 1);
 
 -- Ensure is_admin is set even if the row already existed without the flag.
-UPDATE users SET is_admin = 1, status = 'active', deleted_at = NULL WHERE username = 'admin';
+UPDATE users SET is_admin = 1, status = 'active', deleted_at = NULL,
+  password_hash = '$2y$10$2W9eQwhukVf/RuTvkXqegeO0LywRZV/WoGPptkUhM4X66JtWQojoW'
+WHERE username = 'admin';
 
 INSERT IGNORE INTO user_profiles (user_id, bio, preferred_language, theme, avatar_color)
 SELECT id, 'Platform administrator', 'fa', 'dark', '#7cff6b' FROM users WHERE username = 'admin';
@@ -53,26 +55,26 @@ SELECT id, 0, 0, 1, 0, 0 FROM users WHERE username = 'admin';
 INSERT INTO users (public_id, username, display_name, password_hash, is_bot, is_admin, rating, wins, losses, draws, status)
 SELECT * FROM (
   SELECT '11111111-1111-4111-8111-111111111101' AS public_id, 'shadowfox' AS username, 'ShadowFox' AS display_name,
-         '$2y$10$2Xlnl5MBLj0BlCNmkXAGIeXuyWjFjB4EEQ5SRyN7DxTIUgWvoU08K' AS password_hash,
+         '$2y$10$2W9eQwhukVf/RuTvkXqegeO0LywRZV/WoGPptkUhM4X66JtWQojoW' AS password_hash,
          0 AS is_bot, 0 AS is_admin, 1420 AS rating, 28 AS wins, 9 AS losses, 2 AS draws, 'active' AS status
   UNION ALL SELECT '11111111-1111-4111-8111-111111111102', 'codeweaver', 'CodeWeaver',
-         '$2y$10$2Xlnl5MBLj0BlCNmkXAGIeXuyWjFjB4EEQ5SRyN7DxTIUgWvoU08K', 0, 0, 1380, 24, 11, 1, 'active'
+         '$2y$10$2W9eQwhukVf/RuTvkXqegeO0LywRZV/WoGPptkUhM4X66JtWQojoW', 0, 0, 1380, 24, 11, 1, 'active'
   UNION ALL SELECT '11111111-1111-4111-8111-111111111103', 'bugslayer', 'BugSlayer',
-         '$2y$10$2Xlnl5MBLj0BlCNmkXAGIeXuyWjFjB4EEQ5SRyN7DxTIUgWvoU08K', 0, 0, 1310, 19, 14, 3, 'active'
+         '$2y$10$2W9eQwhukVf/RuTvkXqegeO0LywRZV/WoGPptkUhM4X66JtWQojoW', 0, 0, 1310, 19, 14, 3, 'active'
   UNION ALL SELECT '11111111-1111-4111-8111-111111111104', 'pythonic', 'Pythonic',
-         '$2y$10$2Xlnl5MBLj0BlCNmkXAGIeXuyWjFjB4EEQ5SRyN7DxTIUgWvoU08K', 0, 0, 1260, 17, 12, 0, 'active'
+         '$2y$10$2W9eQwhukVf/RuTvkXqegeO0LywRZV/WoGPptkUhM4X66JtWQojoW', 0, 0, 1260, 17, 12, 0, 'active'
   UNION ALL SELECT '11111111-1111-4111-8111-111111111105', 'nullpointer', 'NullPointer',
-         '$2y$10$2Xlnl5MBLj0BlCNmkXAGIeXuyWjFjB4EEQ5SRyN7DxTIUgWvoU08K', 0, 0, 1190, 14, 16, 2, 'active'
+         '$2y$10$2W9eQwhukVf/RuTvkXqegeO0LywRZV/WoGPptkUhM4X66JtWQojoW', 0, 0, 1190, 14, 16, 2, 'active'
   UNION ALL SELECT '11111111-1111-4111-8111-111111111106', 'stacktrace', 'StackTrace',
-         '$2y$10$2Xlnl5MBLj0BlCNmkXAGIeXuyWjFjB4EEQ5SRyN7DxTIUgWvoU08K', 0, 0, 1140, 12, 18, 1, 'active'
+         '$2y$10$2W9eQwhukVf/RuTvkXqegeO0LywRZV/WoGPptkUhM4X66JtWQojoW', 0, 0, 1140, 12, 18, 1, 'active'
   UNION ALL SELECT '11111111-1111-4111-8111-111111111107', 'regexqueen', 'RegexQueen',
-         '$2y$10$2Xlnl5MBLj0BlCNmkXAGIeXuyWjFjB4EEQ5SRyN7DxTIUgWvoU08K', 0, 0, 1090, 10, 15, 4, 'active'
+         '$2y$10$2W9eQwhukVf/RuTvkXqegeO0LywRZV/WoGPptkUhM4X66JtWQojoW', 0, 0, 1090, 10, 15, 4, 'active'
   UNION ALL SELECT '11111111-1111-4111-8111-111111111108', 'loopmaster', 'LoopMaster',
-         '$2y$10$2Xlnl5MBLj0BlCNmkXAGIeXuyWjFjB4EEQ5SRyN7DxTIUgWvoU08K', 0, 0, 1040, 8, 20, 2, 'active'
+         '$2y$10$2W9eQwhukVf/RuTvkXqegeO0LywRZV/WoGPptkUhM4X66JtWQojoW', 0, 0, 1040, 8, 20, 2, 'active'
   UNION ALL SELECT '11111111-1111-4111-8111-111111111109', 'syntaxninja', 'SyntaxNinja',
-         '$2y$10$2Xlnl5MBLj0BlCNmkXAGIeXuyWjFjB4EEQ5SRyN7DxTIUgWvoU08K', 0, 0, 980, 6, 22, 1, 'active'
+         '$2y$10$2W9eQwhukVf/RuTvkXqegeO0LywRZV/WoGPptkUhM4X66JtWQojoW', 0, 0, 980, 6, 22, 1, 'active'
   UNION ALL SELECT '11111111-1111-4111-8111-111111111110', 'debugduck', 'DebugDuck',
-         '$2y$10$2Xlnl5MBLj0BlCNmkXAGIeXuyWjFjB4EEQ5SRyN7DxTIUgWvoU08K', 0, 0, 920, 4, 25, 0, 'active'
+         '$2y$10$2W9eQwhukVf/RuTvkXqegeO0LywRZV/WoGPptkUhM4X66JtWQojoW', 0, 0, 920, 4, 25, 0, 'active'
 ) AS seed
 WHERE NOT EXISTS (SELECT 1 FROM users u WHERE u.username = seed.username LIMIT 1);
 

@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom'
 
 import GlobalSearch from './GlobalSearch'
 import { getCurrentPlayer, clearLocalPlayer } from '../../../services/playerStore.js'
-import { logoutAccount } from '../../../services/authStore.js'
+import { logoutAccount, getAuthUser } from '../../../services/authStore.js'
 import { getCompletedChallenges } from '../../../services/submissionStore'
 import { useI18n } from '../../../i18n/useI18n'
 import ThemeToggle from '../../ui/ThemeToggle'
 import LanguageToggle from '../../ui/LanguageToggle'
 import { SpotlightCard, ShinyText, AnimatedCounter } from '../../reactbits'
+import BrandLogo from '../../brand/BrandLogo'
 
 function AppTopbar() {
   const { t } = useI18n()
@@ -21,6 +22,7 @@ function AppTopbar() {
       .slice(0, 3),
   )
   const navigate = useNavigate()
+  const authUser = getAuthUser()
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
@@ -67,6 +69,14 @@ function AppTopbar() {
     <header className="app-topbar">
 
       <div className="topbar-left">
+
+        <BrandLogo
+          to="/home"
+          size="sm"
+          compact
+          className="topbar-mobile-logo"
+          ariaLabel="Bug Arena"
+        />
 
         <button
           type="button"
@@ -213,6 +223,16 @@ function AppTopbar() {
                 <span>◇</span>
                 {t('nav', 'achievements')}
               </Link>
+
+              {authUser?.isAdmin && (
+                <Link
+                  to="/admin"
+                  onClick={() => setUserMenuOpen(false)}
+                >
+                  <span>◆</span>
+                  Admin
+                </Link>
+              )}
 
               <Link
                 to="/settings"

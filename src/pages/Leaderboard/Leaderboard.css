@@ -938,12 +938,23 @@
 }
 
 /* ---- Ladder rows: staggered reveal ---- */
-.leaderboard-rows .animated-list__item {
-  display: contents;
+.leaderboard-rows.animated-list,
+.leaderboard-rows {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
-.leaderboard-rows .animated-list__item > .leaderboard-row {
+.leaderboard-rows .animated-list__item {
+  display: block;
+  width: 100%;
+}
+
+.leaderboard-rows .animated-list__item > .leaderboard-row,
+.leaderboard-rows .leaderboard-row {
   display: grid;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .leaderboard-row {
@@ -1001,5 +1012,104 @@
 
   .lb-ticker-dot {
     animation: none;
+  }
+}
+
+
+/* =====================================================================
+   MOBILE HARD FIX — ranks 4+ list must stay a single compact row
+===================================================================== */
+@media (max-width: 800px) {
+  .leaderboard-table {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .leaderboard-table-head {
+    display: grid !important;
+    grid-template-columns: 36px minmax(0, 1fr) 58px 50px !important;
+    gap: 6px !important;
+    padding: 8px 10px !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .leaderboard-table-head span:nth-child(3),
+  .leaderboard-table-head span:nth-child(6) {
+    display: none !important;
+  }
+
+  .leaderboard-rows .animated-list__item {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .leaderboard-rows .animated-list__item > .leaderboard-row,
+  .leaderboard-row {
+    display: grid !important;
+    grid-template-columns: 36px minmax(0, 1fr) 58px 50px !important;
+    gap: 6px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 48px !important;
+    padding: 8px 10px !important;
+    box-sizing: border-box !important;
+    align-items: center !important;
+  }
+
+  /* Only 4 visible cells: rank, player, score, xp */
+  .leaderboard-level,
+  .leaderboard-solved {
+    display: none !important;
+  }
+
+  .leaderboard-rank {
+    font-size: 12px !important;
+  }
+
+  .leaderboard-player {
+    min-width: 0 !important;
+    overflow: hidden;
+  }
+
+  .leaderboard-player strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  .leaderboard-score,
+  .leaderboard-xp {
+    display: block !important;
+    text-align: end !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .leaderboard-score {
+    font-size: 12px !important;
+  }
+
+  .leaderboard-xp {
+    font-size: 10px !important;
+    color: var(--text-muted) !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .leaderboard-table-head,
+  .leaderboard-rows .animated-list__item > .leaderboard-row,
+  .leaderboard-row {
+    grid-template-columns: 32px minmax(0, 1fr) 52px 44px !important;
+    gap: 4px !important;
+    padding-inline: 8px !important;
+  }
+
+  .player-avatar {
+    width: 26px !important;
+    height: 26px !important;
   }
 }

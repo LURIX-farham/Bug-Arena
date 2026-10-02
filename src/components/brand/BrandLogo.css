@@ -1,0 +1,134 @@
+/* =====================================================================
+   BrandLogo — image mark + optional wordmark
+   Uses design tokens so dark/light + RTL stay consistent.
+===================================================================== */
+
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text-primary);
+  min-width: 0;
+  transition: opacity var(--duration-fast, 0.15s) ease, filter 0.2s ease;
+}
+
+.brand-logo:hover {
+  filter: brightness(1.08);
+}
+
+.brand-logo:focus-visible {
+  outline: 2px solid rgba(var(--accent-rgb), 0.55);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.brand-logo-mark {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: transparent;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.brand-logo-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Dark navy mark stays crisp on dark UI; invert lightly on pure dark if needed */
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Sizes */
+.brand-logo--sm .brand-logo-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+}
+
+.brand-logo--md .brand-logo-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+}
+
+.brand-logo--lg .brand-logo-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+}
+
+.brand-logo-wordmark {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.brand-logo--sm .brand-logo-wordmark {
+  font-size: 13px;
+}
+
+.brand-logo--md .brand-logo-wordmark {
+  font-size: 15px;
+}
+
+.brand-logo--lg .brand-logo-wordmark {
+  font-size: 18px;
+}
+
+.brand-logo-wordmark span {
+  color: var(--accent);
+  margin-inline: 1px;
+}
+
+/* Compact = icon only (collapsed sidebar) */
+.brand-logo--compact {
+  justify-content: center;
+}
+
+.brand-logo--compact .brand-logo-mark {
+  width: 32px;
+  height: 32px;
+}
+
+/* Optional soft plate behind the mark on elevated surfaces */
+.brand-logo--plated .brand-logo-mark {
+  background: rgba(var(--accent-rgb), 0.06);
+  border: 1px solid var(--border);
+  padding: 4px;
+  box-sizing: content-box;
+}
+
+/* Light theme: mark is already dark navy — stays readable */
+[data-theme='light'] .brand-logo-mark img {
+  filter: none;
+}
+
+/* If you ever need a white version on dark solid backgrounds, uncomment:
+[data-theme='dark'] .brand-logo-mark img {
+  filter: brightness(0) invert(1);
+}
+*/
+
+@media (max-width: 600px) {
+  .brand-logo--md .brand-logo-wordmark {
+    font-size: 14px;
+  }
+
+  .brand-logo--lg .brand-logo-mark {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-logo {
+    transition: none;
+  }
+}
