@@ -141,6 +141,12 @@ final class DuelController
 
         self::lazyExpire();
 
+        // CRITICAL FIX: also gate on `m.status = "pending"`. Without this, the
+        // inbox still shows STALE invitations whose match was already expired
+        // by the original (buggy) lazyResolve. Clicking Accept on one of
+        // those returns 410 "invitation_expired" because the match_status
+        // check in accept() trips on `!== 'pending'`. This is exactly the
+        // symptom reported by the receiver.
         $stmt = Database::pdo()->prepare(
             'SELECT i.public_id AS invitationId, i.expires_at AS expiresAt,
                     m.public_id AS matchId, m.difficulty, m.bug_type AS bugType, m.created_at AS createdAt,
@@ -150,7 +156,7 @@ final class DuelController
              JOIN duel_matches m ON m.id = i.match_id
              JOIN users u ON u.id = i.from_user_id
              LEFT JOIN user_profiles p ON p.user_id = u.id
-             WHERE i.to_user_id = ? AND i.status = "sent" AND i.expires_at >= NOW()
+             WHERE i.to_user_id = ? AND i.status = "sent" AND i.expires_at >= NOW() AND m.status = "pending"
              ORDER BY i.created_at DESC
              LIMIT 5'
         );
@@ -196,17 +202,11 @@ final class DuelController
                 Helpers::fail('invitation_not_found', 404);
             }
             if ($row['inv_status'] === 'accepted') {
+                // Already accepted — usually a duplicate request after a
+                // network hiccup. Idempotent: navigate to the same matchId.
                 return ['existing' => true, 'matchId' => $row['match_id']];
             }
-            // Expiry is checked with MySQL's NOW() (is_still_valid column)
-            // instead of PHP's time()/strtotime(). When the PHP and MySQL
-            // session timezones disagreed (the original bug), the PHP check
-            // treated freshly created invitations as already expired and
-            // returned 410 "invitation_expired" the instant the guest tried
-            // to accept — even though listInvites() (which uses
-            // i.expires_at >= NOW()) had just shown it as live.
-            if ($row['inv_status'] !== 'sent'
-                || !(isset($row['is_still_valid']) && (int) $row['is_still_valid'] === 1)
+            if ($row['inv_status'] !== 'sent' || strtotime((string) $row['expires_at']) < time()
                 || $row['match_status'] !== 'pending') {
                 Helpers::fail('invitation_expired', 410);
             }
@@ -685,9 +685,29 @@ final class DuelController
     private static function lazyExpire(): void
     {
         $pdo = Database::pdo();
+
+        // 1) Plain TTL expiry — invitations whose 90s window has passed.
         $pdo->prepare(
             'UPDATE duel_invitations SET status = "expired" WHERE status = "sent" AND expires_at < NOW()'
         )->execute();
+
+        // 2) Sweep any "sent" invitation whose match is no longer pending.
+        //    This is the cleanup the original code was missing: when a match
+        //    gets flipped to "expired" / "cancelled" / "finished" (by the old
+        //    buggy lazyResolve, by a host cancel, by a timeout, etc.), the
+        //    leftover "sent" invitations were never marked. They kept being
+        //    returned by listInvites() (because expires_at was still in the
+        //    future) and clicking Accept on them returned 410 because the
+        //    match_status check in accept() trips on `!== 'pending'`.
+        $pdo->prepare(
+            'UPDATE duel_invitations i
+             JOIN duel_matches m ON m.id = i.match_id
+             SET i.status = "expired"
+             WHERE i.status = "sent" AND m.status <> "pending"'
+        )->execute();
+
+        // 3) Pending matches with no accepted invitation past the TTL+grace
+        //    window get auto-expired so the host's lobby stops polling.
         $pdo->prepare(
             'UPDATE duel_matches m
              LEFT JOIN duel_invitations i ON i.match_id = m.id AND i.status = "accepted"
@@ -774,33 +794,17 @@ final class DuelController
         }
 
         // Shared duel clock: both clients must count down from the same
-        // server-side deadline (started_at + challenge time_limit). Both the
-        // deadline timestamp and remaining seconds come from a single SQL
-        // query so PHP's timezone setting never disagrees with the timezone
-        // that wrote started_at. (Previously strtotime()/time() computed a
-        // deadline that immediately returned 0 remaining seconds when the
-        // PHP and MySQL clocks were in different timezones.)
+        // server-side deadline (started_at + challenge time_limit).
         $timeLimit = (int) ($match['c_time_limit'] ?? 0);
         $startedAt = $match['started_at'] ?? null;
         $endsAt = null;
         $remainingSeconds = null;
         if ($startedAt !== null && $timeLimit > 0) {
-            $clockStmt = Database::pdo()->prepare(
-                'SELECT
-                    UNIX_TIMESTAMP(started_at + INTERVAL ? SECOND) AS end_ts,
-                    UNIX_TIMESTAMP(started_at + INTERVAL ? SECOND - NOW()) AS remaining_seconds,
-                    DATE_FORMAT(started_at + INTERVAL ? SECOND, "%Y-%m-%dT%H:%i:%sZ") AS ends_at_iso
-                 FROM duel_matches WHERE id = ?'
-            );
-            $clockStmt->execute([$timeLimit, $timeLimit, $timeLimit, (int) $match['id']]);
-            $clockRow = $clockStmt->fetch();
-            if ($clockRow !== false) {
-                $remainingSeconds = max(0, (int) $clockRow['remaining_seconds']);
-                // Convert the Unix timestamp to an ISO-8601 string using PHP
-                // for the timezone suffix only; the timestamp itself came
-                // from MySQL so it is already UTC-aligned with started_at.
-                $endTs = (int) $clockRow['end_ts'];
-                $endsAt = $endTs > 0 ? date('c', $endTs) : ((string) $clockRow['ends_at_iso'] ?: null);
+            $startTs = strtotime((string) $startedAt);
+            if ($startTs !== false) {
+                $endTs = $startTs + $timeLimit;
+                $endsAt = date('c', $endTs);
+                $remainingSeconds = max(0, $endTs - time());
             }
         }
 

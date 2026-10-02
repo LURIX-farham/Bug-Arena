@@ -110,21 +110,4 @@ final class Database
             throw $e;
         }
     }
-
-    /**
-     * Pin the MySQL session to UTC. NOW(), CURRENT_TIMESTAMP and every
-     * DATETIME column then read back as UTC wall time — the exact frame of
-     * reference that PHP uses after date_default_timezone_set('UTC') in
-     * App::boot(). A shared host often leaves the MySQL server in the system
-     * timezone (UTC), but a per-session SET is the only guarantee that does
-     * not depend on the global my.cnf. The previous code compared MySQL-side
-     * NOW() with PHP-side strtotime()/time() — when the two clocks were in
-     * different timezones, every freshly written duel invitation looked
-     * already expired, so the guest's accept returned 410 "invitation_expired"
-     * and the host's lobby poll flipped the match to "expired" instantly.
-     */
-    private static function applySessionDefaults(PDO $pdo): void
-    {
-        $pdo->exec("SET time_zone = '+00:00'");
-    }
 }
