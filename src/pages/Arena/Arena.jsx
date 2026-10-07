@@ -5,6 +5,8 @@ import { challenges } from '../../data/challenges'
 import { calculateScore } from '../../engine/scoring'
 import { runChallengeTests } from '../../engine/challengeRunner'
 import { saveSubmission } from '../../services/submissionStore'
+import { apiRequest } from '../../services/apiClient'
+import { isAuthenticated } from '../../services/authStore'
 import { useI18n } from '../../i18n/useI18n'
 import { getLocalizedChallenge } from '../../i18n/languageUtils'
 import { startReplaySession, recordReplayEvent, finishReplaySession, abandonReplaySession } from '../../services/replayStore'
@@ -936,7 +938,7 @@ function ArenaSession() {
    * --------------------------------------------------
    */
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!challenge || !coreFixed || submitted || isRunning || timeLeftRef.current <= 0) {
       return
     }
@@ -983,7 +985,58 @@ function ArenaSession() {
       return
     }
 
-    const finalSubmission = {
+    const solveSeconds = Math.max(0, Math.round(Math.max(0, (challenge?.timeLimit || 0) * (competitionConfig?.timeMultiplier || 1)) - timeLeft))
+
+    // Prefer server-authoritative evaluation + scoring when online.
+    let serverSubmission = null
+    if (isAuthenticated()) {
+      setIsRunning(true)
+      try {
+        const result = await apiRequest('/submissions', {
+          method: 'POST',
+          body: JSON.stringify({
+            challengeId: challenge.id,
+            code,
+            attempts,
+            timeLeft,
+            solveSeconds,
+            // Client scores ignored by server; kept for offline fallback shape only.
+            hardened: hardening,
+          }),
+        })
+        if (result?.execution?.results) {
+          setTests(result.execution.results.map((r) => ({ ...r, passed: r.status === 'passed' })))
+        }
+        if (result?.submission) {
+          serverSubmission = {
+            challengeId: challenge.id,
+            challengeTitle: challenge.title,
+            score: Number(result.submission.score) || 0,
+            baseScore: Number(result.submission.baseScore) || 0,
+            speedBonus: Number(result.submission.speedBonus) || 0,
+            attemptBonus: Number(result.submission.attemptBonus) || 0,
+            hardeningBonus: Number(result.submission.hardeningBonus) || 0,
+            attempts: Number(result.submission.attempts) || attempts,
+            hardened: Boolean(result.submission.hardened),
+            timeLeft,
+            solveSeconds,
+            testsPassed: Number(result.execution?.testsPassed) || 0,
+            testsTotal: Number(result.execution?.testsTotal) || 0,
+            code,
+            submittedAt: result.submission.submittedAt || new Date().toISOString(),
+          }
+          if (result.stats && typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('bug-arena:server-stats', { detail: result.stats }))
+          }
+        }
+      } catch (err) {
+        console.warn('Server submission failed, falling back to local save:', err?.message)
+      } finally {
+        setIsRunning(false)
+      }
+    }
+
+    const finalSubmission = serverSubmission || {
       challengeId: challenge.id,
       challengeTitle: challenge.title,
       score: finalScore.score,
@@ -994,14 +1047,17 @@ function ArenaSession() {
       attempts,
       hardened: hardening,
       timeLeft,
-      solveSeconds: Math.max(0, Math.round(Math.max(0, (challenge?.timeLimit || 0) * (competitionConfig?.timeMultiplier || 1)) - timeLeft)),
+      solveSeconds,
       testsPassed: tests.filter((item) => item.status === 'passed').length,
       testsTotal: tests.length,
       code,
       submittedAt: new Date().toISOString(),
     }
 
-    const saveResult = saveSubmission(finalSubmission)
+    // When server already persisted, still mirror into local cache without re-POST.
+    const saveResult = serverSubmission
+      ? { saved: true, reason: 'saved', submission: finalSubmission }
+      : saveSubmission(finalSubmission)
 
     if (saveResult?.reason === 'storage_error') {
       setSubmissionSaved(false)

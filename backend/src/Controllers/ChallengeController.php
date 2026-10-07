@@ -60,14 +60,79 @@ final class ChallengeController
 
     private static function decode(array $row): array
     {
-        foreach (['skills','tags','hints','evaluationTests'] as $field) {
+        foreach (['skills', 'tags', 'hints'] as $field) {
             $decoded = json_decode((string) $row[$field], true);
             $row[$field] = is_array($decoded) ? $decoded : [];
         }
+
+        // Public surface only: core tests keep args/expected.
+        // Hidden tests reduced to metadata — never args or expected.
+        $rawTests = json_decode((string) ($row['evaluationTests'] ?? '[]'), true);
+        $publicTests = [];
+        $hiddenCount = 0;
+        if (is_array($rawTests)) {
+            foreach ($rawTests as $test) {
+                if (!is_array($test)) {
+                    continue;
+                }
+                $type = (string) ($test['type'] ?? 'core');
+                if ($type === 'hidden') {
+                    $hiddenCount++;
+                    $publicTests[] = [
+                        'id' => $test['id'] ?? 0,
+                        'name' => $test['name'] ?? 'Hidden',
+                        'type' => 'hidden',
+                    ];
+                } else {
+                    $publicTests[] = [
+                        'id' => $test['id'] ?? 0,
+                        'name' => $test['name'] ?? 'Test',
+                        'type' => $type,
+                        'args' => $test['args'] ?? [],
+                        'expected' => $test['expected'] ?? null,
+                    ];
+                }
+            }
+        }
+        $row['evaluationTests'] = $publicTests;
+        $row['hiddenTestCount'] = $hiddenCount;
+        $row['publicTestCount'] = count($publicTests) - $hiddenCount;
+
         $row['id'] = (int) $row['id'];
-        foreach (['estimatedTime','timeLimit','baseScore','hardeningBonus','xpReward','version'] as $field) {
+        foreach (['estimatedTime', 'timeLimit', 'baseScore', 'hardeningBonus', 'xpReward', 'version'] as $field) {
             $row[$field] = (int) $row[$field];
         }
         return $row;
+    }
+
+    /**
+     * Full authoritative tests (core + hidden with args/expected) — server only.
+     * @return list<array>
+     */
+    public static function loadFullTests(int $challengeId): array
+    {
+        $stmt = Database::pdo()->prepare(
+            'SELECT evaluation_tests FROM challenges WHERE id = ? AND is_active = 1 LIMIT 1'
+        );
+        $stmt->execute([$challengeId]);
+        $raw = $stmt->fetchColumn();
+        $decoded = json_decode((string) $raw, true);
+        if (!is_array($decoded)) {
+            return [];
+        }
+        $out = [];
+        foreach ($decoded as $test) {
+            if (!is_array($test)) {
+                continue;
+            }
+            $out[] = [
+                'id' => $test['id'] ?? 0,
+                'name' => $test['name'] ?? 'Test',
+                'type' => (string) ($test['type'] ?? 'core'),
+                'args' => $test['args'] ?? [],
+                'expected' => $test['expected'] ?? null,
+            ];
+        }
+        return $out;
     }
 }

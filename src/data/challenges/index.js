@@ -76,9 +76,18 @@ export function mergeServerChallenges(serverChallenges) {
       evaluation: {
         ...local.evaluation,
         functionName: serverChallenge.functionName || local.evaluation.functionName,
-        tests: Array.isArray(serverChallenge.evaluationTests) && serverChallenge.evaluationTests.length
-          ? serverChallenge.evaluationTests
-          : local.evaluation.tests,
+        // Prefer server public tests, but preserve local hidden args when server strips them.
+        tests: (() => {
+          const serverTests = Array.isArray(serverChallenge.evaluationTests) ? serverChallenge.evaluationTests : []
+          if (!serverTests.length) return local.evaluation.tests
+          return serverTests.map((st) => {
+            if (st.type === 'hidden' && (st.args === undefined || st.expected === undefined)) {
+              // Keep metadata only for UI; authoritative hidden payloads stay on the server.
+              return { id: st.id, name: st.name || 'Hidden', type: 'hidden' }
+            }
+            return st
+          })
+        })(),
       },
       code: serverChallenge.code || local.code,
       timeLimit: Number(serverChallenge.timeLimit ?? local.timeLimit),

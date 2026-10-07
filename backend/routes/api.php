@@ -9,6 +9,7 @@ use BugArena\Controllers\CompetitiveController;
 use BugArena\Controllers\ChallengeController;
 use BugArena\Controllers\DuelController;
 use BugArena\Controllers\EventController;
+use BugArena\Controllers\ExecutionController;
 use BugArena\Controllers\HealthController;
 use BugArena\Controllers\LeaderboardController;
 use BugArena\Controllers\PlayerController;
@@ -33,6 +34,7 @@ return static function (Router $router): void {
     $health = new HealthController();
     $sync = new SyncController();
     $duel = new DuelController();
+    $execution = new ExecutionController();
 
     $write = static function (callable $handler): callable {
         return static function ($req, $params = []) use ($handler): void {
@@ -67,9 +69,12 @@ return static function (Router $router): void {
     $router->get('/player', fn () => $player->show());
     $router->put('/player', $write(fn ($req) => $player->update($req)));
 
-    // Submissions (server-scored)
+    // Submissions (server-scored + server-executed)
     $router->get('/submissions', fn ($req) => $submissions->index($req));
     $router->post('/submissions', $write(fn ($req) => $submissions->store($req)));
+
+    // Server-side public test execution (hidden tests never run here)
+    $router->post('/execute', $write(fn ($req) => $execution->run($req)));
 
     // Replays
     $router->get('/replays', fn ($req) => $replays->index($req));

@@ -9,6 +9,7 @@ use BugArena\Core\Response;
 use BugArena\Middleware\AuthMiddleware;
 use BugArena\Middleware\RateLimitMiddleware;
 use BugArena\Services\AchievementService;
+use BugArena\Services\Execution\PythonExecutor;
 use BugArena\Services\ScoringService;
 use BugArena\Services\StatisticsService;
 use BugArena\Utils\Helpers;
@@ -35,8 +36,8 @@ final class SubmissionController
     }
 
     /**
-     * Record a submission. The score is RECOMPUTED server-side from the
-     * challenge registry — client-supplied scores are ignored entirely.
+     * Record a submission. Server executes code against full test suite;
+     * client-supplied scores and test counts are ignored.
      */
     public function store(Request $request): void
     {
@@ -48,7 +49,7 @@ final class SubmissionController
 
     /**
      * Shared submission pipeline (HTTP store + offline /sync batch).
-     * Returns the response payload plus the HTTP status it should map to.
+     * @return array{http:int,payload:array}
      */
     public static function persist(int $userId, array $body): array
     {
@@ -71,42 +72,79 @@ final class SubmissionController
             Helpers::fail('challenge_not_found', 404);
         }
 
-        $testStmt = $pdo->prepare('SELECT COUNT(*) FROM challenge_tests WHERE challenge_id = ?');
-        $testStmt->execute([$challengeId]);
-        $expectedTests = (int) $testStmt->fetchColumn();
-
-        $coreStmt = $pdo->prepare(
-            'SELECT COUNT(*) FROM challenge_tests WHERE challenge_id = ? AND test_type = "core"'
-        );
-        $coreStmt->execute([$challengeId]);
-        $coreTests = (int) $coreStmt->fetchColumn();
+        $allTests = ChallengeController::loadFullTests($challengeId);
+        $expectedTests = count($allTests);
+        $coreTests = count(array_filter($allTests, static fn (array $t): bool => ($t['type'] ?? 'core') !== 'hidden'));
 
         $attempts = Helpers::clampInt($body['attempts'] ?? 1, 1, 99);
-        $hardened = (bool) ($body['hardened'] ?? false);
         $timeLeft = min((float) $challenge['time_limit'], max(0.0, (float) ($body['timeLeft'] ?? 0)));
         $solveSeconds = Helpers::clampInt((int) round((float) ($body['solveSeconds'] ?? 0)), 0, 86400);
-        $testsPassed = Helpers::clampInt($body['testsPassed'] ?? 0, 0, 999);
-        $testsTotal = Helpers::clampInt($body['testsTotal'] ?? 0, 0, 999);
 
-        // Server-side scoring (throws 409 test_integrity_failed on mismatch).
-        // Accepts core-only or full suite; forces hardened=false for core-only.
-        $scoreParts = ScoringService::compute(
-            $challenge, $attempts, $hardened, $timeLeft, $testsPassed, $testsTotal, $expectedTests, $coreTests
+        $execOptions = [
+            'timeoutSec' => (int) ($config['execution']['timeout_sec'] ?? 8),
+            'memoryMb' => (int) ($config['execution']['memory_mb'] ?? 128),
+        ];
+        $functionName = (string) ($challenge['function_name'] ?? '');
+        $exec = PythonExecutor::runFull($code, $functionName, $allTests, $execOptions);
+
+        $testsPassed = (int) $exec['testsPassed'];
+        $testsTotal = (int) $exec['testsTotal'];
+        $hardened = (bool) (
+            $exec['allPassed']
+            && $exec['hiddenPassed']
+            && $exec['corePassed']
+            && $expectedTests > $coreTests
         );
-        $score = $scoreParts['score'];
-        $hardened = (bool) ($scoreParts['hardened'] ?? $hardened);
+
+        if (!$exec['corePassed']) {
+            $scoreParts = [
+                'score' => 0,
+                'baseScore' => 0,
+                'speedBonus' => 0,
+                'attemptBonus' => 0,
+                'hardeningBonus' => 0,
+                'hardened' => false,
+            ];
+            $score = 0;
+            $hardened = false;
+        } else {
+            $scoreParts = ScoringService::compute(
+                $challenge,
+                $attempts,
+                $hardened,
+                $timeLeft,
+                $testsPassed,
+                $testsTotal,
+                $expectedTests,
+                $coreTests
+            );
+            $score = $scoreParts['score'];
+            $hardened = (bool) ($scoreParts['hardened'] ?? $hardened);
+        }
+
+        $status = $score > 0 ? 'accepted' : 'failed';
+        $corePassed = (bool) $exec['corePassed'];
+        $allPassed = (bool) $exec['allPassed'];
 
         $result = Database::transaction(function () use (
             $pdo, $userId, $challenge, $challengeId, $score, $scoreParts,
-            $attempts, $hardened, $timeLeft, $solveSeconds, $testsPassed, $testsTotal, $code
+            $attempts, $hardened, $timeLeft, $solveSeconds, $testsPassed, $testsTotal, $code, $status
         ): array {
             $stmt = $pdo->prepare('SELECT score FROM submissions WHERE user_id = ? AND challenge_id = ? FOR UPDATE');
             $stmt->execute([$userId, $challengeId]);
             $existing = $stmt->fetch();
             $previousBest = $existing ? (int) $existing['score'] : 0;
 
-            if ($score <= $previousBest) {
-                return ['improved' => false, 'bestScore' => $previousBest, 'score' => $score];
+            if ($score <= 0 || $score <= $previousBest) {
+                if ($score <= 0) {
+                    StatisticsService::applySubmission($userId, 0, false, $solveSeconds);
+                }
+                return [
+                    'improved' => false,
+                    'bestScore' => $previousBest,
+                    'score' => $score,
+                    'persisted' => false,
+                ];
             }
 
             $stmt = $pdo->prepare(
@@ -114,9 +152,9 @@ final class SubmissionController
                    (user_id, challenge_id, challenge_title, status, score, base_score, speed_bonus,
                     attempt_bonus, hardening_bonus, attempts, tests_passed, tests_total, hardened,
                     time_left, solve_seconds, code, submitted_at)
-                 VALUES (?, ?, ?, "accepted", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                  ON DUPLICATE KEY UPDATE
-                   challenge_title = VALUES(challenge_title), status = "accepted", score = VALUES(score),
+                   challenge_title = VALUES(challenge_title), status = VALUES(status), score = VALUES(score),
                    base_score = VALUES(base_score), speed_bonus = VALUES(speed_bonus),
                    attempt_bonus = VALUES(attempt_bonus), hardening_bonus = VALUES(hardening_bonus),
                    attempts = VALUES(attempts), tests_passed = VALUES(tests_passed),
@@ -126,7 +164,7 @@ final class SubmissionController
             );
             $stmt->execute([
                 $userId, $challengeId, substr((string) $challenge['title'], 0, 160),
-                $score, $scoreParts['baseScore'], $scoreParts['speedBonus'],
+                $status, $score, $scoreParts['baseScore'], $scoreParts['speedBonus'],
                 $scoreParts['attemptBonus'], $scoreParts['hardeningBonus'],
                 $attempts, $testsPassed, $testsTotal, $hardened ? 1 : 0,
                 $timeLeft, $solveSeconds, $code, Helpers::safeDate('now'),
@@ -136,24 +174,45 @@ final class SubmissionController
             StatisticsService::applySubmission($userId, $xpDelta, true, $solveSeconds);
             StatisticsService::refreshStreaks($userId);
 
-            return ['improved' => true, 'bestScore' => $score, 'score' => $score, 'xpDelta' => $xpDelta];
+            return [
+                'improved' => true,
+                'bestScore' => $score,
+                'score' => $score,
+                'xpDelta' => $xpDelta,
+                'persisted' => true,
+            ];
         });
 
-        if (!$result['improved']) {
-            return ['http' => 409, 'payload' => [
-                'ok' => false,
-                'error' => 'not_better',
-                'bestScore' => $result['bestScore'],
-                'score' => $result['score'],
-            ]];
-        }
-
         $stats = StatisticsService::get($userId);
-        $unlocked = AchievementService::evaluate($userId);
+        $unlocked = ($result['improved'] ?? false) ? AchievementService::evaluate($userId) : [];
 
-        return ['http' => 201, 'payload' => [
-            'ok' => true,
+        $safeResults = array_map(static function (array $r): array {
+            if (($r['type'] ?? '') === 'hidden') {
+                return [
+                    'id' => $r['id'] ?? 0,
+                    'name' => $r['name'] ?? 'Hidden',
+                    'type' => 'hidden',
+                    'status' => $r['status'] ?? 'failed',
+                ];
+            }
+            return $r;
+        }, $exec['results'] ?? []);
+
+        $http = ($result['improved'] ?? false) ? 201 : ($score > 0 ? 409 : 200);
+        return ['http' => $http, 'payload' => [
+            'ok' => $allPassed || $corePassed,
             'challengeId' => $challengeId,
+            'execution' => [
+                'status' => $exec['status'],
+                'results' => $safeResults,
+                'corePassed' => $exec['corePassed'],
+                'hiddenPassed' => $exec['hiddenPassed'],
+                'allPassed' => $exec['allPassed'],
+                'testsPassed' => $testsPassed,
+                'testsTotal' => $testsTotal,
+                'wallMs' => $exec['wallMs'] ?? 0,
+                'error' => $exec['error'],
+            ],
             'submission' => [
                 'score' => $scoreParts['score'],
                 'baseScore' => $scoreParts['baseScore'],
@@ -162,11 +221,15 @@ final class SubmissionController
                 'hardeningBonus' => $scoreParts['hardeningBonus'],
                 'attempts' => $attempts,
                 'hardened' => $hardened,
+                'status' => $status,
                 'submittedAt' => date('Y-m-d H:i:s'),
             ],
+            'bestScore' => $result['bestScore'] ?? $score,
+            'improved' => (bool) ($result['improved'] ?? false),
             'xpGained' => $result['xpDelta'] ?? 0,
             'stats' => $stats,
             'unlockedAchievements' => $unlocked,
+            'error' => ($result['improved'] ?? false) ? null : ($score > 0 ? 'not_better' : null),
         ]];
     }
 

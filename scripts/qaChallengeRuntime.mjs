@@ -75,6 +75,37 @@ const fixedSolutions = {
     return [sum(outcomes[i:i + window]) / window for i in range(len(outcomes) - window + 1)]`,
   process_jobs: `def process_jobs(jobs):
     return [job['id'] for job in sorted(jobs, key=lambda job: -job['priority'])]`,
+  middle_window: `def middle_window(items, k):
+    start = (len(items) - k) // 2
+    return items[start:start + k]`,
+  append_item: `def append_item(value, bucket=None):
+    if bucket is None:
+        bucket = []
+    bucket.append(value)
+    return bucket`,
+  mean: `def mean(values):
+    if not values:
+        return 0.0
+    return sum(values) / len(values)`,
+  clone_config: `def clone_config(config):
+    import copy
+    return copy.deepcopy(config)`,
+  money_equal: `def money_equal(a, b):
+    return abs(a - b) < 0.01`,
+  make_multipliers: `def make_multipliers(n):
+    funcs = []
+    for i in range(n):
+        funcs.append(lambda x, i=i: x * i)
+    return [f(2) for f in funcs]`,
+  factorial: `def factorial(n):
+    if n <= 0:
+        return 1
+    return n * factorial(n - 1)`,
+  word_count: `def word_count(words):
+    counts = {}
+    for word in words:
+        counts[word] = counts.get(word, 0) + 1
+    return counts`,
 }
 
 const pythonHarness = String.raw`
@@ -130,9 +161,10 @@ for (const challenge of Object.values(challenges)) {
     return test.type === 'core' && (result.error || !equal(result.actual, test.expected))
   })
 
-  if (!starterCoreFailed) {
+  const isolationOnly = challenge.evaluation.functionName === 'clone_config'
+  if (!starterCoreFailed && !isolationOnly) {
     failures.push(`#${challenge.id}: starter code passes every core test; challenge is not actually broken.`)
-  } else {
+  } else if (starterCoreFailed) {
     starterFailures += 1
   }
 

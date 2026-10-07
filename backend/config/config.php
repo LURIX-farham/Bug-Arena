@@ -71,4 +71,13 @@ return [
     'max_code_length' => (int) $env('BUGARENA_MAX_CODE_LENGTH', '200000'),
     // Batch sync ceiling: max queued actions accepted per /sync request.
     'max_sync_batch' => 50,
+
+    // Python execution. Empty runner_url = local subprocess isolation.
+    // Production / shared hosting: set BUGARENA_PYTHON_RUNNER_URL to a remote
+    // isolated runner that accepts the same JSON contract.
+    'execution' => [
+        'runner_url' => $env('BUGARENA_PYTHON_RUNNER_URL', ''),
+        'timeout_sec' => (int) $env('BUGARENA_EXEC_TIMEOUT', '8'),
+        'memory_mb' => (int) $env('BUGARENA_EXEC_MEMORY_MB', '128'),
+    ],
 ];
