@@ -390,7 +390,7 @@ function ArenaSession() {
       const endMs = new Date(duelMatch.endsAt).getTime()
       if (!Number.isNaN(endMs)) {
         // Reporter only ever runs from submit handlers / effects, never render.
-        remaining = Math.max(0, Math.ceil((endMs - Date.now()) / 1000)) // eslint-disable-line react-hooks/purity -- reads the shared server clock at report time
+        remaining = Math.max(0, Math.ceil((endMs - Date.now()) / 1000))  
       }
     }
     const solveSeconds = Math.max(0, Math.round(limit - remaining))
@@ -622,7 +622,7 @@ function ArenaSession() {
     element.focus()
     element.setSelectionRange(0, element.value.length)
     // execCommand keeps the browser's native undo stack intact.
-    let applied = false
+    let applied 
     try {
       applied = document.execCommand('insertText', false, edit.value)
     } catch {
