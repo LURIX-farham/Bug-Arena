@@ -15,10 +15,16 @@
   }
 }
 
+/* اگر JS کلاس visible نداد، بعد از 0.8s خود CSS نشان می‌دهد */
+.animated-list:not(.animated-list--visible) .animated-list__item {
+  animation: animated-list-enter 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.8s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animated-list__item {
-    opacity: 1;
-    transform: none;
-    animation: none;
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
   }
 }

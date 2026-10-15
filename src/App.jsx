@@ -1,36 +1,45 @@
-import { useEffect, useState } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom'
 
-import Landing from './pages/Landing/Landing'
 import AppShell from './components/layout/AppShell/AppShell'
 import ComingSoon from './components/layout/AppShell/ComingSoon'
 
-import Home from './pages/Home/Home'
-import Challenges from './pages/Challenges/Challenges'
-import ChallengeDetails from './pages/ChallengeDetails/ChallengeDetails'
-import Arena from './pages/Arena/Arena'
-import Leaderboard from './pages/Leaderboard/Leaderboard'
-import Profile from './pages/Profile/Profile'
-import Achievements from './pages/Achievements/Achievements'
-import Replays from './pages/Replays/Replays'
-import Analytics from './pages/Analytics/Analytics'
-import Auth from './pages/Auth'
 import ErrorBoundary from './components/ErrorBoundary'
 import { I18nProvider } from './i18n/I18nContext'
 import { useI18n } from './i18n/useI18n'
 import { ThemeProvider } from './theme/ThemeProvider'
-import Settings from './pages/Settings/Settings'
-import Competitive from './pages/Competitive/Competitive'
-import System from './pages/System/System'
-import Admin from './pages/Admin/Admin'
-import AdminShell from './components/layout/AdminShell/AdminShell'
-import DuelLobby from './pages/Duel/DuelLobby'
-import DuelRoom from './pages/Duel/DuelRoom'
 import { runMigrations } from './services/migrations.js'
 import { bootstrapDatabase, refreshDatabase } from './services/databaseSync.js'
 import { isAuthenticated } from './services/authStore.js'
 import usePremiumMotion from './hooks/usePremiumMotion'
 import { ToastProvider } from './components/ui/vibefarsi/Toast'
+import BootScreen from './components/feedback/BootScreen'
+import OfflineBanner from './components/feedback/OfflineBanner'
+
+// Route-level code splitting: each page is its own chunk, so the first
+// paint no longer downloads the Arena editor, Admin console, charts, etc.
+const Landing = lazy(() => import('./pages/Landing/Landing'))
+const Home = lazy(() => import('./pages/Home/Home'))
+const Challenges = lazy(() => import('./pages/Challenges/Challenges'))
+const ChallengeDetails = lazy(() => import('./pages/ChallengeDetails/ChallengeDetails'))
+const Arena = lazy(() => import('./pages/Arena/Arena'))
+const Leaderboard = lazy(() => import('./pages/Leaderboard/Leaderboard'))
+const Profile = lazy(() => import('./pages/Profile/Profile'))
+const Achievements = lazy(() => import('./pages/Achievements/Achievements'))
+const Replays = lazy(() => import('./pages/Replays/Replays'))
+const Analytics = lazy(() => import('./pages/Analytics/Analytics'))
+const Auth = lazy(() => import('./pages/Auth'))
+const Settings = lazy(() => import('./pages/Settings/Settings'))
+const Competitive = lazy(() => import('./pages/Competitive/Competitive'))
+const System = lazy(() => import('./pages/System/System'))
+const Admin = lazy(() => import('./pages/Admin/Admin'))
+const AdminShell = lazy(() => import('./components/layout/AdminShell/AdminShell'))
+const DuelLobby = lazy(() => import('./pages/Duel/DuelLobby'))
+const DuelRoom = lazy(() => import('./pages/Duel/DuelRoom'))
+const NotFound = lazy(() => import('./pages/NotFound'))
+
+// Run once at startup (it used to run on every render of <App/>).
+runMigrations()
 
 
 function ArenaRoute() {
@@ -42,16 +51,14 @@ function ArenaRoute() {
 
 function ProtectedShell({ ready }) {
   const { t } = useI18n()
-  if (!ready) {
-    return <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', color: 'var(--text-secondary)' }}>{t('boot', 'connecting')}</div>
-  }
-  if (!isAuthenticated()) return <Navigate to="/login" replace />
+  const location = useLocation()
+  if (!ready) return <BootScreen label={t('boot', 'connecting')} />
+  if (!isAuthenticated()) return <Navigate to="/login" replace state={{ from: location }} />
   return <AppShell />
 }
 
 function App() {
   usePremiumMotion()
-  runMigrations()
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
@@ -74,6 +81,8 @@ function App() {
       <I18nProvider>
         <ToastProvider>
           <ErrorBoundary>
+            <OfflineBanner />
+            <Suspense fallback={<BootScreen label={null} />}>
             <Routes>
             <Route path="/" element={<Landing />} />
 
@@ -82,7 +91,7 @@ function App() {
               <Route path="/challenges" element={<Challenges />} />
               <Route path="/challenges/:id" element={<ChallengeDetails />} />
               <Route path="/arena/:id" element={<ArenaRoute />} />
-              <Route path="/arena" element={<Navigate to="/challenges/1001" replace />} />
+              <Route path="/arena" element={<Navigate to="/challenges" replace />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/compete" element={<Competitive />} />
               <Route path="/duel" element={<DuelLobby />} />
@@ -108,8 +117,9 @@ function App() {
             <Route path="/privacy" element={<ComingSoon title="Privacy" />} />
             <Route path="/terms" element={<ComingSoon title="Terms" />} />
 
-            <Route path="*" element={<Navigate to="/home" replace />} />
+            <Route path="*" element={<NotFound />} />
             </Routes>
+            </Suspense>
           </ErrorBoundary>
         </ToastProvider>
       </I18nProvider>

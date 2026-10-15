@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 
 import { useI18n } from '../../../i18n/useI18n'
 
+import './ComingSoon.css'
+
 const TITLE_KEYS = {
   Tournaments: 'tournaments',
   Privacy: 'privacy',
@@ -15,7 +17,7 @@ function ComingSoon({ title = 'Coming soon' }) {
     : t('comingSoon', 'defaultTitle')
 
   return (
-    <div className="challenge-not-found">
+    <div className="challenge-not-found coming-soon bp-grid">
       <span className="eyebrow">{t('comingSoon', 'eyebrow')}</span>
       <h1>{heading}</h1>
       <p>{t('comingSoon', 'body')}</p>

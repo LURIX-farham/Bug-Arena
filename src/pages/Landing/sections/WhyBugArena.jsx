@@ -44,7 +44,7 @@ function WhyBugArena() {
           {t('landing', 'comparisonVs')}
         </div>
 
-        <SpotlightCard className="comparison-side arena" spotlightColor="rgba(99, 102, 241, 0.22)">
+        <SpotlightCard className="comparison-side arena" spotlightColor="rgba(61, 126, 255, 0.2)">
           <div className="comparison-header">
             <span>BUG//ARENA</span>
             <span>02</span>

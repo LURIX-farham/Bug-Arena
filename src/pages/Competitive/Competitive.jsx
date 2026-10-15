@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { ArrowUpRight } from 'lucide-react'
 import { challenges } from '../../data/challenges'
 import { getCompletedChallenges } from '../../services/submissionStore'
 import { getCompetitiveStats, getCurrentSeason, getCompetitiveMatches, COMPETITIVE_MODES, COMPETITIVE_OPPONENTS } from '../../services/competitiveStore'
@@ -62,7 +63,7 @@ function Competitive() {
         </div>
 
         <div className="competitive-panel match-history">
-          <div className="competitive-panel-head"><div><span>{t('competitive', 'matchHistory')}</span><h2>{t('competitive', 'recentBattles')}</h2></div><Link to="/leaderboard">{t('nav', 'leaderboard')} →</Link></div>
+          <div className="competitive-panel-head"><div><span>{t('competitive', 'matchHistory')}</span><h2>{t('competitive', 'recentBattles')}</h2></div><Link to="/leaderboard" className="competitive-history-link"><span>{t('nav', 'leaderboard')}</span><ArrowUpRight size={13} strokeWidth={1.75} aria-hidden="true" /></Link></div>
           {matches.length ? matches.map((match) => (
             <div className="history-row" key={match.id}><span className={`history-result ${match.result}`}>{match.result === 'win' ? t('competitive', 'resultWin') : match.result === 'loss' ? t('competitive', 'resultLoss') : t('competitive', 'resultDraw')}</span><div><strong>{t('competitive', 'vs')} {match.opponentName}</strong><span>{match.challengeTitle} · {MODE_KEYS[match.mode?.toLowerCase()] ? t('competitive', MODE_KEYS[match.mode.toLowerCase()]) : match.mode}</span></div><strong className={match.ratingDelta >= 0 ? 'delta-positive' : 'delta-negative'}>{match.ratingDelta >= 0 ? '+' : ''}{match.ratingDelta}</strong></div>
           )) : <div className="history-empty">{t('competitive', 'historyEmpty')}</div>}

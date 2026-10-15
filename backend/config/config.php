@@ -41,7 +41,7 @@ return [
     'db' => [
         'host' => $env('BUGARENA_DB_HOST', 'localhost'),
         'port' => (int) $env('BUGARENA_DB_PORT', '3306'),
-        'name' => $env('BUGARENA_DB_NAME', 'bug_arena'),
+        'name' => $env('BUGARENA_DB_NAME', 'bugare_bugarena'),
         'user' => $env('BUGARENA_DB_USER', 'root'),
         'password' => $env('BUGARENA_DB_PASSWORD', ''),
         'charset' => 'utf8mb4',
@@ -56,16 +56,12 @@ return [
     ],
 
     'cors' => [
-        'allowed_origins' => array_values(array_filter(
-            array_map(
-                'trim',
-                explode(',', $env(
-                    'BUGARENA_CORS_ORIGINS',
-                    'http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,http://127.0.0.1:4173,http://localhost,http://127.0.0.1'
-                ))
-            ),
-            static fn (string $origin): bool => $origin !== ''
-        )),
+        // Comma-separated list in BUGARENA_CORS_ORIGINS (the .env value was
+        // previously ignored and the production domain hard-coded).
+        'allowed_origins' => array_values(array_filter(array_map(
+            'trim',
+            explode(',', $env('BUGARENA_CORS_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173'))
+        ))),
     ],
 
     'max_code_length' => (int) $env('BUGARENA_MAX_CODE_LENGTH', '200000'),
@@ -78,6 +74,8 @@ return [
     'execution' => [
         'runner_url' => $env('BUGARENA_PYTHON_RUNNER_URL', ''),
         'timeout_sec' => (int) $env('BUGARENA_EXEC_TIMEOUT', '8'),
-        'memory_mb' => (int) $env('BUGARENA_EXEC_MEMORY_MB', '128'),
+        'memory_mb' => (int) $env('BUGARENA_EXEC_MEMORY_MB', '256'),
+        // 1 = refuse to score submissions that could not be re-run on the server.
+        'require_verified' => $env('BUGARENA_REQUIRE_VERIFIED', '0') === '1',
     ],
 ];

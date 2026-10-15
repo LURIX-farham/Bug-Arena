@@ -1,0 +1,96 @@
+/* =================================================================
+   COMING SOON — RESERVED MODULE PLACEHOLDER  (v2.0 "BLUEPRINT")
+   -----------------------------------------------------------------
+   Scoped under .coming-soon so the shared .challenge-not-found
+   contract (also used by Arena / ChallengeDetails) stays untouched.
+   Centered mono eyebrow with the "//" voice, display h1, muted
+   body, hairline back link, generous whitespace over a blueprint
+   grid backdrop.
+================================================================= */
+
+.coming-soon {
+  flex: 1;
+
+  display: grid;
+  place-items: center;
+  align-content: center;
+
+  gap: 14px;
+
+  min-height: 60vh;
+
+  padding: 80px 24px;
+
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+
+  text-align: center;
+}
+
+.coming-soon .eyebrow {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: var(--primary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.coming-soon .eyebrow::before {
+  content: '//';
+
+  margin-inline-end: 8px;
+
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.coming-soon h1 {
+  margin: 0;
+
+  font-size: clamp(28px, 3.5vw, 40px);
+  letter-spacing: -0.02em;
+}
+
+.coming-soon p {
+  max-width: 46ch;
+  margin: 0 0 10px;
+
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
+/* Hairline back link — quiet, technical */
+.coming-soon a {
+  justify-self: center;
+
+  padding: 10px 18px;
+
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+
+  color: var(--text-secondary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+
+  transition: border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease,
+    background-color var(--duration-fast) ease;
+}
+
+.coming-soon a:hover {
+  border-color: var(--primary);
+
+  background: var(--primary-soft);
+
+  color: var(--primary);
+}

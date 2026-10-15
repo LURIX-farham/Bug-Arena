@@ -38,17 +38,17 @@ function ChallengeShowcase() {
         </h2>
       </div>
 
-      <div className="challenge-card">
+      <div className="showcase-challenge">
 
-        <div className="challenge-info">
+        <div className="showcase-challenge-info">
 
-          <div className="challenge-top">
+          <div className="showcase-challenge-top">
 
-            <span className="challenge-id">
+            <span className="showcase-challenge-id">
               {t('landing', 'challengeId')}
             </span>
 
-            <span className="challenge-language">
+            <span className="showcase-challenge-language">
               {t('landing', 'challengeLanguage')}
             </span>
 
@@ -64,7 +64,7 @@ function ChallengeShowcase() {
             {t('landing', 'challengeDesc2')}
           </p>
 
-          <div className="challenge-stats">
+          <div className="showcase-challenge-stats">
             {challengeStats.map((stat) => (
               <div key={stat.label}>
                 <strong>{stat.value}</strong>
@@ -75,7 +75,7 @@ function ChallengeShowcase() {
 
           <Link
             to="/challenges/1001"
-            className="challenge-action"
+            className="showcase-challenge-action"
           >
             {t('landing', 'challengeCta')}
             <span>→</span>
@@ -83,11 +83,11 @@ function ChallengeShowcase() {
 
         </div>
 
-        <div className="challenge-editor">
+        <div className="showcase-challenge-editor">
 
-          <div className="editor-header">
+          <div className="showcase-editor-header">
 
-            <div className="editor-dots">
+            <div className="showcase-editor-dots">
               <span />
               <span />
               <span />
@@ -99,37 +99,37 @@ function ChallengeShowcase() {
 
           </div>
 
-          <div className="editor-code">
+          <div className="showcase-editor-code">
 
-            <div className="editor-line">
+            <div className="showcase-editor-line">
               <span>01</span>
               <code>
                 def calculate_average(data):
               </code>
             </div>
 
-            <div className="editor-line">
+            <div className="showcase-editor-line">
               <span>02</span>
               <code>
                 &nbsp;&nbsp;&nbsp;&nbsp;total = 0
               </code>
             </div>
 
-            <div className="editor-line">
+            <div className="showcase-editor-line">
               <span>03</span>
               <code>
                 &nbsp;&nbsp;&nbsp;&nbsp;for value in data:
               </code>
             </div>
 
-            <div className="editor-line error">
+            <div className="showcase-editor-line error">
               <span>04</span>
               <code>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;total += value
               </code>
             </div>
 
-            <div className="editor-line">
+            <div className="showcase-editor-line">
               <span>05</span>
               <code>
                 &nbsp;&nbsp;&nbsp;&nbsp;return total
@@ -138,9 +138,9 @@ function ChallengeShowcase() {
 
           </div>
 
-          <div className="editor-footer">
+          <div className="showcase-editor-footer">
 
-            <span className="editor-error">
+            <span className="showcase-editor-error">
               {t('landing', 'editorTestsFailed')}
             </span>
 

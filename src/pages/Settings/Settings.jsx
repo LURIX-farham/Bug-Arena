@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Moon, Sun } from 'lucide-react'
 import { getCurrentPlayer, savePlayer } from '../../services/playerStore'
 import { useI18n } from '../../i18n/useI18n'
 import { useTheme } from '../../theme/useTheme'
@@ -58,11 +59,11 @@ function Settings() {
         <div className="account-fields">
           <label>
             <span>{t('settings', 'username')}</span>
-            <input value={username} onChange={(event) => setUsername(event.target.value)} maxLength={20} autoComplete="username" />
+            <input className="field-input" value={username} onChange={(event) => setUsername(event.target.value)} maxLength={20} autoComplete="username" />
           </label>
           <label>
             <span>{t('settings', 'displayName')}</span>
-            <input value={displayName} onChange={(event) => setDisplayName(event.target.value)} maxLength={24} autoComplete="nickname" />
+            <input className="field-input" value={displayName} onChange={(event) => setDisplayName(event.target.value)} maxLength={24} autoComplete="nickname" />
           </label>
           <Button className="settings-save-button" type="submit" variant="brand">
             {saved ? t('settings', 'savedAccount') : t('common', 'save')}
@@ -78,12 +79,12 @@ function Settings() {
         </div>
         <div className="theme-switcher" role="group" aria-label={t('theme', 'label')}>
           <button className={isDark ? 'theme-option active' : 'theme-option'} onClick={() => setTheme('dark')} type="button">
-            <span className="theme-option-icon" aria-hidden="true">◐</span>
+            <span className="theme-option-icon" aria-hidden="true"><Moon size={15} strokeWidth={1.75} /></span>
             <strong>{t('theme', 'dark')}</strong>
             <span>{t('theme', 'darkBody')}</span>
           </button>
           <button className={isLight ? 'theme-option active' : 'theme-option'} onClick={() => setTheme('light')} type="button">
-            <span className="theme-option-icon" aria-hidden="true">☼</span>
+            <span className="theme-option-icon" aria-hidden="true"><Sun size={15} strokeWidth={1.75} /></span>
             <strong>{t('theme', 'light')}</strong>
             <span>{t('theme', 'lightBody')}</span>
           </button>

@@ -1,18 +1,334 @@
-.settings-page{max-width:980px;margin:0 auto;padding:16px 0 48px}.settings-header{margin-bottom:28px}.settings-eyebrow{font:8px 'JetBrains Mono',monospace;color:var(--accent);letter-spacing:.16em}.settings-header h1{margin:10px 0 8px;font-size:34px;letter-spacing:-1px}.settings-header p{max-width:680px;color:var(--text-muted);line-height:1.8}.settings-card{display:flex;align-items:center;justify-content:space-between;gap:28px;padding:28px;border:1px solid var(--border);background:var(--bg-surface);margin-bottom:16px}.settings-card-copy h2,.settings-card>div h2{margin:8px 0}.settings-card p{color:var(--text-muted);line-height:1.7}.settings-label{font:7px 'JetBrains Mono',monospace;color:var(--text-muted);letter-spacing:.14em}.language-switcher,.theme-switcher{display:flex;gap:8px}.language-option,.theme-option{min-width:120px;padding:14px 16px;border:1px solid var(--border);background:transparent;color:var(--text-primary);cursor:pointer;text-align:start;transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}.language-option strong{display:block;font:11px 'JetBrains Mono',monospace;margin-bottom:4px}.language-option span{font-size:12px;color:var(--text-muted)}.language-option.active{border-color:var(--accent);box-shadow:inset 0 -2px 0 var(--accent);background:var(--accent-soft)}.theme-option{display:flex;flex-direction:column;align-items:flex-start;gap:6px}.theme-option-icon{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);background:var(--bg-elevated)}.theme-option strong{font:11px 'JetBrains Mono',monospace;letter-spacing:1px}.theme-option span{font-size:11px;color:var(--text-muted)}.theme-option.active{border-color:var(--accent);box-shadow:inset 0 -2px 0 var(--accent);background:var(--accent-soft)}.theme-option.active .theme-option-icon{color:var(--accent);border-color:var(--accent)}.settings-card-muted{background:transparent}.settings-saved{font:7px 'JetBrains Mono',monospace;color:var(--accent);white-space:nowrap}@media(max-width:720px){.settings-card{flex-direction:column;align-items:stretch}.language-switcher,.theme-switcher{width:100%}.language-option,.theme-option{flex:1}}
+/* =================================================================
+   SETTINGS — ACCOUNT & APPEARANCE  (v2.0 "BLUEPRINT")
+   -----------------------------------------------------------------
+   Composition (top → bottom):
+   1. Header            — mono eyebrow, display h1, hairline rule
+   2. Account card      — identity fields + primary save action
+   3. Appearance card   — theme options (shared .field-input inputs)
+   4. Status card       — quiet account meta read-out
 
-/* Settings now focuses on account management and appearance. Language lives
-   in the persistent navbar/topbar for one-click switching. */
-.settings-page { max-width: 1040px; }
-.settings-header { padding-bottom: 18px; border-bottom: 1px solid var(--border); }
-.settings-header h1 { font-size: clamp(32px, 5vw, 48px); letter-spacing: -.035em; }
-.settings-card { border-radius: 16px; box-shadow: var(--shadow-sm); }
-.account-settings-card { align-items: flex-start; }
-.account-fields { width: min(460px, 100%); display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.account-fields label { display: grid; gap: 7px; }
-.account-fields label span { font-size: 11px; font-weight: 700; color: var(--text-secondary); }
-.account-fields input { width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid var(--border); border-radius: 9px; background: var(--bg-primary); color: var(--text-primary); }
-.account-fields input:hover { border-color: var(--border-strong); }
-.settings-save-button { grid-column: 1 / -1; width: 100%; }
+   Inputs reuse the shared .field-input primitive; this file only
+   tunes sizing. Legacy rtl.css flex shims are neutralized below
+   with higher-specificity logical equivalents.
+================================================================= */
 
-.account-meta-card h2 { font-size: 18px; }
-@media(max-width:720px) { .account-fields { grid-template-columns: 1fr; } .settings-save-button { grid-column: auto; } }
+.settings-page {
+  max-width: 980px;
+
+  margin: 0 auto;
+
+  padding: 4px 0 48px;
+}
+
+
+/* =========================
+   1 · HEADER
+========================= */
+
+.settings-header {
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+
+  border-block-end: 1px solid var(--border);
+}
+
+.settings-eyebrow {
+  display: inline-block;
+
+  color: var(--primary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.settings-eyebrow::before {
+  content: '//';
+
+  margin-inline-end: 8px;
+
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.settings-header h1 {
+  margin: 10px 0 8px;
+
+  font-size: clamp(26px, 3vw, 36px);
+  letter-spacing: -0.02em;
+}
+
+.settings-header p {
+  max-width: 660px;
+
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+
+/* =========================
+   2–4 · CARDS
+========================= */
+
+.settings-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+
+  margin-bottom: 14px;
+  padding: 26px 28px;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+
+  background: var(--bg-surface);
+}
+
+.settings-card-copy h2,
+.settings-card > div h2 {
+  margin: 8px 0;
+
+  font-size: var(--text-xl);
+  letter-spacing: -0.02em;
+}
+
+.settings-card p {
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.settings-label {
+  display: inline-block;
+
+  color: var(--text-muted);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.settings-label::before {
+  content: '//';
+
+  margin-inline-end: 6px;
+
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Mono technical values across the meta card */
+.account-meta-card strong,
+.settings-saved {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.account-meta-card h2 {
+  font-size: var(--text-lg);
+}
+
+.settings-card-muted {
+  background: var(--bg-surface);
+}
+
+.settings-saved {
+  color: var(--primary);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+
+/* =========================
+   ACCOUNT FIELDS
+========================= */
+
+.account-settings-card {
+  align-items: flex-start;
+}
+
+.account-fields {
+  width: min(460px, 100%);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.account-fields label {
+  display: grid;
+  gap: 7px;
+}
+
+.account-fields label span {
+  color: var(--text-secondary);
+
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+/* Shared .field-input primitive — only sizing tuned here */
+.account-fields .field-input {
+  min-height: 42px;
+  padding-block: 9px;
+}
+
+.settings-save-button {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+
+/* =========================
+   THEME OPTIONS
+========================= */
+
+.theme-switcher {
+  display: flex;
+  gap: 8px;
+}
+
+.language-option,
+.theme-option {
+  min-width: 120px;
+  padding: 14px 16px;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+
+  background: transparent;
+
+  color: var(--text-primary);
+  text-align: start;
+
+  cursor: pointer;
+
+  transition: border-color var(--duration-fast) ease,
+    box-shadow var(--duration-fast) ease,
+    background-color var(--duration-fast) ease;
+}
+
+.language-option strong,
+.theme-option strong {
+  display: block;
+
+  margin-bottom: 4px;
+
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+}
+
+.language-option span,
+.theme-option span {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.language-option.active,
+.theme-option.active {
+  border-color: var(--primary);
+
+  background: var(--primary-soft);
+
+  box-shadow: inset 0 -2px 0 var(--primary);
+}
+
+.theme-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.theme-option-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+
+  background: var(--bg-elevated);
+
+  color: var(--text-muted);
+
+  transition: color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease;
+}
+
+.theme-option.active .theme-option-icon {
+  border-color: var(--primary);
+
+  color: var(--primary);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 720px) {
+  .settings-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .theme-switcher {
+    width: 100%;
+  }
+
+  .language-option,
+  .theme-option {
+    flex: 1;
+  }
+
+  .account-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-save-button {
+    grid-column: auto;
+  }
+}
+
+
+/* =================================================================
+   RTL — NEUTRALIZE LEGACY rtl.css SHIMS
+   rtl.css was written against the old physical layout
+   (row-reverse + forced right alignment). The layout above is
+   fully logical, so re-assert the natural direction with higher
+   specificity.
+================================================================= */
+
+html[dir='rtl'] .settings-page .settings-card {
+  flex-direction: row;
+  text-align: start;
+}
+
+html[dir='rtl'] .settings-page .theme-switcher,
+html[dir='rtl'] .settings-page .language-switcher {
+  flex-direction: row;
+}
+
+html[dir='rtl'] .settings-page .language-option,
+html[dir='rtl'] .settings-page .theme-option {
+  text-align: start;
+  align-items: flex-start;
+}
+
+@media (max-width: 720px) {
+  html[dir='rtl'] .settings-page .settings-card {
+    flex-direction: column;
+  }
+}

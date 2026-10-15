@@ -18,7 +18,7 @@ import LandingFooter from './sections/LandingFooter'
 
 import useScrollReveal from '../../hooks/useScrollReveal'
 import { useI18n } from '../../i18n/useI18n'
-import { Aurora, BlurText, GradientText } from '../../components/reactbits'
+import { BlurText, GradientText } from '../../components/reactbits'
 
 function Landing() {
   const { t } = useI18n()
@@ -62,14 +62,8 @@ function Landing() {
 
         {/* HERO */}
 
-        <section className="hero hero-with-aurora">
-          <div className="hero-aurora-bg" aria-hidden="true">
-            <Aurora
-              colorStops={['#5227FF', '#7cff67', '#5227FF']}
-              amplitude={1.0}
-              blend={0.55}
-            />
-          </div>
+        <section className="hero bp-grid">
+          <div className="hero-glow" aria-hidden="true" />
 
           <div className="hero-content">
 
@@ -87,8 +81,8 @@ function Landing() {
               />
               <br />
               <GradientText
-                colors={['#6366f1', '#a78bfa', '#22d3ee', '#6366f1']}
-                animationSpeed={6}
+                colors={['#3d7eff', '#3fd5e4', '#3d7eff']}
+                animationSpeed={7}
                 className="hero-gradient-accent"
               >
                 {t('landing', 'heroTitleAccent')}

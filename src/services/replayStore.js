@@ -79,7 +79,7 @@ export function startReplaySession({ challengeId, challengeTitle, difficulty, ti
 }
 
 export function recordReplayEvent(sessionId, event) {
-  if (!sessionId) return false
+  if (!sessionId || sessionId === 'undefined' || sessionId === 'null') return false
   const state = readState()
   const session = state.sessions.find((item) => item.id === sessionId)
   if (!session || session.status === 'finished') return false
@@ -96,7 +96,7 @@ export function recordReplayEvent(sessionId, event) {
 }
 
 export function finishReplaySession(sessionId, result = {}) {
-  if (!sessionId) return false
+  if (!sessionId || sessionId === 'undefined' || sessionId === 'null') return false
   const state = readState()
   const session = state.sessions.find((item) => item.id === sessionId)
   if (!session) return false

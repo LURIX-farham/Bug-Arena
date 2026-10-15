@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Crown, Medal, Trophy } from 'lucide-react'
 import { getCurrentPlayer } from '../../services/playerStore'
 import { getLeaderboard, isLeaderboardLoaded, hydrateLeaderboardFromServer } from '../../services/leaderboardStore.js'
 import { useI18n } from '../../i18n/useI18n'
@@ -11,7 +12,6 @@ import {
   LogoLoop,
   ShinyText,
   SpotlightCard,
-  StarBorder,
 } from '../../components/reactbits'
 import { useTheme } from '../../theme/useTheme'
 import './Leaderboard.css'
@@ -83,11 +83,17 @@ function Leaderboard() {
 
   const formatScore = (value) => (Number(value) || 0).toLocaleString()
 
-  // DotGrid palette — concrete colors for the canvas layer.
+  // DotGrid palette — concrete colors for the canvas layer (electric blue).
   const dotBase = isDark ? 'rgba(154, 161, 172, 0.16)' : 'rgba(71, 85, 105, 0.13)'
-  const dotActive = isDark ? 'rgba(124, 255, 107, 0.7)' : 'rgba(37, 99, 235, 0.45)'
+  const dotActive = isDark ? 'rgba(61, 126, 255, 0.6)' : 'rgba(30, 86, 224, 0.45)'
 
-  const podiumMedal = (rank) => (rank === 1 ? '◆' : rank === 2 ? '▲' : '■')
+  const podiumMedal = (rank) => (
+    rank === 1
+      ? <Crown size={16} strokeWidth={1.75} />
+      : rank === 2
+        ? <Trophy size={16} strokeWidth={1.75} />
+        : <Medal size={16} strokeWidth={1.75} />
+  )
 
   const renderPodiumCard = (player) => {
     const isMe = player.id === me.id
@@ -99,8 +105,8 @@ function Leaderboard() {
         spotlightColor={player.rank === 1 ? 'rgba(var(--accent-rgb), 0.2)' : 'rgba(var(--secondary-rgb), 0.14)'}
       >
         <div className="podium-head">
+          <span className="podium-rank tnum">{String(player.rank).padStart(2, '0')}</span>
           <span className="podium-medal" aria-hidden="true">{podiumMedal(player.rank)}</span>
-          <span className="podium-rank">#{player.rank}</span>
           {isMe && <span className="podium-you">{t('leaderboard', 'you')}</span>}
         </div>
 
@@ -134,18 +140,7 @@ function Leaderboard() {
       </SpotlightCard>
     )
 
-    // The champion gets the orbiting border beams.
-    return player.rank === 1 ? (
-      <StarBorder
-        key={player.id}
-        className="podium-arena"
-        speed={8}
-        color="rgba(var(--accent-rgb), 0.85)"
-        secondaryColor="rgba(var(--tertiary-rgb), 0.4)"
-      >
-        {card}
-      </StarBorder>
-    ) : card
+    return card
   }
 
   return (
@@ -179,7 +174,7 @@ function Leaderboard() {
             <h1 id="lb-hero-title">
               <GradientText
                 as="span"
-                colors={['var(--accent)', '#59f3c4', '#7c5cff']}
+                colors={['var(--primary)', 'var(--secondary)', 'var(--primary)']}
                 animationSpeed={7}
                 pauseOnHover
               >
@@ -228,7 +223,7 @@ function Leaderboard() {
               <strong>#{player.rank}</strong>
               {player.username}
               <span className="lb-ticker-score">{formatScore(player.score)}</span>
-              <i className="lb-ticker-sep" aria-hidden="true">◆</i>
+              <i className="lb-ticker-sep" aria-hidden="true" />
             </span>
           ))}
         </LogoLoop>

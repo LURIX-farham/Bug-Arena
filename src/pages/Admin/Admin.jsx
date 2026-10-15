@@ -1,17 +1,27 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Navigate, Link, useParams, useNavigate } from 'react-router-dom'
+import {
+  Activity,
+  Bug,
+  LayoutDashboard,
+  ListChecks,
+  RefreshCw,
+  Server,
+  Swords,
+  Users,
+} from 'lucide-react'
 import { apiRequest } from '../../services/apiClient.js'
 import { getAuthUser } from '../../services/authStore.js'
 import './Admin.css'
 
 const TABS = [
-  { id: 'overview', label: 'Overview', icon: '◆' },
-  { id: 'users', label: 'Users', icon: '●' },
-  { id: 'challenges', label: 'Challenges', icon: '◈' },
-  { id: 'submissions', label: 'Submissions', icon: '▷' },
-  { id: 'duels', label: 'Duels', icon: '⚔' },
-  { id: 'events', label: 'Events', icon: '⌁' },
-  { id: 'system', label: 'System', icon: '⚙' },
+  { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+  { id: 'users', label: 'Users', icon: Users },
+  { id: 'challenges', label: 'Challenges', icon: Bug },
+  { id: 'submissions', label: 'Submissions', icon: ListChecks },
+  { id: 'duels', label: 'Duels', icon: Swords },
+  { id: 'events', label: 'Events', icon: Activity },
+  { id: 'system', label: 'System', icon: Server },
 ]
 
 function fmt(n) {
@@ -203,6 +213,7 @@ function Admin() {
           if (tab === 'events') loadEvents().finally(() => setLoading(false))
           if (tab === 'system') loadSystem().finally(() => setLoading(false))
         }}>
+          <RefreshCw size={14} strokeWidth={1.75} aria-hidden="true" />
           Refresh
         </button>
       </header>
@@ -217,7 +228,7 @@ function Admin() {
             className={`admin-tab${tab === item.id ? ' active' : ''}`}
             onClick={() => setTab(item.id)}
           >
-            <span aria-hidden="true">{item.icon}</span>
+            <span className="admin-tab-icon" aria-hidden="true"><item.icon size={14} strokeWidth={1.75} /></span>
             {item.label}
           </button>
         ))}

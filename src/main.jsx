@@ -11,6 +11,7 @@ import './styles/AppShell.css'
 import './styles/rtl.css'
 import './styles/vibefarsi.css'
 import './components/brand/BrandLogo.css'
+import './styles/enhancements.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

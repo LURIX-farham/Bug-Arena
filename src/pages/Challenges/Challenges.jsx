@@ -6,6 +6,7 @@ import { DIFFICULTIES, filterChallenges, getChallengeTags, sortChallenges } from
 import { isChallengeCompleted } from '../../services/submissionStore'
 import { useI18n } from '../../i18n/useI18n'
 import { getLocalizedChallenge } from '../../i18n/languageUtils'
+import { ArrowRight, CircleDashed, Search } from 'lucide-react'
 import {
   AnimatedCounter,
   AnimatedList,
@@ -15,7 +16,6 @@ import {
   Magnet,
   ShinyText,
   SpotlightCard,
-  StarBorder,
 } from '../../components/reactbits'
 import { useTheme } from '../../theme/useTheme'
 import './Challenges.css'
@@ -27,6 +27,7 @@ function Challenges() {
   const [activeTag, setActiveTag] = useState('ALL')
   const [sort, setSort] = useState('DEFAULT')
   const [query, setQuery] = useState('')
+  const [showAllTags, setShowAllTags] = useState(false)
 
   const tags = useMemo(() => getChallengeTags(allChallenges), [])
   const filteredChallenges = useMemo(() => {
@@ -37,6 +38,14 @@ function Challenges() {
     })
     return sortChallenges(filtered, sort)
   }, [activeDifficulty, activeTag, query, sort])
+
+  // 40+ topic chips were three rows of noise: show the first dozen and keep
+  // the active tag visible even when it is hidden behind "show all".
+  const COLLAPSED_TAGS = 12
+  const visibleTags = showAllTags || tags.length <= COLLAPSED_TAGS + 2
+    ? tags
+    : [...tags.slice(0, COLLAPSED_TAGS), ...(activeTag !== 'ALL' && !tags.slice(0, COLLAPSED_TAGS).includes(activeTag) ? [activeTag] : [])]
+  const hiddenTagCount = tags.length - visibleTags.length
 
   const clearFilters = () => {
     setActiveDifficulty('ALL')
@@ -55,8 +64,9 @@ function Challenges() {
     : 0
 
   // DotGrid palette — canvas can't resolve CSS vars, pass concrete colors.
+  // Active dots mirror --primary (blueprint accent), never green.
   const dotBase = isDark ? 'rgba(154, 161, 172, 0.16)' : 'rgba(71, 85, 105, 0.13)'
-  const dotActive = isDark ? 'rgba(124, 255, 107, 0.7)' : 'rgba(37, 99, 235, 0.45)'
+  const dotActive = isDark ? 'rgba(61, 126, 255, 0.7)' : 'rgba(30, 86, 224, 0.45)'
 
   const renderCard = (rawChallenge) => {
     const challenge = getLocalizedChallenge(rawChallenge, language)
@@ -73,14 +83,14 @@ function Challenges() {
         className={`challenge-card ${completed ? 'challenge-completed-card' : ''}${isFeatured ? ' challenge-featured-card' : ''}`}
         spotlightColor={
           completed
-            ? 'rgba(52, 211, 153, 0.16)'
+            ? 'rgba(var(--success-rgb), 0.16)'
             : 'rgba(var(--accent-rgb), 0.2)'
         }
       >
         <div className="challenge-card-top">
-          <span>{t('challenges', 'bug')} #{challenge.id}</span>
+          <span className="challenge-id-chip">{t('challenges', 'bug')} #{challenge.id}</span>
           <div className="challenge-card-status">
-            <span className="challenge-difficulty">{challenge.difficulty.toUpperCase()}</span>
+            <span className={`challenge-difficulty difficulty--${challenge.difficulty.toLowerCase()}`}>{challenge.difficulty.toUpperCase()}</span>
             {completed && <span className="challenge-completed">{t('challenges', 'completed')}</span>}
             {isFeatured && <span className="challenge-next-chip"><ShinyText text={t('challenges', 'nextUp')} speed={3.2} /></span>}
           </div>
@@ -103,22 +113,17 @@ function Challenges() {
           <div className="challenge-tags">
             {challenge.tags.map((tag) => <span key={tag}>#{tag}</span>)}
           </div>
-          <span className="challenge-arrow">→</span>
+          <span className="challenge-arrow" aria-hidden="true"><ArrowRight size={15} strokeWidth={1.75} /></span>
         </div>
       </SpotlightCard>
     )
 
-    // The featured hunt gets the orbiting border beams.
+    // The featured hunt gets a static accent edge (no animated beams —
+    // they fight with the card grid and add glow noise).
     return isFeatured ? (
-      <StarBorder
-        key={challenge.id}
-        className="challenge-featured"
-        speed={9}
-        color="rgba(var(--accent-rgb), 0.85)"
-        secondaryColor="rgba(var(--secondary-rgb), 0.4)"
-      >
+      <div key={challenge.id} className="challenge-featured">
         {card}
-      </StarBorder>
+      </div>
     ) : card
   }
 
@@ -126,7 +131,7 @@ function Challenges() {
     <div className="challenges-page">
 
       {/* ============ HERO — ARCHIVE FIELD ============ */}
-      <section className="challenges-hero" aria-labelledby="challenges-hero-title">
+      <section className="challenges-hero bp-grid" aria-labelledby="challenges-hero-title">
         <div className="challenges-hero-layers" aria-hidden="true">
           <DotGrid
             className="challenges-hero-dots"
@@ -155,7 +160,7 @@ function Challenges() {
               <br />
               <GradientText
                 as="span"
-                colors={['var(--accent)', '#59f3c4', '#7c5cff']}
+                colors={['var(--primary)', 'var(--tertiary)', 'var(--secondary)']}
                 animationSpeed={7}
                 pauseOnHover
               >
@@ -199,7 +204,7 @@ function Challenges() {
 
       <div className="challenge-toolbar">
         <label className="challenge-search">
-          <span>⌕</span>
+          <span className="challenge-search-icon" aria-hidden="true"><Search size={16} strokeWidth={1.75} /></span>
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
@@ -225,6 +230,7 @@ function Challenges() {
             key={difficulty}
             className={`filter ${activeDifficulty === difficulty ? 'active' : ''}`}
             onClick={() => setActiveDifficulty(difficulty)}
+            aria-pressed={activeDifficulty === difficulty}
           >
             {difficulty === 'ALL'
               ? t('common', 'all')
@@ -240,15 +246,26 @@ function Challenges() {
       </div>
 
       <div className="challenge-tags-filter">
-        {tags.map((tag) => (
+        {visibleTags.map((tag) => (
           <button
             key={tag}
             className={`tag-filter ${activeTag === tag ? 'active' : ''}`}
             onClick={() => setActiveTag(tag)}
+            aria-pressed={activeTag === tag}
           >
             {tag === 'ALL' ? t('challenges', 'allTopics') : `#${tag}`}
           </button>
         ))}
+        {tags.length > COLLAPSED_TAGS + 2 && (
+          <button
+            type="button"
+            className="tag-filter tag-filter--toggle"
+            onClick={() => setShowAllTags((value) => !value)}
+            aria-expanded={showAllTags}
+          >
+            {showAllTags ? t('ux', 'showFewerTags') : `${t('ux', 'showAllTags')} (+${hiddenTagCount})`}
+          </button>
+        )}
       </div>
 
       <AnimatedList
@@ -262,7 +279,7 @@ function Challenges() {
 
       {filteredChallenges.length === 0 && (
         <div className="challenges-empty">
-          <span>◌</span>
+          <span className="challenges-empty-icon" aria-hidden="true"><CircleDashed size={18} strokeWidth={1.75} /></span>
           <strong>{t('challenges', 'noFound')}</strong>
           <p>{t('challenges', 'noFoundBody')}</p>
           <Magnet padding={24} magnetStrength={5} maxOffset={5}>

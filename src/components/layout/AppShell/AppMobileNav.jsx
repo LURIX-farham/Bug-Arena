@@ -1,30 +1,31 @@
 import { NavLink } from 'react-router-dom'
+import { House, Bug, Swords, Trophy, User } from 'lucide-react'
 import { useI18n } from '../../../i18n/useI18n'
 
 const navigation = [
   {
     label: 'Home',
-    icon: '⌂',
+    Icon: House,
     path: '/home',
   },
   {
     label: 'Challenges',
-    icon: '◈',
+    Icon: Bug,
     path: '/challenges',
   },
   {
     label: 'Duel',
-    icon: '⚔',
+    Icon: Swords,
     path: '/duel',
   },
   {
     label: 'Ranks',
-    icon: '◆',
+    Icon: Trophy,
     path: '/leaderboard',
   },
   {
     label: 'Profile',
-    icon: '●',
+    Icon: User,
     path: '/profile',
   },
 ]
@@ -51,7 +52,7 @@ function AppMobileNav() {
           }
         >
           <span>
-            {item.icon}
+            <item.Icon size={18} strokeWidth={1.75} aria-hidden="true" />
           </span>
 
           <small>

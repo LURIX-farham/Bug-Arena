@@ -9,7 +9,6 @@ use BugArena\Controllers\CompetitiveController;
 use BugArena\Controllers\ChallengeController;
 use BugArena\Controllers\DuelController;
 use BugArena\Controllers\EventController;
-use BugArena\Controllers\ExecutionController;
 use BugArena\Controllers\HealthController;
 use BugArena\Controllers\LeaderboardController;
 use BugArena\Controllers\PlayerController;
@@ -34,12 +33,18 @@ return static function (Router $router): void {
     $health = new HealthController();
     $sync = new SyncController();
     $duel = new DuelController();
-    $execution = new ExecutionController();
 
     $write = static function (callable $handler): callable {
         return static function ($req, $params = []) use ($handler): void {
             $csrfExempt = $req->method === 'POST'
-                && in_array($req->path, ['/auth/register', '/auth/login'], true);
+                && in_array($req->path, [
+                    '/auth/register',
+                    '/auth/login',
+                    // Presence ping only — no state change beyond last_active_at.
+                    // Polled every ~20s; requiring CSRF here floods 403 when the
+                    // in-memory token is missing after a hard refresh / half-session.
+                    '/duel/heartbeat',
+                ], true);
             if (!$csrfExempt) {
                 CsrfMiddleware::verify();
             }
@@ -50,6 +55,19 @@ return static function (Router $router): void {
 
     // Light read protection for public/bulk endpoints (per IP).
     $readLimit = static fn (string $bucket, int $max, int $window, callable $next) => static fn ($req) => (new RateLimitMiddleware($max, $window))->handle($bucket . ':' . $req->ip) ?: $next($req);
+
+    // Server-side challenge evaluation (Python) — lazy-load so a missing
+    // controller file cannot take down auth/health routes.
+    $router->post('/execute', $write(static function ($req): void {
+        if (!class_exists(\BugArena\Controllers\ExecuteController::class)) {
+            \BugArena\Core\Response::json([
+                'ok' => false,
+                'error' => 'execute_unavailable',
+                'message' => 'ExecuteController.php is missing on the server.',
+            ], 503);
+        }
+        (new \BugArena\Controllers\ExecuteController())->run($req);
+    }));
 
     // Health (public)
     $router->get('/health', fn () => $health->show());
@@ -69,12 +87,9 @@ return static function (Router $router): void {
     $router->get('/player', fn () => $player->show());
     $router->put('/player', $write(fn ($req) => $player->update($req)));
 
-    // Submissions (server-scored + server-executed)
+    // Submissions (server-scored)
     $router->get('/submissions', fn ($req) => $submissions->index($req));
     $router->post('/submissions', $write(fn ($req) => $submissions->store($req)));
-
-    // Server-side public test execution (hidden tests never run here)
-    $router->post('/execute', $write(fn ($req) => $execution->run($req)));
 
     // Replays
     $router->get('/replays', fn ($req) => $replays->index($req));

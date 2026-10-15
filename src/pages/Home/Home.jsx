@@ -7,6 +7,15 @@ import { players } from '../../data/players'
 import { useI18n } from '../../i18n/useI18n'
 import { getLocalizedChallenge } from '../../i18n/languageUtils'
 import {
+  ArrowRight,
+  Check,
+  Diamond,
+  Flame,
+  Play,
+  Sparkles,
+  Swords,
+} from 'lucide-react'
+import {
   AnimatedCounter,
   AnimatedList,
   Aurora,
@@ -130,14 +139,15 @@ function Home() {
 
   // Ambient layer palettes adapt to the active theme. Stops must be HEX:
   // Aurora feeds them to ogl's Color parser every frame, which only
-  // understands hex — rgba() strings would warn and render as garbage.
+  // understands hex — rgba()/var() strings would warn and render as
+  // garbage. Values mirror --primary/--tertiary/--secondary exactly.
   const auroraStops = isDark
-    ? ['#7cff6b', '#7c5cff', '#22c7d9']
-    : ['#008f70', '#6947e8', '#087fb5']
+    ? ['#3d7eff', '#92a5ff', '#3fd5e4']
+    : ['#1e56e0', '#4c5fd6', '#0a93b4']
 
   // DotGrid palette — concrete colors because canvas can't resolve CSS vars.
   const dotBase = isDark ? 'rgba(154, 161, 172, 0.20)' : 'rgba(71, 85, 105, 0.16)'
-  const dotActive = isDark ? 'rgba(124, 255, 107, 0.85)' : 'rgba(37, 99, 235, 0.55)'
+  const dotActive = isDark ? 'rgba(61, 126, 255, 0.75)' : 'rgba(30, 86, 224, 0.5)'
 
   const [chartRef, chartInView] = useInViewOnce(0.25)
 
@@ -183,7 +193,7 @@ function Home() {
               <GradientText
                 as="span"
                 className="home-name-gradient"
-                colors={['var(--accent)', '#59f3c4', '#7c5cff']}
+                colors={['var(--primary)', 'var(--secondary)', 'var(--tertiary)']}
                 animationSpeed={7}
                 pauseOnHover
               >
@@ -236,13 +246,13 @@ function Home() {
               <div className="home-header-actions">
                 <Magnet padding={30} magnetStrength={5} maxOffset={7}>
                   <Link to={`/arena/${nextChallenge.id}`} className="primary-action">
-                    <span className="action-glyph" aria-hidden="true">▶</span>
+                    <span className="action-glyph" aria-hidden="true"><Play size={14} strokeWidth={1.75} /></span>
                     {t('home', 'startChallenge')}
                   </Link>
                 </Magnet>
                 <Magnet padding={26} magnetStrength={5} maxOffset={6}>
                   <Link to="/duel" className="secondary-action duel-action">
-                    <span className="action-glyph" aria-hidden="true">⚔</span>
+                    <span className="action-glyph" aria-hidden="true"><Swords size={14} strokeWidth={1.75} /></span>
                     {t('home', 'duelCta')}
                   </Link>
                 </Magnet>
@@ -320,7 +330,9 @@ function Home() {
             <div className="identity-divider" aria-hidden="true" />
 
             <div className="identity-streak">
-              <div className="identity-streak-icon" aria-hidden="true">🔥</div>
+              <div className="identity-streak-icon" aria-hidden="true">
+                <Flame size={18} strokeWidth={1.75} />
+              </div>
               <div className="identity-streak-body">
                 {streak > 0 ? (
                   <>
@@ -361,7 +373,7 @@ function Home() {
               <strong>{entry.username}</strong>
               <span className="ticker-score">{formatScore(entry.score)}</span>
               <em>{t('home', 'points')}</em>
-              <i className="ticker-sep" aria-hidden="true">◆</i>
+              <i className="ticker-sep" aria-hidden="true"><Diamond size={14} strokeWidth={1.75} /></i>
             </span>
           ))}
         </LogoLoop>
@@ -454,7 +466,7 @@ function Home() {
               </div>
               <Link to={`/arena/${nextChallenge.id}`} className="challenge-start">
                 {t('home', 'enterChallenge')}
-                <span className="challenge-start-arrow" aria-hidden="true">→</span>
+                <span className="challenge-start-arrow" aria-hidden="true"><ArrowRight size={14} strokeWidth={1.75} /></span>
               </Link>
             </div>
           </SpotlightCard>
@@ -564,12 +576,15 @@ function Home() {
               <span className="panel-eyebrow">{t('home', 'activityEyebrow')}</span>
               <h2>{t('home', 'activityTitle')}</h2>
             </div>
-            <Link to="/profile" className="panel-link">{t('home', 'viewAll')} →</Link>
+            <Link to="/profile" className="panel-link">
+              {t('home', 'viewAll')}
+              <ArrowRight size={14} strokeWidth={1.75} aria-hidden="true" />
+            </Link>
           </div>
           <AnimatedList className="matches-list" delay={110} initialDelay={160}>
             {recent.length ? recent.map((item) => (
               <div className="match-row" key={`${item.challengeId}-${item.submittedAt}`}>
-                <div className="match-result win">✓</div>
+                <div className="match-result win" aria-hidden="true"><Check size={14} strokeWidth={1.75} /></div>
                 <div className="match-info">
                   <strong>{item.challengeTitle}</strong>
                   <span>{t('home', 'pythonLabel')}{challenges[item.challengeId]?.difficulty || t('home', 'challengeLabel')}</span>
@@ -589,7 +604,7 @@ function Home() {
 
       {/* ============ 6 · FOR YOU BAND ============ */}
       <SpotlightCard as="section" className="home-panel for-you-band">
-        <span className="fy-badge" aria-hidden="true">✦</span>
+        <span className="fy-badge" aria-hidden="true"><Sparkles size={18} strokeWidth={1.75} /></span>
         <div className="fy-copy">
           <span className="panel-eyebrow">{t('home', 'forYouEyebrow')}</span>
           <h2>{t('home', 'forYouTitle')}</h2>
@@ -602,7 +617,7 @@ function Home() {
         </div>
         <Link to={`/arena/${nextChallenge.id}`} className="fy-cta">
           {t('home', 'enterChallenge')}
-          <span className="challenge-start-arrow" aria-hidden="true">→</span>
+          <span className="challenge-start-arrow" aria-hidden="true"><ArrowRight size={14} strokeWidth={1.75} /></span>
         </Link>
       </SpotlightCard>
     </div>

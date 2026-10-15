@@ -6,6 +6,7 @@ import { challenges } from '../../data/challenges'
 import { getSubmission } from '../../services/submissionStore'
 import { useI18n } from '../../i18n/useI18n'
 import { getLocalizedChallenge } from '../../i18n/languageUtils'
+import { ArrowRight, Circle, Diamond, Plus, TriangleAlert } from 'lucide-react'
 
 function ChallengeDetails() {
   const { id } = useParams()
@@ -47,12 +48,21 @@ function ChallengeDetails() {
 
           <div className="details-meta">
 
-            <span>
+            <span className="details-id-chip">
               BUG #{challenge.id}
             </span>
 
             <span className={`details-live ${submission ? 'details-completed' : ''}`}>
-              ● {submission ? t('challengeDetails', 'completed') : t('challengeDetails', 'available')}
+              <Circle size={14} strokeWidth={1.75} aria-hidden="true" />
+              {submission ? t('challengeDetails', 'completed') : t('challengeDetails', 'available')}
+            </span>
+
+            <span className={`details-difficulty difficulty--${challenge.difficulty.toLowerCase()}`}>
+              {challenge.difficulty.toUpperCase()}
+            </span>
+
+            <span className="details-lang">
+              {challenge.language.toUpperCase()}
             </span>
 
           </div>
@@ -72,10 +82,12 @@ function ChallengeDetails() {
 
           <Link
             to={`/arena/${challenge.id}`}
-            className="enter-arena-button"
+            className="enter-arena-button cut-corner-sm"
           >
             {submission ? t('challengeDetails', 'replay') : t('challengeDetails', 'enter')}
-            <span>→</span>
+            <span aria-hidden="true">
+              <ArrowRight size={16} strokeWidth={1.75} />
+            </span>
           </Link>
 
           <span className="action-hint">
@@ -131,8 +143,8 @@ function ChallengeDetails() {
 
               <div className="brief-warning">
 
-                <span>
-                  !
+                <span className="brief-warning-icon" aria-hidden="true">
+                  <TriangleAlert size={16} strokeWidth={1.75} />
                 </span>
 
                 <div>
@@ -543,8 +555,8 @@ function ChallengeDetails() {
 
           <div className="details-side-warning">
 
-            <span className="warning-icon">
-              ◈
+            <span className="warning-icon" aria-hidden="true">
+              <Diamond size={16} strokeWidth={1.75} />
             </span>
 
             <div>
@@ -564,10 +576,10 @@ function ChallengeDetails() {
 
           {/* HARDENING INFO */}
 
-          <div className="details-side-warning">
+          <div className="details-side-warning details-side-warning--neutral">
 
-            <span className="warning-icon">
-              +
+            <span className="warning-icon" aria-hidden="true">
+              <Plus size={16} strokeWidth={1.75} />
             </span>
 
             <div>

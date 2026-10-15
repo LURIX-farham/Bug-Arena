@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { Search, Bell, User, Award, Shield, Settings, LogOut } from 'lucide-react'
 
 import GlobalSearch from './GlobalSearch'
 import { getCurrentPlayer, clearLocalPlayer } from '../../../services/playerStore.js'
@@ -83,7 +84,7 @@ function AppTopbar() {
           className="search-trigger"
           onClick={() => setSearchOpen(true)}
         >
-          <span>⌕</span>
+          <span><Search size={14} strokeWidth={2} aria-hidden="true" /></span>
 
           <span>
             {t('search', 'placeholder')}
@@ -112,7 +113,7 @@ function AppTopbar() {
               aria-label={t('notifications', 'title')}
               aria-expanded={notificationsOpen}
             >
-              ◇
+              <Bell size={16} strokeWidth={1.75} aria-hidden="true" />
 
               {recentSubmissions.length > 0 && (
                 <span className="notification-count">
@@ -212,7 +213,7 @@ function AppTopbar() {
                 to="/profile"
                 onClick={() => setUserMenuOpen(false)}
               >
-                <span>●</span>
+                <User size={15} strokeWidth={1.75} aria-hidden="true" />
                 {t('nav', 'profile')}
               </Link>
 
@@ -220,7 +221,7 @@ function AppTopbar() {
                 to="/achievements"
                 onClick={() => setUserMenuOpen(false)}
               >
-                <span>◇</span>
+                <Award size={15} strokeWidth={1.75} aria-hidden="true" />
                 {t('nav', 'achievements')}
               </Link>
 
@@ -229,7 +230,7 @@ function AppTopbar() {
                   to="/admin"
                   onClick={() => setUserMenuOpen(false)}
                 >
-                  <span>◆</span>
+                  <Shield size={15} strokeWidth={1.75} aria-hidden="true" />
                   Admin
                 </Link>
               )}
@@ -238,7 +239,7 @@ function AppTopbar() {
                 to="/settings"
                 onClick={() => setUserMenuOpen(false)}
               >
-                <span>⚙</span>
+                <Settings size={15} strokeWidth={1.75} aria-hidden="true" />
                 {t('nav', 'settings')}
               </Link>
 
@@ -254,7 +255,7 @@ function AppTopbar() {
                   navigate('/login', { replace: true })
                 }}
               >
-                <span>↪</span>
+                <LogOut size={15} strokeWidth={1.75} aria-hidden="true" />
                 {t('auth', 'signOut')}
               </button>
 

@@ -1,30 +1,92 @@
+/* =================================================================
+   CHALLENGE DETAILS — MISSION BRIEFING  (v2.0 "BLUEPRINT")
+   -----------------------------------------------------------------
+   Composition:
+   1. Briefing header  — id chip + status + difficulty/language tags,
+                         title, description, cut-corner start CTA
+   2. Content column   — numbered brief panels (01–04)
+   3. Sidebar          — data strip (mono tabular stats), coverage,
+                         ready/hardening notes
+
+   Contract: tokens only, hairline geometry, mono technical labels,
+   logical properties (RTL-safe). The start CTA is the one primary
+   action and carries the cut-corner motif.
+================================================================= */
+
 .challenge-details-page {
-  max-width: 1250px;
+  max-width: 1150px;
   margin: 0 auto;
+
+  padding-bottom: 24px;
 }
 
 
-/* BACK */
+/* =========================
+   NOT FOUND
+========================= */
+
+.challenge-not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+
+  padding: 48px 32px;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+
+  background: var(--bg-surface);
+}
+
+.challenge-not-found h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  letter-spacing: -0.02em;
+}
+
+.challenge-not-found a {
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.challenge-not-found a:hover {
+  color: var(--accent-hover);
+}
+
+
+/* =========================
+   BACK
+========================= */
 
 .details-back {
   display: inline-block;
 
-  margin-bottom: 30px;
+  margin-bottom: 26px;
 
   color: var(--text-muted);
 
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
 
   text-decoration: none;
+
+  transition: color var(--duration-fast) ease;
 }
 
 .details-back:hover {
-  color: var(--accent);
+  color: var(--primary);
 }
 
 
-/* HEADER */
+/* =========================
+   1 · BRIEFING HEADER
+========================= */
 
 .details-header {
   display: flex;
@@ -33,58 +95,144 @@
 
   gap: 40px;
 
-  padding-bottom: 35px;
+  padding-bottom: 30px;
 
   border-bottom: 1px solid var(--border);
 }
 
 .details-header-main {
-  max-width: 750px;
+  max-width: 720px;
 }
 
+/* Meta row — mono chips: id · status · difficulty · language */
 .details-meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 
-  gap: 15px;
+  gap: 8px;
+}
 
-  color: var(--text-muted);
+.details-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 8px;
+  padding: 4px 10px;
+
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--text-2xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.details-id-chip {
+  border: 1px solid rgba(var(--primary-rgb), 0.35);
+  border-radius: var(--radius-xs);
+
+  background: var(--primary-soft);
+
+  color: var(--primary);
+  font-weight: 700;
 }
 
 .details-live {
-  color: var(--accent);
+  border: 1px solid rgba(var(--secondary-rgb), 0.35);
+  border-radius: var(--radius-xs);
+
+  background: var(--secondary-soft);
+
+  color: var(--secondary);
 }
 
+.details-live svg {
+  flex-shrink: 0;
+}
+
+/* Completed hunts: filled ring + success tokens */
 .details-completed {
+  border-color: rgba(var(--success-rgb), 0.35);
+
+  background: var(--success-soft);
+
+  color: var(--success);
+}
+
+.details-completed svg {
+  fill: currentColor;
+}
+
+.details-difficulty {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+
+  background: var(--bg-elevated);
+
+  color: var(--text-secondary);
+}
+
+.details-difficulty.difficulty--easy {
+  border-color: rgba(var(--success-rgb), 0.35);
+
+  background: var(--success-soft);
+
+  color: var(--difficulty-easy);
+}
+
+.details-difficulty.difficulty--medium {
+  border-color: rgba(var(--warning-rgb), 0.35);
+
+  background: var(--warning-soft);
+
+  color: var(--difficulty-medium);
+}
+
+.details-difficulty.difficulty--hard {
+  border-color: rgba(var(--danger-rgb), 0.35);
+
+  background: var(--danger-soft);
+
+  color: var(--difficulty-hard);
+}
+
+.details-lang {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+
+  background: transparent;
+
   color: var(--text-muted);
 }
 
 .details-header h1 {
-  margin: 13px 0 12px;
+  margin: 16px 0 12px;
 
-  font-size: clamp(38px, 5vw, 64px);
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4vw, 46px);
 
-  line-height: 1;
+  line-height: 1.05;
 
-  letter-spacing: -3px;
+  letter-spacing: -0.03em;
+
+  color: var(--text-primary);
 }
 
-.details-header p {
-  max-width: 650px;
+.details-header-main > p {
+  max-width: 640px;
 
   margin: 0;
 
-  color: var(--text-muted);
+  color: var(--text-secondary);
 
-  font-size: 13px;
-  line-height: 1.7;
+  font-size: var(--text-md);
+  line-height: 1.75;
 }
 
 
-/* ACTION */
+/* =========================
+   START CTA — the one primary action, cut-corner motif
+========================= */
 
 .details-action {
   display: flex;
@@ -92,7 +240,7 @@
 
   align-items: stretch;
 
-  min-width: 190px;
+  min-width: 210px;
 }
 
 .enter-arena-button {
@@ -102,52 +250,63 @@
 
   height: 48px;
 
-  padding: 0 16px;
+  padding: 0 18px;
 
-  border: 1px solid var(--accent);
-  border-radius: var(--radius-sm);
+  border: 1px solid var(--primary);
+  border-radius: 0;
 
-  background: var(--accent);
+  background: var(--primary);
 
-  color: var(--bg-primary);
+  color: var(--text-invert);
 
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 8px;
-  font-weight: 800;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
 
   text-decoration: none;
 
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    background-color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease,
+    transform var(--duration-fast) var(--ease-out);
 }
 
+/* clip-path clips box-shadows — hover reads through fill + lift only */
 .enter-arena-button:hover {
-  color: var(--bg-primary);
+  border-color: var(--accent-hover);
 
-  transform: translateY(-2px);
+  background: var(--accent-hover);
 
-  box-shadow:
-    0 8px 25px rgba(var(--accent-rgb), 0.12);
+  color: var(--text-invert);
+
+  transform: translateY(-1px);
 }
 
 .enter-arena-button span {
-  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .action-hint {
-  margin-top: 9px;
+  margin-top: 10px;
 
   color: var(--text-muted);
 
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 7px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--text-2xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 
   text-align: center;
 }
 
 
-/* MAIN */
+/* =========================
+   2 · MAIN GRID
+========================= */
 
 .details-main-grid {
   display: grid;
@@ -156,27 +315,29 @@
     minmax(0, 1fr)
     320px;
 
-  gap: 10px;
+  gap: 16px;
 
-  margin-top: 10px;
+  margin-top: 24px;
 }
 
 .details-content {
   display: flex;
   flex-direction: column;
 
-  gap: 10px;
+  gap: 16px;
 }
 
 .details-sidebar {
   display: flex;
   flex-direction: column;
 
-  gap: 10px;
+  gap: 16px;
 }
 
 
-/* PANEL */
+/* =========================
+   PANELS — numbered briefing sections
+========================= */
 
 .details-panel {
   border: 1px solid var(--border);
@@ -187,42 +348,60 @@
   overflow: hidden;
 }
 
+/* Briefing panels are informational — no lift, quiet border tint */
+.challenge-details-page .details-panel.motion-surface:hover {
+  transform: none;
+  border-color: rgba(var(--primary-rgb), 0.28);
+  box-shadow: var(--shadow-sm);
+}
+
 .details-panel-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
 
-  padding: 20px;
+  padding: 18px 22px;
 
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .details-panel-header > div > span {
   color: var(--text-muted);
 
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 7px;
-  letter-spacing: 1px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
 }
 
 .details-panel-header h2 {
   margin: 7px 0 0;
 
-  font-size: 17px;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+
+  color: var(--text-primary);
 }
 
 .brief-number {
-  color: var(--accent);
+  color: rgba(var(--primary-rgb), 0.75);
 
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--text-sm);
+  font-weight: 700;
 }
 
 
-/* BRIEF */
+/* =========================
+   BRIEF CONTENT
+========================= */
 
 .brief-content {
-  padding: 25px;
+  padding: 22px;
 }
 
 .brief-content > p {
@@ -232,7 +411,7 @@
 
   color: var(--text-secondary);
 
-  font-size: 12px;
+  font-size: var(--text-base);
   line-height: 1.8;
 }
 
@@ -242,20 +421,20 @@
 
   gap: 13px;
 
-  margin-top: 25px;
-  padding: 15px;
+  margin-top: 22px;
+  padding: 15px 16px;
 
-  border: 1px solid rgba(215, 168, 79, 0.18);
+  border: 1px solid rgba(var(--warning-rgb), 0.28);
   border-radius: var(--radius-sm);
 
-  background: rgba(215, 168, 79, 0.04);
+  background: var(--warning-soft);
 }
 
-.brief-warning > span {
-  color: var(--warning);
+.brief-warning-icon {
+  display: inline-flex;
+  align-items: center;
 
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: bold;
+  color: var(--warning);
 }
 
 .brief-warning strong {
@@ -263,8 +442,10 @@
 
   color: var(--warning);
 
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
 }
 
 .brief-warning p {
@@ -272,12 +453,14 @@
 
   color: var(--text-muted);
 
-  font-size: 9px;
-  line-height: 1.6;
+  font-size: var(--text-sm);
+  line-height: 1.65;
 }
 
 
-/* SKILLS */
+/* =========================
+   SKILLS GRID — hairline quadrants
+========================= */
 
 .skills-grid {
   display: grid;
@@ -286,13 +469,13 @@
 }
 
 .skill-item {
-  padding: 18px 20px;
+  padding: 17px 22px;
 
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .skill-item:nth-child(odd) {
-  border-right: 1px solid var(--border);
+  border-inline-end: 1px solid var(--border-subtle);
 }
 
 .skill-item:nth-last-child(-n + 2) {
@@ -305,7 +488,10 @@
 }
 
 .skill-item strong {
-  font-size: 11px;
+  color: var(--text-primary);
+
+  font-size: var(--text-base);
+  font-weight: 700;
 }
 
 .skill-item span {
@@ -313,14 +499,49 @@
 
   color: var(--text-muted);
 
-  font-size: 8px;
+  font-size: var(--text-sm);
+  line-height: 1.65;
 }
 
 
-/* STATS */
+/* =========================
+   TAGS
+========================= */
+
+.details-panel .challenge-tags {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  margin-top: 0;
+
+  padding: 20px 22px;
+}
+
+.details-panel .challenge-tag {
+  padding: 5px 10px;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+
+  background: var(--bg-elevated);
+
+  color: var(--text-secondary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.06em;
+}
+
+
+/* =========================
+   SIDEBAR — DATA STRIP
+   Mono tabular values separated by hairlines.
+========================= */
 
 .detail-stat-list {
-  padding: 5px 20px 10px;
+  padding: 5px 22px 12px;
 }
 
 .detail-stat-list > div {
@@ -328,9 +549,9 @@
   align-items: center;
   justify-content: space-between;
 
-  padding: 14px 0;
+  padding: 13px 0;
 
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .detail-stat-list > div:last-child {
@@ -340,48 +561,88 @@
 .detail-stat-list span {
   color: var(--text-muted);
 
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 7px;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
 }
 
 .detail-stat-list strong {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--text-base);
+  font-weight: 700;
+}
+
+.detail-stat-list .difficulty-easy {
+  color: var(--difficulty-easy);
+}
+
+.detail-stat-list .difficulty-medium {
+  color: var(--difficulty-medium);
+}
+
+.detail-stat-list .difficulty-hard {
+  color: var(--difficulty-hard);
 }
 
 .success-rate {
-  color: var(--accent);
+  color: var(--success);
 }
 
 
-/* WARNING */
+/* =========================
+   SIDEBAR NOTES — ready / hardening
+========================= */
 
 .details-side-warning {
   display: flex;
   align-items: flex-start;
 
-  gap: 12px;
+  gap: 13px;
 
   padding: 17px;
 
-  border: 1px solid rgba(var(--accent-rgb), 0.15);
+  border: 1px solid rgba(var(--primary-rgb), 0.3);
   border-radius: var(--radius-md);
 
-  background:
-    rgba(var(--accent-rgb), 0.035);
+  background: var(--primary-soft);
+}
+
+.details-side-warning--neutral {
+  border-color: var(--border);
+
+  background: var(--bg-elevated);
 }
 
 .warning-icon {
-  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-  font-size: 15px;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+
+  border: 1px solid rgba(var(--primary-rgb), 0.35);
+  border-radius: var(--radius-sm);
+
+  background: var(--bg-surface);
+
+  color: var(--primary);
 }
 
 .details-side-warning strong {
   display: block;
 
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 8px;
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
 }
 
 .details-side-warning p {
@@ -389,14 +650,55 @@
 
   color: var(--text-muted);
 
-  font-size: 9px;
-  line-height: 1.6;
+  font-size: var(--text-sm);
+  line-height: 1.65;
 }
 
 
-/* RESPONSIVE */
+/* =========================
+   LIGHT THEME POLISH
+========================= */
 
-@media (max-width: 850px) {
+[data-theme='light'] .details-panel {
+  box-shadow: var(--shadow-xs);
+}
+
+[data-theme='light'] .challenge-not-found {
+  box-shadow: var(--shadow-xs);
+}
+
+[data-theme='light'] .details-lang {
+  background: var(--bg-surface);
+}
+
+
+/* =========================
+   PERSIAN / RTL SYNC
+   Mono technical labels switch to Vazirmatn — monospace
+   letter-spacing fights Persian glyphs.
+========================= */
+
+html[lang='fa'] .details-back,
+html[lang='fa'] .details-meta span,
+html[lang='fa'] .enter-arena-button,
+html[lang='fa'] .action-hint,
+html[lang='fa'] .details-panel-header > div > span,
+html[lang='fa'] .brief-number,
+html[lang='fa'] .brief-warning strong,
+html[lang='fa'] .detail-stat-list span,
+html[lang='fa'] .detail-stat-list strong,
+html[lang='fa'] .details-side-warning strong,
+html[lang='fa'] .details-panel .challenge-tag {
+  font-family: var(--font-fa);
+  letter-spacing: 0;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
 
   .details-header {
     align-items: flex-start;
@@ -414,10 +716,10 @@
 }
 
 
-@media (max-width: 550px) {
+@media (max-width: 560px) {
 
   .details-header h1 {
-    font-size: 40px;
+    font-size: 30px;
   }
 
   .skills-grid {
@@ -425,15 +727,36 @@
   }
 
   .skill-item:nth-child(odd) {
-    border-right: 0;
+    border-inline-end: 0;
   }
 
   .skill-item:nth-last-child(-n + 2) {
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-subtle);
   }
 
   .skill-item:last-child {
     border-bottom: 0;
   }
 
+}
+
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .details-back,
+  .enter-arena-button,
+  .details-panel {
+    transition: none;
+  }
+
+  .enter-arena-button:hover {
+    transform: none;
+  }
+
+  .challenge-details-page .details-panel.motion-surface:hover {
+    transform: none;
+  }
 }

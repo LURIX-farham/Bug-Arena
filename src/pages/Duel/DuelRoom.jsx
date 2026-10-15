@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
+import { Swords } from 'lucide-react'
 import { challenges } from '../../data/challenges'
 import { createPoller, fetchMatch } from '../../services/duelStore.js'
 import { useI18n } from '../../i18n/useI18n'
-import { ShinyText, SpotlightCard, StarBorder } from '../../components/reactbits'
 import './Duel.css'
 
 const VS_PHASE_MS = 3200
@@ -22,17 +22,17 @@ function DuelerCard({ player, side }) {
       </span>
       <strong>{player.displayName}</strong>
       <small>@{player.username}</small>
-      <em>{player.rating} · {player.wins}W/{player.losses}L</em>
+      <em className="tnum">{player.rating} · {player.wins}W/{player.losses}L</em>
     </div>
   )
 }
 
 /**
  * Duel room: the pre-match ceremony. Two matched players see each other's
- * profiles split by an animated divider (VS), then the "computer" spins a
- * slot-machine over the challenge catalogue and locks in the random bug
- * challenge honouring the host's filters. Both sides are then routed into
- * the shared arena editor.
+ * profiles split by a divider (VS), then the "computer" spins a slot-machine
+ * over the challenge catalogue and locks in the random bug challenge
+ * honouring the host's filters. Both sides are then routed into the shared
+ * arena editor.
  */
 function DuelRoom() {
   const { matchId } = useParams()
@@ -149,7 +149,7 @@ function DuelRoom() {
     return (
       <div className="duel-room">
         <section className="duel-panel duel-searching">
-          <div className="duel-radar" aria-hidden="true"><span /><span /><span /><strong>⚔</strong></div>
+          <div className="duel-radar" aria-hidden="true"><span /><span /><span /><strong><Swords size={22} strokeWidth={1.75} /></strong></div>
           <h2>{t('duel', 'hostWaiting')}</h2>
           <DuelerCard player={match.host} side="host" />
         </section>
@@ -203,19 +203,15 @@ function DuelRoom() {
       </header>
 
       {/* VS stage */}
-      <SpotlightCard
-        as="section"
-        className={`duel-stage ${phase !== 'vs' ? 'duel-stage-selecting' : ''}`}
-        spotlightColor="rgba(var(--accent-rgb), 0.1)"
-      >
+      <section className={`duel-stage ${phase !== 'vs' ? 'duel-stage-selecting' : ''}`}>
         <DuelerCard player={match.host} side="host" />
 
         <div className="duel-divider" aria-hidden="true">
-          {phase === 'vs' && <span className="duel-vs">{t('duel', 'vs')}</span>}
+          {phase === 'vs' && <span className="duel-vs tnum">{t('duel', 'vs')}</span>}
         </div>
 
         <DuelerCard player={match.guest} side="guest" />
-      </SpotlightCard>
+      </section>
 
       {/* Challenge selection */}
       {phase !== 'vs' && (
@@ -225,30 +221,25 @@ function DuelRoom() {
           </span>
 
           {revealed ? (
-            <StarBorder
-              className="duel-slot-arena"
-              speed={6}
-              color="rgba(var(--accent-rgb), 0.85)"
-              secondaryColor="rgba(var(--secondary-rgb), 0.4)"
-            >
-              <div className={`duel-slot duel-slot-locked`}>
+            <div className="duel-slot-arena tick-frame">
+              <div className="duel-slot duel-slot-locked bp-grid">
                 <strong className="duel-slot-title">{displayTitle}</strong>
                 <div className="duel-slot-meta">
                   <span className={`duel-slot-diff difficulty-${displayDifficulty.toLowerCase()}`}>
                     {displayDifficulty.toUpperCase()}
                   </span>
                   <span>{displayBugType.toUpperCase()}</span>
-                  <span>{displayScore} PTS</span>
+                  <span className="tnum">{displayScore} PTS</span>
                 </div>
               </div>
-            </StarBorder>
+            </div>
           ) : (
-            <div className="duel-slot">
+            <div className="duel-slot bp-grid">
               <strong className="duel-slot-title duel-slot-spinning">{slotTitle || '…'}</strong>
             </div>
           )}
 
-          {revealed && <p className="duel-entering"><ShinyText text={`${t('duel', 'entering')}…`} speed={2.2} /></p>}
+          {revealed && <p className="duel-entering">{`${t('duel', 'entering')}…`}</p>}
         </section>
       )}
     </div>

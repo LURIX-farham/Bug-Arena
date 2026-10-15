@@ -32,7 +32,7 @@ export async function loginAccount({ username, password }) {
 export async function bootstrapAuth() {
   if (bootstrapped) return currentUser
   try {
-    const result = await apiRequest('/auth/me')
+    const result = await apiRequest('/auth/me', { timeoutMs: 8000 })
     currentUser = result.authenticated ? result.user : null
   } catch {
     currentUser = null

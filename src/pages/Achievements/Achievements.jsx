@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Check, Minus } from 'lucide-react'
 import { challenges } from '../../data/challenges'
 import { getAchievementProgress } from '../../services/achievementStore'
 import { useI18n } from '../../i18n/useI18n'
@@ -22,9 +23,9 @@ function Achievements() {
   const unlocked = items.filter((item) => item.unlocked).length
   const percent = items.length ? Math.round((unlocked / items.length) * 100) : 0
 
-  // DotGrid palette — concrete colors for the canvas layer.
+  // DotGrid palette — concrete colors for the canvas layer (electric blue).
   const dotBase = isDark ? 'rgba(154, 161, 172, 0.16)' : 'rgba(71, 85, 105, 0.13)'
-  const dotActive = isDark ? 'rgba(124, 255, 107, 0.7)' : 'rgba(37, 99, 235, 0.45)'
+  const dotActive = isDark ? 'rgba(61, 126, 255, 0.6)' : 'rgba(30, 86, 224, 0.45)'
 
   return (
     <div className="achievements-page">
@@ -57,7 +58,7 @@ function Achievements() {
             <h1 id="achievements-hero-title">
               <GradientText
                 as="span"
-                colors={['var(--accent)', '#59f3c4', '#7c5cff']}
+                colors={['var(--primary)', 'var(--secondary)', 'var(--primary)']}
                 animationSpeed={7}
                 pauseOnHover
               >
@@ -114,7 +115,11 @@ function Achievements() {
               <h2>{t('achievements', item.id)}</h2>
               <p>{t('achievements', `${item.id}Body`)}</p>
             </div>
-            <div className="achievement-state">{item.unlocked ? '✓' : '—'}</div>
+            <div className="achievement-state" aria-hidden="true">
+              {item.unlocked
+                ? <Check size={16} strokeWidth={1.75} />
+                : <Minus size={16} strokeWidth={1.75} />}
+            </div>
           </SpotlightCard>
         ))}
       </AnimatedList>
@@ -129,7 +134,7 @@ function Achievements() {
         <SpotlightCard as="section" className="achievement-footer-panel" spotlightColor="rgba(var(--accent-rgb), 0.1)">
           <div><span>{t('achievements', 'keepGoing')}</span><h2>{t('achievements', 'footerTitle')}</h2></div>
           <Magnet padding={22} magnetStrength={4} maxOffset={5}>
-            <Link to="/challenges">{t('achievements', 'browse')}</Link>
+            <Link to="/challenges" className="achievement-cta cut-corner-sm">{t('achievements', 'browse')}</Link>
           </Magnet>
         </SpotlightCard>
       </StarBorder>

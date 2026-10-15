@@ -1,13 +1,16 @@
 /* =================================================================
-   BUG ARENA — DESIGN SYSTEM · THEME TOKENS
+   BUG//ARENA — DESIGN SYSTEM · THEME TOKENS  (v2.0 "BLUEPRINT")
    -----------------------------------------------------------------
-   Every theme-dependent value in the app must come from this file.
-   Two complete palettes:
-   • DARK  — refined black-green terminal with cyan/violet undertones
-   • LIGHT — clean white-blue with a vivid blue accent
+   Single source of truth for every theme-dependent value.
+
+   Identity: the logo's deep navy (#011631) is the brand core.
+   Surfaces are layered navy — never pure black — with one
+   disciplined electric-blue accent and a cool cyan for live/data.
+   Geometry is architectural: sharp radii, hairline rules,
+   cut-corner motifs that echo the mark's angular notch.
 
    Conventions:
-   • --bg-*, --text-*, --border  → semantic surfaces & typography
+   • --bg-*, --text-*, --border*  → semantic surfaces & typography
    • --primary / --secondary / --accent-* → brand roles
    • --success/--warning/--danger/--info → status roles
    • --*-rgb triplet helpers → use with rgba(var(--accent-rgb), .12)
@@ -17,11 +20,12 @@
 
 :root {
   /* ---------- Typography ---------- */
+  --font-display: 'Space Grotesk', 'Vazirmatn', 'Inter', system-ui, -apple-system, sans-serif;
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Fira Code', Menlo, monospace;
   --font-fa: 'Vazirmatn', 'Inter', system-ui, -apple-system, sans-serif;
 
-  /* Type scale (1.25 ratio, base 14px) */
+  /* Type scale (base 13px UI; display sizes opt-in via --text-4xl/5xl) */
   --text-2xs: 9px;
   --text-xs: 10px;
   --text-sm: 11px;
@@ -31,8 +35,11 @@
   --text-xl: 20px;
   --text-2xl: 26px;
   --text-3xl: 34px;
+  --text-4xl: 44px;
+  --text-5xl: 58px;
 
   --tracking-eyebrow: 0.16em;
+  --tracking-wide: 0.08em;
 
   /* ---------- Spacing scale (4px base) ---------- */
   --space-1: 4px;
@@ -46,12 +53,12 @@
   --space-12: 48px;
   --space-16: 64px;
 
-  /* ---------- Radius ---------- */
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
+  /* ---------- Radius — architectural, deliberately sharp ---------- */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
   --radius-pill: 999px;
 
   /* ---------- Z-index layers ---------- */
@@ -68,44 +75,49 @@
   --duration-slow: 0.4s;
 
   /* ---------- Focus ring ---------- */
-  --focus-ring: 0 0 0 2px var(--bg-primary), 0 0 0 4px rgba(var(--primary-rgb), 0.6);
+  --focus-ring: 0 0 0 2px var(--bg-primary), 0 0 0 4px rgba(var(--primary-rgb), 0.65);
 
-  /* Default to dark theme tokens so pre-paint state matches the
-     previous Bug Arena look. ThemeProvider swaps these on mount. */
-  --bg-primary: #07080b;
-  --bg-surface: #0f1115;
-  --bg-elevated: #161a20;
-  --bg-sunken: #040507;
-  --bg-overlay: rgba(8, 9, 12, 0.85);
+  /* ---------- Brand constants (theme-independent) ---------- */
+  --navy: #011631;              /* logo navy — the brand anchor */
+  --navy-rgb: 1, 22, 49;
+  --control-height: 42px;
 
-  --border: #232830;
-  --border-strong: #323843;
-  --border-subtle: #1a1e25;
+  /* Default to dark tokens so pre-paint state matches the arena look.
+     ThemeProvider swaps these on mount. */
+  --bg-primary: #050c1b;
+  --bg-surface: #0a1526;
+  --bg-elevated: #0f1d33;
+  --bg-sunken: #030711;
+  --bg-overlay: rgba(4, 9, 20, 0.86);
 
-  --text-primary: #f2f4f7;
-  --text-secondary: #9aa1ac;
-  --text-muted: #656c77;
-  --text-disabled: #4a505b;
-  --text-invert: #07080b;
+  --border: #1b2c48;
+  --border-strong: #2b4269;
+  --border-subtle: #13223a;
 
-  --primary: #7cff6b;
-  --primary-rgb: 124, 255, 107;
-  --primary-soft: rgba(124, 255, 107, 0.08);
-  --primary-soft-strong: rgba(124, 255, 107, 0.16);
+  --text-primary: #e9f0fc;
+  --text-secondary: #9cacc9;
+  --text-muted: #67799b;
+  --text-disabled: #47587a;
+  --text-invert: #051225;
+
+  --primary: #3d7eff;
+  --primary-rgb: 61, 126, 255;
+  --primary-soft: rgba(61, 126, 255, 0.1);
+  --primary-soft-strong: rgba(61, 126, 255, 0.18);
 
   /* Legacy alias — every existing rule keeps working */
   --accent: var(--primary);
   --accent-rgb: var(--primary-rgb);
-  --accent-hover: #95ff8b;
+  --accent-hover: #5e96ff;
   --accent-soft: var(--primary-soft);
 
-  --secondary: #5ea7ff;
-  --secondary-rgb: 94, 167, 255;
-  --secondary-soft: rgba(94, 167, 255, 0.1);
+  --secondary: #3fd5e4;
+  --secondary-rgb: 63, 213, 228;
+  --secondary-soft: rgba(63, 213, 228, 0.1);
 
-  --tertiary: #b78bff;
-  --tertiary-rgb: 183, 139, 255;
-  --tertiary-soft: rgba(183, 139, 255, 0.1);
+  --tertiary: #92a5ff;
+  --tertiary-rgb: 146, 165, 255;
+  --tertiary-soft: rgba(146, 165, 255, 0.1);
 
   /* Legacy aliases for the numbered accents */
   --accent-2: var(--secondary);
@@ -113,39 +125,43 @@
   --accent-3: var(--tertiary);
   --accent-3-rgb: var(--tertiary-rgb);
 
-  --success: #57e389;
-  --success-rgb: 87, 227, 137;
-  --success-soft: rgba(87, 227, 137, 0.1);
+  --success: #35d49e;
+  --success-rgb: 53, 212, 158;
+  --success-soft: rgba(53, 212, 158, 0.1);
 
-  --warning: #ffb84d;
-  --warning-rgb: 255, 184, 77;
-  --warning-soft: rgba(255, 184, 77, 0.12);
+  --warning: #ffb454;
+  --warning-rgb: 255, 180, 84;
+  --warning-soft: rgba(255, 180, 84, 0.12);
 
-  --danger: #ff5c67;
-  --danger-rgb: 255, 92, 103;
-  --danger-soft: rgba(255, 92, 103, 0.1);
+  --danger: #ff5c7a;
+  --danger-rgb: 255, 92, 122;
+  --danger-soft: rgba(255, 92, 122, 0.1);
 
-  --info: #5ea7ff;
-  --info-rgb: 94, 167, 255;
-  --info-soft: rgba(94, 167, 255, 0.1);
+  --info: #55a8ff;
+  --info-rgb: 85, 168, 255;
+  --info-soft: rgba(85, 168, 255, 0.1);
 
   --difficulty-easy: var(--success);
   --difficulty-medium: var(--warning);
   --difficulty-hard: var(--danger);
 
-  --shadow-color: 0, 0, 0;
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.28);
-  --shadow-md: 0 12px 34px rgba(0, 0, 0, 0.32);
-  --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.35);
-  --shadow-strong: 0 30px 90px rgba(0, 0, 0, 0.45);
-  --shadow-accent: 0 8px 24px rgba(var(--primary-rgb), 0.12);
+  --shadow-color: 2, 8, 23;
+  --shadow-xs: 0 1px 2px rgba(2, 8, 23, 0.36);
+  --shadow-sm: 0 4px 14px rgba(2, 8, 23, 0.32);
+  --shadow-md: 0 12px 34px rgba(2, 8, 23, 0.38);
+  --shadow-soft: 0 20px 60px rgba(2, 8, 23, 0.42);
+  --shadow-strong: 0 30px 90px rgba(2, 8, 23, 0.5);
+  --shadow-accent: 0 8px 24px rgba(var(--primary-rgb), 0.18);
 
-  /* Code surfaces stay terminal-dark in BOTH themes (intentional) */
-  --code-bg: #090b0d;
-  --code-border: #1c2129;
-  --code-text: #c9d1d9;
-  --code-gutter: #444b52;
+  /* Code surfaces stay terminal-dark navy in BOTH themes (intentional) */
+  --code-bg: #060f1e;
+  --code-border: #16283f;
+  --code-text: #d5e1f2;
+  --code-gutter: #4a5d7e;
+
+  /* Blueprint grid line — signature texture */
+  --grid-line: rgba(122, 162, 247, 0.055);
+  --grid-line-strong: rgba(122, 162, 247, 0.09);
 
   /* Legacy aliases — older page stylesheets reference these names.
      Defining them here routes them through the live theme tokens. */
@@ -154,222 +170,170 @@
   --line: var(--border);
   --text: var(--text-primary);
   --border-color: var(--border);
+
+  /* reactbits compatibility aliases */
+  --brand-400: var(--primary);
+  --brand-500: var(--primary);
+  --brand-600: #2b62d9;
+  --violet-500: var(--tertiary);
+  --cyan-500: var(--secondary);
+  --amber-500: var(--warning);
+  --rose-500: var(--danger);
+  --surface-tint: rgba(148, 178, 255, 0.03);
+  --motion-highlight: rgba(158, 190, 255, 0.075);
 }
 
 /* =================================================================
-   DARK THEME — refined black-green terminal
+   DARK THEME — layered navy mission control
 ================================================================= */
 
 [data-theme='dark'] {
-  --bg-primary: #07080b;
-  --bg-surface: #0f1115;
-  --bg-elevated: #161a20;
-  --bg-sunken: #040507;
-  --bg-overlay: rgba(7, 8, 11, 0.85);
+  --bg-primary: #050c1b;
+  --bg-surface: #0a1526;
+  --bg-elevated: #0f1d33;
+  --bg-sunken: #030711;
+  --bg-overlay: rgba(4, 9, 20, 0.86);
 
-  --border: #232830;
-  --border-strong: #323843;
-  --border-subtle: #1a1e25;
+  --border: #1b2c48;
+  --border-strong: #2b4269;
+  --border-subtle: #13223a;
 
-  --text-primary: #f2f4f7;
-  --text-secondary: #9aa1ac;
-  --text-muted: #656c77;
-  --text-disabled: #4a505b;
-  --text-invert: #07080b;
+  --text-primary: #e9f0fc;
+  --text-secondary: #9cacc9;
+  --text-muted: #67799b;
+  --text-disabled: #47587a;
+  --text-invert: #051225;
 
-  --primary: #7cff6b;
-  --primary-rgb: 124, 255, 107;
-  --primary-soft: rgba(124, 255, 107, 0.08);
-  --primary-soft-strong: rgba(124, 255, 107, 0.16);
+  --primary: #3d7eff;
+  --primary-rgb: 61, 126, 255;
+  --primary-soft: rgba(61, 126, 255, 0.1);
+  --primary-soft-strong: rgba(61, 126, 255, 0.18);
 
   --accent: var(--primary);
   --accent-rgb: var(--primary-rgb);
-  --accent-hover: #95ff8b;
+  --accent-hover: #5e96ff;
   --accent-soft: var(--primary-soft);
 
-  --secondary: #5ea7ff;
-  --secondary-rgb: 94, 167, 255;
-  --secondary-soft: rgba(94, 167, 255, 0.1);
+  --secondary: #3fd5e4;
+  --secondary-rgb: 63, 213, 228;
+  --secondary-soft: rgba(63, 213, 228, 0.1);
 
-  --tertiary: #b78bff;
-  --tertiary-rgb: 183, 139, 255;
-  --tertiary-soft: rgba(183, 139, 255, 0.1);
+  --tertiary: #92a5ff;
+  --tertiary-rgb: 146, 165, 255;
+  --tertiary-soft: rgba(146, 165, 255, 0.1);
 
   --accent-2: var(--secondary);
   --accent-2-rgb: var(--secondary-rgb);
   --accent-3: var(--tertiary);
   --accent-3-rgb: var(--tertiary-rgb);
 
-  --success: #57e389;
-  --success-rgb: 87, 227, 137;
-  --success-soft: rgba(87, 227, 137, 0.1);
+  --success: #35d49e;
+  --success-rgb: 53, 212, 158;
+  --success-soft: rgba(53, 212, 158, 0.1);
 
-  --warning: #ffb84d;
-  --warning-rgb: 255, 184, 77;
-  --warning-soft: rgba(255, 184, 77, 0.12);
+  --warning: #ffb454;
+  --warning-rgb: 255, 180, 84;
+  --warning-soft: rgba(255, 180, 84, 0.12);
 
-  --danger: #ff5c67;
-  --danger-rgb: 255, 92, 103;
-  --danger-soft: rgba(255, 92, 103, 0.1);
+  --danger: #ff5c7a;
+  --danger-rgb: 255, 92, 122;
+  --danger-soft: rgba(255, 92, 122, 0.1);
 
-  --info: #5ea7ff;
-  --info-rgb: 94, 167, 255;
-  --info-soft: rgba(94, 167, 255, 0.1);
+  --info: #55a8ff;
+  --info-rgb: 85, 168, 255;
+  --info-soft: rgba(85, 168, 255, 0.1);
 
-  --shadow-color: 0, 0, 0;
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.28);
-  --shadow-md: 0 12px 34px rgba(0, 0, 0, 0.32);
-  --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.35);
-  --shadow-strong: 0 30px 90px rgba(0, 0, 0, 0.45);
-  --shadow-accent: 0 8px 24px rgba(var(--primary-rgb), 0.12);
+  --shadow-color: 2, 8, 23;
+  --shadow-xs: 0 1px 2px rgba(2, 8, 23, 0.36);
+  --shadow-sm: 0 4px 14px rgba(2, 8, 23, 0.32);
+  --shadow-md: 0 12px 34px rgba(2, 8, 23, 0.38);
+  --shadow-soft: 0 20px 60px rgba(2, 8, 23, 0.42);
+  --shadow-strong: 0 30px 90px rgba(2, 8, 23, 0.5);
+  --shadow-accent: 0 8px 24px rgba(var(--primary-rgb), 0.18);
+
+  --code-bg: #060f1e;
+  --code-border: #16283f;
+  --code-text: #d5e1f2;
+  --code-gutter: #4a5d7e;
+
+  --grid-line: rgba(122, 162, 247, 0.055);
+  --grid-line-strong: rgba(122, 162, 247, 0.09);
+  --surface-tint: rgba(148, 178, 255, 0.03);
+  --motion-highlight: rgba(158, 190, 255, 0.075);
 }
 
 /* =================================================================
-   LIGHT THEME — clean white + blue
+   LIGHT THEME — crisp drafting paper, navy ink
 ================================================================= */
 
 [data-theme='light'] {
-  --bg-primary: #f5f7fb;
+  --bg-primary: #f1f4f9;
   --bg-surface: #ffffff;
-  --bg-elevated: #eef2f9;
-  --bg-sunken: #e9edf5;
-  --bg-overlay: rgba(245, 247, 251, 0.85);
+  --bg-elevated: #f6f8fc;
+  --bg-sunken: #e8edf5;
+  --bg-overlay: rgba(241, 244, 249, 0.92);
 
-  --border: #d8deea;
-  --border-strong: #b9c2d4;
-  --border-subtle: #e4e9f2;
+  --border: #d8dfea;
+  --border-strong: #bcc8da;
+  --border-subtle: #e5eaf2;
 
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #6b7894;
-  --text-disabled: #9aa5b8;
+  --text-primary: #0a1a33;
+  --text-secondary: #4a5a73;
+  --text-muted: #6e7f99;
+  --text-disabled: #a2b0c4;
   --text-invert: #ffffff;
 
-  --primary: #2563eb;
-  --primary-rgb: 37, 99, 235;
-  --primary-soft: rgba(37, 99, 235, 0.08);
-  --primary-soft-strong: rgba(37, 99, 235, 0.15);
+  --primary: #1e56e0;
+  --primary-rgb: 30, 86, 224;
+  --primary-soft: rgba(30, 86, 224, 0.08);
+  --primary-soft-strong: rgba(30, 86, 224, 0.14);
 
   --accent: var(--primary);
   --accent-rgb: var(--primary-rgb);
-  --accent-hover: #1d4ed7;
+  --accent-hover: #1747c4;
   --accent-soft: var(--primary-soft);
 
-  --secondary: #0ea5e9;
-  --secondary-rgb: 14, 165, 233;
-  --secondary-soft: rgba(14, 165, 233, 0.1);
+  --secondary: #0a93b4;
+  --secondary-rgb: 10, 147, 180;
+  --secondary-soft: rgba(10, 147, 180, 0.09);
 
-  --tertiary: #6366f1;
-  --tertiary-rgb: 99, 102, 241;
-  --tertiary-soft: rgba(99, 102, 241, 0.1);
+  --tertiary: #4c5fd6;
+  --tertiary-rgb: 76, 95, 214;
+  --tertiary-soft: rgba(76, 95, 214, 0.09);
 
   --accent-2: var(--secondary);
   --accent-2-rgb: var(--secondary-rgb);
   --accent-3: var(--tertiary);
   --accent-3-rgb: var(--tertiary-rgb);
 
-  --success: #059669;
-  --success-rgb: 5, 150, 105;
-  --success-soft: rgba(5, 150, 105, 0.1);
+  --success: #0c9d6e;
+  --success-rgb: 12, 157, 110;
+  --success-soft: rgba(12, 157, 110, 0.09);
 
-  --warning: #b45309;
-  --warning-rgb: 180, 83, 9;
-  --warning-soft: rgba(180, 83, 9, 0.1);
+  --warning: #b96c0e;
+  --warning-rgb: 185, 108, 14;
+  --warning-soft: rgba(185, 108, 14, 0.09);
 
-  --danger: #dc2626;
-  --danger-rgb: 220, 38, 38;
-  --danger-soft: rgba(220, 38, 38, 0.08);
+  --danger: #d93a5e;
+  --danger-rgb: 217, 58, 94;
+  --danger-soft: rgba(217, 58, 94, 0.08);
 
-  --info: #0ea5e9;
-  --info-rgb: 14, 165, 233;
-  --info-soft: rgba(14, 165, 233, 0.1);
+  --info: #1673d2;
+  --info-rgb: 22, 115, 210;
+  --info-soft: rgba(22, 115, 210, 0.09);
 
-  --shadow-color: 30, 41, 59;
-  --shadow-xs: 0 1px 2px rgba(30, 41, 59, 0.06);
-  --shadow-sm: 0 4px 14px rgba(30, 41, 59, 0.08);
-  --shadow-md: 0 12px 34px rgba(30, 41, 59, 0.12);
-  --shadow-soft: 0 20px 60px rgba(30, 41, 59, 0.12);
-  --shadow-strong: 0 30px 90px rgba(30, 41, 59, 0.18);
-  --shadow-accent: 0 8px 24px rgba(37, 99, 235, 0.14);
+  --shadow-color: 15, 34, 74;
+  --shadow-xs: 0 1px 2px rgba(15, 34, 74, 0.06);
+  --shadow-sm: 0 4px 14px rgba(15, 34, 74, 0.07);
+  --shadow-md: 0 12px 34px rgba(15, 34, 74, 0.1);
+  --shadow-soft: 0 20px 60px rgba(15, 34, 74, 0.11);
+  --shadow-strong: 0 30px 90px rgba(15, 34, 74, 0.16);
+  --shadow-accent: 0 8px 24px rgba(30, 86, 224, 0.16);
+
+  --grid-line: rgba(2, 22, 49, 0.05);
+  --grid-line-strong: rgba(2, 22, 49, 0.085);
+  --surface-tint: rgba(2, 22, 49, 0.03);
+  --motion-highlight: rgba(30, 86, 224, 0.06);
 
   --focus-ring: 0 0 0 2px var(--bg-primary), 0 0 0 4px rgba(var(--primary-rgb), 0.5);
-}
-
-/* ================================================================
-   LIVE PALETTE EXTENSION · v1.8.3 motion pass
-   Light mode stays bright, but gains cool blue, teal and violet
-   surfaces so it feels like a product interface instead of a blank
-   document. Dark mode keeps the terminal identity and gains the same
-   semantic depth without becoming neon soup.
-================================================================ */
-
-:root {
-  --brand-blue: #4f7cff;
-  --brand-cyan: #22c7d9;
-  --brand-violet: #8b6cff;
-  --brand-amber: #f3b24b;
-  --surface-tint: rgba(255,255,255,.025);
-  --motion-highlight: rgba(255,255,255,.08);
-}
-
-[data-theme='dark'] {
-  --surface-tint: rgba(255,255,255,.03);
-  --motion-highlight: rgba(255,255,255,.075);
-}
-
-[data-theme='light'] {
-  --bg-primary: #eef3f9;
-  --bg-surface: #fbfcff;
-  --bg-elevated: #f2f6fd;
-  --bg-sunken: #e4ebf5;
-  --bg-overlay: rgba(239,244,251,.94);
-
-  --border: #d2dce9;
-  --border-strong: #b6c5d8;
-  --border-subtle: #e0e7f0;
-
-  --text-primary: #111827;
-  --text-secondary: #4b5c73;
-  --text-muted: #718096;
-  --text-disabled: #a2afbf;
-  --text-invert: #ffffff;
-
-  --primary: #008f70;
-  --primary-rgb: 0,143,112;
-  --primary-soft: rgba(0,143,112,.08);
-  --primary-soft-strong: rgba(0,143,112,.14);
-  --accent: #008f70;
-  --accent-rgb: 0,143,112;
-  --accent-hover: #00745a;
-  --accent-soft: rgba(0,143,112,.08);
-
-  --secondary: #6954df;
-  --secondary-rgb: 105,84,223;
-  --secondary-soft: rgba(105,84,223,.09);
-  --tertiary: #159cc7;
-  --tertiary-rgb: 21,156,199;
-  --tertiary-soft: rgba(21,156,199,.085);
-
-  --success: #087f5b;
-  --success-rgb: 8,127,91;
-  --success-soft: rgba(8,127,91,.08);
-  --warning: #a15f00;
-  --warning-rgb: 161,95,0;
-  --warning-soft: rgba(161,95,0,.09);
-  --danger: #c63d5a;
-  --danger-rgb: 198,61,90;
-  --danger-soft: rgba(198,61,90,.08);
-  --info: #087fb5;
-  --info-rgb: 8,127,181;
-  --info-soft: rgba(8,127,181,.09);
-
-  --surface-tint: rgba(82,112,168,.055);
-  --motion-highlight: rgba(255,255,255,.74);
-
-  --shadow-xs: 0 1px 2px rgba(46,64,86,.055);
-  --shadow-sm: 0 6px 18px rgba(49,68,94,.075);
-  --shadow-md: 0 16px 42px rgba(49,68,94,.11);
-  --shadow-soft: 0 24px 70px rgba(49,68,94,.12);
-  --shadow-strong: 0 34px 100px rgba(49,68,94,.16);
 }

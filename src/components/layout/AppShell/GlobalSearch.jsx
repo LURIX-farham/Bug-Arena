@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Search, Bug } from 'lucide-react'
 import { useI18n } from '../../../i18n/useI18n'
 import { getLocalizedChallenge } from '../../../i18n/languageUtils'
 
@@ -143,7 +144,7 @@ function GlobalSearch({ open, onClose }) {
 
         <div className="global-search-input">
 
-          <span>⌕</span>
+          <span><Search size={17} strokeWidth={2} aria-hidden="true" /></span>
 
           <input
             autoFocus
@@ -172,7 +173,7 @@ function GlobalSearch({ open, onClose }) {
               >
 
                 <div className="search-result-icon">
-                  ◈
+                  <Bug size={14} strokeWidth={1.75} aria-hidden="true" />
                 </div>
 
                 <div className="search-result-content">

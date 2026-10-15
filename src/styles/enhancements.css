@@ -1,0 +1,401 @@
+/* =================================================================
+   ENHANCEMENTS — UX polish layer (loaded last, uses existing tokens)
+   • boot / loading screen   • offline banner   • skip link
+   • Arena editor toolbar    • auth password field
+   • challenge tag toggle    • focus + scrollbar + touch refinements
+   All rules use logical properties so they work in both LTR and RTL.
+================================================================= */
+
+/* ---------- Global refinements ---------- */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: rgba(var(--primary-rgb), 0.28);
+  color: inherit;
+}
+
+:where(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+/* One consistent, visible keyboard focus indicator. */
+:where(a, button, input, select, textarea, summary, [role='button'], [tabindex]):focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+:where(input, textarea, select):focus-visible {
+  outline-offset: 0;
+}
+
+/* ---------- Skip link ---------- */
+
+.skip-link {
+  position: fixed;
+  inset-block-start: 8px;
+  inset-inline-start: 8px;
+  z-index: 1000;
+
+  padding: 10px 16px;
+
+  background: var(--primary);
+  color: #fff;
+
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  transform: translateY(-200%);
+  transition: transform 0.15s var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+#main-content:focus {
+  outline: none;
+}
+
+/* ---------- Boot / Suspense screen ---------- */
+
+.boot-screen {
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  display: grid;
+  place-items: center;
+
+  padding: 24px;
+
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+}
+
+.boot-screen-inner {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+
+  text-align: center;
+}
+
+.boot-screen-mark {
+  font-family: var(--font-display, var(--font-mono));
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  direction: ltr;
+}
+
+.boot-screen-mark i {
+  font-style: normal;
+  color: var(--primary);
+}
+
+.boot-screen-bar {
+  position: relative;
+
+  width: min(220px, 60vw);
+  height: 2px;
+
+  overflow: hidden;
+
+  background: var(--border);
+}
+
+.boot-screen-bar > span {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+
+  width: 40%;
+
+  background: linear-gradient(90deg, transparent, var(--primary), var(--secondary));
+
+  animation: boot-slide 1.2s var(--ease-out) infinite;
+}
+
+[dir='rtl'] .boot-screen-bar > span {
+  animation-direction: reverse;
+}
+
+@keyframes boot-slide {
+  0%   { transform: translateX(-110%); }
+  100% { transform: translateX(280%); }
+}
+
+.boot-screen-label,
+.boot-screen-slow {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.boot-screen-slow {
+  max-width: 36ch;
+  color: var(--warning);
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+/* ---------- Offline banner ---------- */
+
+.offline-banner {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 500;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 8px 16px;
+
+  /* Solid + theme-independent so it is legible on light and dark pages. */
+  background: #3a2706;
+  border-block-end: 1px solid #ffb454;
+
+  color: #ffe0a8;
+
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* ---------- Arena: editor toolbar ---------- */
+
+.code-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  min-width: 0;
+}
+
+.code-toolbar-hint {
+  margin-inline-end: 6px;
+
+  overflow: hidden;
+
+  color: var(--code-gutter);
+
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-overflow: ellipsis;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  min-height: 28px;
+  padding: 0 10px;
+
+  /* The editor panel stays dark in both themes → use fixed light-on-dark colours. */
+  border: 1px solid rgba(148, 178, 255, 0.28);
+  border-radius: var(--radius-sm);
+
+  background: transparent;
+  color: #b9c6df;
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s var(--ease-out),
+    border-color 0.15s var(--ease-out),
+    color 0.15s var(--ease-out),
+    opacity 0.15s var(--ease-out);
+}
+
+.toolbar-btn:hover:not(:disabled) {
+  border-color: #6d9bff;
+  color: #ffffff;
+}
+
+.toolbar-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.toolbar-btn kbd {
+  padding: 1px 5px;
+
+  border: 1px solid rgba(148, 178, 255, 0.28);
+  border-radius: var(--radius-xs);
+
+  color: #8fa2c6;
+
+  font-family: inherit;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+
+.toolbar-btn--run {
+  border-color: rgba(109, 155, 255, 0.7);
+  background: rgba(61, 126, 255, 0.22);
+  color: #ffffff;
+}
+
+.toolbar-btn--run:hover:not(:disabled) {
+  background: rgba(61, 126, 255, 0.38);
+}
+
+.toolbar-btn--submit {
+  border-color: rgba(53, 212, 158, 0.6);
+  background: rgba(53, 212, 158, 0.14);
+  color: #4fe3b2;
+
+  animation: toolbar-pop 0.35s var(--ease-spring);
+}
+
+.toolbar-btn--submit:hover:not(:disabled) {
+  border-color: #4fe3b2;
+  background: rgba(53, 212, 158, 0.26);
+  color: #7dffd0;
+}
+
+@keyframes toolbar-pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.local-preview-badge {
+  padding: 2px 8px;
+
+  border: 1px solid rgba(255, 180, 84, 0.55);
+  border-radius: var(--radius-xs);
+
+  background: rgba(255, 180, 84, 0.12);
+  color: #ffb454;
+
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+
+  cursor: help;
+}
+
+/* Line numbers must be able to scroll as far as the textarea (which has
+   bottom padding + a possible horizontal scrollbar). */
+.arena-page .editor-lines {
+  padding-block-end: 40px;
+}
+
+.arena-page .arena-code-editor {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+/* Hide the hint before it can crowd the buttons. */
+@media (max-width: 1240px) {
+  .code-toolbar-hint { display: none; }
+}
+
+@media (max-width: 760px) {
+  /* The full-bleed arena cancelled the shell's bottom padding, so the last
+     76px of the side panel ended up hidden behind the fixed bottom nav. */
+  .arena-page {
+    padding-block-end: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (max-width: 560px) {
+  .toolbar-btn kbd { display: none; }
+  .toolbar-btn { padding: 0 8px; }
+  .code-file { display: none; }
+  .code-toolbar { justify-content: flex-end; }
+}
+
+@media (pointer: coarse) {
+  .toolbar-btn { min-height: 36px; }
+}
+
+/* ---------- Auth ---------- */
+
+.password-field {
+  position: relative;
+  display: block;
+}
+
+.password-field .field-input {
+  width: 100%;
+  padding-inline-end: 44px;
+}
+
+.password-toggle {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 4px;
+
+  display: grid;
+  place-items: center;
+
+  width: 36px;
+
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+
+  cursor: pointer;
+}
+
+.password-toggle:hover {
+  color: var(--text-primary);
+}
+
+.field-hint {
+  display: block;
+
+  margin-block-start: 6px;
+
+  color: var(--text-muted);
+
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ---------- Challenges ---------- */
+
+.tag-filter--toggle {
+  border-style: dashed;
+  color: var(--primary);
+}
+
+.tag-filter--toggle:hover {
+  border-style: solid;
+}
+
+/* ---------- Motion preferences ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-screen-bar > span { animation: none; width: 100%; opacity: 0.6; }
+  .toolbar-btn--submit { animation: none; }
+  .skip-link { transition: none; }
+}

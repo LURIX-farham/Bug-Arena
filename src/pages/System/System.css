@@ -1,1 +1,517 @@
-.system-page{max-width:1180px;margin:0 auto;padding:34px 0 90px}.system-header{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin-bottom:28px}.system-eyebrow,.system-card span,.system-panel-heading span,.health-grid span,.inventory-grid span{color:var(--text-muted);font-size:11px;letter-spacing:.16em;text-transform:uppercase}.system-header h1{margin:8px 0 10px;font-size:42px;letter-spacing:-.04em}.system-header p{margin:0;max-width:680px;color:var(--text-secondary);line-height:1.7}.system-connection{border:1px solid var(--border);border-radius:999px;padding:10px 15px;display:flex;gap:9px;align-items:center;font-size:11px;letter-spacing:.12em;white-space:nowrap}.system-connection span{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 12px var(--success)}.system-connection.offline span{background:var(--danger);box-shadow:0 0 12px var(--danger)}.system-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}.system-card,.system-panel{border:1px solid var(--border);background:var(--bg-surface);border-radius:var(--radius-lg)}.system-card{padding:18px;min-height:120px;display:flex;flex-direction:column;justify-content:space-between}.system-card strong{font-size:20px;margin:10px 0 4px}.system-card small{color:var(--text-muted)}.system-panel{padding:22px;margin-top:14px}.system-panel-heading{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px}.system-panel-heading h2{margin:6px 0 0;font-size:22px}.system-panel-heading button{background:transparent;color:var(--text-secondary);border:1px solid var(--border);border-radius:8px;padding:8px 11px;cursor:pointer}.health-grid,.inventory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.health-grid>div,.inventory-grid>div{background:var(--bg-elevated);border-radius:10px;padding:15px;display:flex;flex-direction:column;gap:8px}.health-grid b{font-size:14px}.good{color:var(--success)}.bad{color:var(--danger)}.sync-summary{display:flex;align-items:baseline;gap:10px;margin-bottom:14px}.sync-summary strong{font-size:32px}.sync-summary span{color:var(--text-secondary)}.sync-list,.event-list{display:flex;flex-direction:column;gap:8px}.sync-row{display:grid;grid-template-columns:1.2fr .6fr 1fr;gap:12px;align-items:center;background:var(--bg-elevated);border-radius:9px;padding:12px 14px;font-size:12px}.sync-row span{color:var(--warning);text-transform:uppercase}.sync-row time,.event-row small{color:var(--text-muted)}.event-row{display:flex;gap:12px;align-items:center;background:var(--bg-elevated);border-radius:9px;padding:12px 14px;font-size:12px}.event-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}.event-row div{display:flex;flex-direction:column;gap:4px}.inventory-grid strong{font-size:24px}.system-empty{color:var(--text-muted);padding:18px 0}@media(max-width:800px){.system-page{padding:22px 0 80px}.system-header{flex-direction:column}.system-header h1{font-size:34px}.system-grid{grid-template-columns:repeat(2,1fr)}.health-grid,.inventory-grid{grid-template-columns:repeat(2,1fr)}.sync-row{grid-template-columns:1fr}.sync-row time{display:none}}@media(max-width:480px){.system-grid,.health-grid,.inventory-grid{grid-template-columns:1fr}}
+/* =================================================================
+   SYSTEM — DIAGNOSTICS  (v2.0 "BLUEPRINT")
+   -----------------------------------------------------------------
+   Composition (top → bottom):
+   1. Header            — mono eyebrow, display h1, connection chip
+   2. Version cards     — 4 hairline diagnostic tiles
+   3. Storage health    — OK/FAIL status grid
+   4. Sync queue        — pending action rows + clear action
+   5. Event bus         — recent event rows with status dot
+   6. Local inventory   — record counts
+
+   Radius tokens only (999px pills → --radius-sm chips); the online
+   dot keeps a subtle pulse, disabled under reduced motion.
+================================================================= */
+
+.system-page {
+  max-width: 1180px;
+
+  margin: 0 auto;
+
+  padding: 4px 0 60px;
+}
+
+
+/* =========================
+   1 · HEADER
+========================= */
+
+.system-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+
+  margin-bottom: 24px;
+}
+
+.system-eyebrow {
+  display: block;
+
+  color: var(--primary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.system-eyebrow::before {
+  content: '//';
+
+  margin-inline-end: 8px;
+
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.system-header h1 {
+  margin: 10px 0;
+
+  font-size: clamp(26px, 3vw, 36px);
+  letter-spacing: -0.02em;
+}
+
+.system-header p {
+  margin: 0;
+
+  max-width: 660px;
+
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Connection chip — sharp hairline, tiny status dot (pill allowed) */
+.system-connection {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 10px 14px;
+
+  border: 1px solid rgba(var(--success-rgb), 0.35);
+  border-radius: var(--radius-sm);
+
+  background: var(--success-soft);
+
+  color: var(--success);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.system-connection span {
+  width: 7px;
+  height: 7px;
+  flex: none;
+
+  border-radius: 50%;
+
+  background: var(--success);
+
+  animation: systemPulse 2.4s ease-in-out infinite;
+}
+
+.system-connection.offline {
+  border-color: rgba(var(--danger-rgb), 0.35);
+
+  background: var(--danger-soft);
+
+  color: var(--danger);
+}
+
+.system-connection.offline span {
+  background: var(--danger);
+
+  animation: none;
+}
+
+@keyframes systemPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--success-rgb), 0.35);
+  }
+
+  50% {
+    box-shadow: 0 0 0 4px rgba(var(--success-rgb), 0);
+  }
+}
+
+
+/* =========================
+   2 · VERSION CARDS
+========================= */
+
+.system-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+
+  margin-bottom: 14px;
+}
+
+.system-card,
+.system-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+
+  background: var(--bg-surface);
+}
+
+.system-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  min-height: 118px;
+  padding: 18px;
+}
+
+.system-card span {
+  color: var(--text-muted);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.system-card strong {
+  margin: 10px 0 4px;
+
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.system-card small {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+
+/* =========================
+   PANELS (shared shell)
+========================= */
+
+.system-panel {
+  margin-top: 14px;
+  padding: 22px;
+}
+
+.system-panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+
+  margin-bottom: 16px;
+}
+
+.system-panel-heading span {
+  color: var(--text-muted);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.system-panel-heading h2 {
+  margin: 6px 0 0;
+
+  font-size: var(--text-xl);
+  letter-spacing: -0.02em;
+}
+
+.system-panel-heading button {
+  padding: 8px 12px;
+
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+
+  background: transparent;
+
+  color: var(--text-secondary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+
+  transition: border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease;
+}
+
+.system-panel-heading button:hover {
+  border-color: var(--primary);
+
+  color: var(--primary);
+}
+
+.system-panel-heading > strong {
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================
+   3 · STORAGE HEALTH
+========================= */
+
+.health-grid,
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.health-grid > div,
+.inventory-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  padding: 14px;
+
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+
+  background: var(--bg-elevated);
+}
+
+.health-grid span,
+.inventory-grid span {
+  color: var(--text-muted);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.health-grid b {
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.good {
+  color: var(--success);
+}
+
+.bad {
+  color: var(--danger);
+}
+
+
+/* =========================
+   4 · SYNC QUEUE
+========================= */
+
+.sync-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+
+  margin-bottom: 14px;
+}
+
+.sync-summary strong {
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.sync-summary span {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.sync-list,
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sync-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.6fr 1fr;
+  gap: 12px;
+  align-items: center;
+
+  padding: 12px 14px;
+
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+
+  background: var(--bg-elevated);
+
+  font-size: var(--text-sm);
+}
+
+.sync-row strong {
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.sync-row span {
+  color: var(--warning);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.sync-row time {
+  color: var(--text-muted);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================
+   5 · EVENT BUS
+========================= */
+
+.event-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 14px;
+
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+
+  background: var(--bg-elevated);
+
+  font-size: var(--text-sm);
+}
+
+.event-dot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+
+  border-radius: 50%;
+
+  background: var(--primary);
+
+  box-shadow: 0 0 6px rgba(var(--primary-rgb), 0.4);
+}
+
+.event-row div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.event-row strong {
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.event-row small {
+  color: var(--text-muted);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================
+   6 · LOCAL INVENTORY
+========================= */
+
+.inventory-grid strong {
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.system-empty {
+  padding: 16px 0;
+
+  color: var(--text-muted);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 800px) {
+  .system-header {
+    flex-direction: column;
+  }
+
+  .system-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .health-grid,
+  .inventory-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sync-row {
+    grid-template-columns: 1fr;
+  }
+
+  .sync-row time {
+    text-align: start;
+  }
+}
+
+@media (max-width: 480px) {
+  .system-grid,
+  .health-grid,
+  .inventory-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================
+   MOTION
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .system-connection span {
+    animation: none;
+  }
+}

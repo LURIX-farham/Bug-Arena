@@ -10,8 +10,9 @@ import { landing } from './landing'
 import { community } from './community'
 import { support } from './support'
 import { duel } from './duel'
+import { ux } from './ux'
 
 export const translations = {
-  en: { ...core.en, ...landing.en, ...community.en, ...support.en, ...duel.en },
-  fa: { ...core.fa, ...landing.fa, ...community.fa, ...support.fa, ...duel.fa },
+  en: { ...core.en, ...landing.en, ...community.en, ...support.en, ...duel.en, ...ux.en },
+  fa: { ...core.fa, ...landing.fa, ...community.fa, ...support.fa, ...duel.fa, ...ux.fa },
 }

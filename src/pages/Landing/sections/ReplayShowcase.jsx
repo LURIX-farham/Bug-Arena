@@ -38,13 +38,13 @@ function ReplayShowcase() {
         </p>
       </div>
 
-      <div className="replay-card">
+      <div className="showcase-replay">
 
-        <div className="replay-editor">
+        <div className="showcase-replay-editor">
 
-          <div className="replay-header">
+          <div className="showcase-replay-header">
 
-            <div className="editor-dots">
+            <div className="showcase-editor-dots">
               <span />
               <span />
               <span />
@@ -56,23 +56,23 @@ function ReplayShowcase() {
 
           </div>
 
-          <div className="replay-code">
+          <div className="showcase-replay-code">
 
-            <div className="editor-line">
+            <div className="showcase-editor-line">
               <span>15</span>
               <code>
                 if len(data) == 0:
               </code>
             </div>
 
-            <div className="editor-line">
+            <div className="showcase-editor-line">
               <span>16</span>
               <code>
                 &nbsp;&nbsp;&nbsp;&nbsp;return 0
               </code>
             </div>
 
-            <div className="editor-line">
+            <div className="showcase-editor-line">
               <span>17</span>
               <code>
                 total = sum(data)
@@ -92,7 +92,7 @@ function ReplayShowcase() {
               </code>
             </div>
 
-            <div className="editor-line">
+            <div className="showcase-editor-line">
               <span>19</span>
               <code>
                 # solution
@@ -103,14 +103,14 @@ function ReplayShowcase() {
 
         </div>
 
-        <div className="replay-timeline">
+        <div className="showcase-replay-timeline">
 
-          <div className="timeline-top">
+          <div className="showcase-timeline-top">
             <span>{t('landing', 'debuggingSession')}</span>
             <span>{t('landing', 'replayPlayer')} ALEX</span>
           </div>
 
-          <div className="timeline">
+          <div className="showcase-timeline">
 
             {stepKeys.map((step, index) => (
               <button
@@ -122,7 +122,7 @@ function ReplayShowcase() {
                 }
                 onClick={() => setActiveStep(index)}
               >
-                <span className="timeline-dot" />
+                <span className="showcase-timeline-dot" />
 
                 <div>
                   <strong>{t('landing', step.action)}</strong>
@@ -135,7 +135,7 @@ function ReplayShowcase() {
 
           </div>
 
-          <div className="timeline-current">
+          <div className="showcase-timeline-current">
 
             <span>{t('landing', 'currentAction')}</span>
 
@@ -151,7 +151,7 @@ function ReplayShowcase() {
 
           <Link
             to="/replays"
-            className="replay-action"
+            className="showcase-replay-action"
           >
             {t('landing', 'replaysCta')}
             <span>→</span>

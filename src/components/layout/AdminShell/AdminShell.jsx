@@ -1,16 +1,25 @@
 import { NavLink, Outlet, Navigate, Link, useNavigate } from 'react-router-dom'
+import {
+  Activity,
+  Bug,
+  LayoutDashboard,
+  ListChecks,
+  Server,
+  Swords,
+  Users,
+} from 'lucide-react'
 import { getAuthUser, isAuthenticated, logoutAccount } from '../../../services/authStore.js'
 import BrandLogo from '../../brand/BrandLogo'
 import './AdminShell.css'
 
 const NAV = [
-  { to: '/admin', end: true, label: 'Overview', icon: '◆' },
-  { to: '/admin/users', label: 'Users', icon: '●' },
-  { to: '/admin/challenges', label: 'Challenges', icon: '◈' },
-  { to: '/admin/submissions', label: 'Submissions', icon: '▷' },
-  { to: '/admin/duels', label: 'Duels', icon: '⚔' },
-  { to: '/admin/events', label: 'Events', icon: '⌁' },
-  { to: '/admin/system', label: 'System', icon: '⚙' },
+  { to: '/admin', end: true, label: 'Overview', icon: LayoutDashboard },
+  { to: '/admin/users', label: 'Users', icon: Users },
+  { to: '/admin/challenges', label: 'Challenges', icon: Bug },
+  { to: '/admin/submissions', label: 'Submissions', icon: ListChecks },
+  { to: '/admin/duels', label: 'Duels', icon: Swords },
+  { to: '/admin/events', label: 'Events', icon: Activity },
+  { to: '/admin/system', label: 'System', icon: Server },
 ]
 
 function AdminShell() {
@@ -54,7 +63,7 @@ function AdminShell() {
               end={item.end}
               className={({ isActive }) => `admin-shell-link${isActive ? ' active' : ''}`}
             >
-              <span className="admin-shell-link-icon" aria-hidden="true">{item.icon}</span>
+              <span className="admin-shell-link-icon" aria-hidden="true"><item.icon size={15} strokeWidth={1.75} /></span>
               {item.label}
             </NavLink>
           ))}
@@ -100,7 +109,7 @@ function AdminShell() {
             end={item.end}
             className={({ isActive }) => `admin-shell-m-link${isActive ? ' active' : ''}`}
           >
-            <span>{item.icon}</span>
+            <span aria-hidden="true"><item.icon size={16} strokeWidth={1.75} /></span>
             <small>{item.label}</small>
           </NavLink>
         ))}

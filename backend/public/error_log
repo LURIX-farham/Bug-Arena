@@ -1,0 +1,474 @@
+[07-Oct-2026 19:51:25 UTC] [2026-10-07 19:51:25] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[07-Oct-2026 19:51:28 UTC] [2026-10-07 19:51:28] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[07-Oct-2026 19:51:46 UTC] [2026-10-07 19:51:46] INFO auth: login ok user=lurix_farham ip=178.131.178.18
+
+[07-Oct-2026 19:52:03 UTC] [2026-10-07 19:52:03] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[07-Oct-2026 19:52:19 UTC] [2026-10-07 19:52:19] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[07-Oct-2026 19:52:37 UTC] [2026-10-07 19:52:37] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[07-Oct-2026 19:52:41 UTC] [2026-10-07 19:52:41] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[07-Oct-2026 19:53:01 UTC] [2026-10-07 19:53:01] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[07-Oct-2026 19:56:46 UTC] [2026-10-07 19:56:46] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[07-Oct-2026 19:57:11 UTC] [2026-10-07 19:57:11] INFO auth: login ok user=lurix_farham ip=178.131.178.18
+
+[07-Oct-2026 19:57:26 UTC] [2026-10-07 19:57:26] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 09:22:39 UTC] [2026-10-08 09:22:39] INFO auth: login ok user=lurix_farham ip=178.131.178.112
+
+[08-Oct-2026 09:23:13 UTC] [2026-10-08 09:23:13] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 09:27:30 UTC] [2026-10-08 09:27:30] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 09:27:43 UTC] [2026-10-08 09:27:43] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 09:28:06 UTC] [2026-10-08 09:28:06] INFO auth: login ok user=lurix_farham ip=178.131.178.112
+
+[08-Oct-2026 09:29:43 UTC] [2026-10-08 09:29:43] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 09:30:22 UTC] [2026-10-08 09:30:22] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 09:30:52 UTC] [2026-10-08 09:30:52] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 09:30:59 UTC] [2026-10-08 09:30:59] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 09:32:11 UTC] [2026-10-08 09:32:11] INFO auth: login ok user=lurix_farham ip=178.131.178.112
+
+[08-Oct-2026 09:32:40 UTC] [2026-10-08 09:32:40] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 09:41:01 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:41:06 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:41:11 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:41:16 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:41:17 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:41:21 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:41:25 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:41:30 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:41:36 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:41:38 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:41:40 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:41:46 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:41:51 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:41:56 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:41:59 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:42:01 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:42:06 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:42:11 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:42:16 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:42:20 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:42:21 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:42:26 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:42:31 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:42:36 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:42:41 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:42:41 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:42:46 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:42:51 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:42:56 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:01 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:01 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:06 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:11 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:16 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:21 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:23 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:26 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:31 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:36 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:41 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:44 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:46 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:51 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:43:56 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:44:01 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:44:05 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:44:06 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:44:11 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecutionController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:44:16 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:44:21 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:44:27 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:44:27 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:44:32 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:44:40 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:45:11 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:45:13 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:45:41 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 09:46:02 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 10:02:32 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 10:02:41 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 10:02:43 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 10:04:16 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 10:04:35 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 10:07:25 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 10:07:46 UTC] PHP Fatal error:  Uncaught Error: Class "BugArena\Controllers\ExecuteController" not found in /home/bugare/public_html/api/routes/api.php:37
+Stack trace:
+#0 /home/bugare/public_html/api/src/Core/App.php(97): BugArena\Core\App::{closure}()
+#1 /home/bugare/public_html/api/public/index.php(10): BugArena\Core\App::run()
+#2 {main}
+  thrown in /home/bugare/public_html/api/routes/api.php on line 37
+[08-Oct-2026 10:17:53 UTC] [2026-10-08 10:17:53] INFO auth: login ok user=lurix_farham ip=178.131.178.112
+
+[08-Oct-2026 10:18:37 UTC] [2026-10-08 10:18:37] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 10:20:28 UTC] [2026-10-08 10:20:28] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 10:48:43 UTC] [2026-10-08 10:48:43] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 10:48:55 UTC] [2026-10-08 10:48:55] INFO auth: login ok user=lurix_farham ip=178.131.178.112
+
+[08-Oct-2026 10:50:00 UTC] [2026-10-08 10:50:00] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 10:50:43 UTC] [2026-10-08 10:50:43] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 10:54:26 UTC] [2026-10-08 10:54:26] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 10:54:36 UTC] [2026-10-08 10:54:36] INFO auth: login ok user=lurix_farham ip=178.131.178.112
+
+[08-Oct-2026 10:55:26 UTC] [2026-10-08 10:55:26] ERROR python_executor: Call to undefined function BugArena\Services\Execution\shell_exec()
+
+[08-Oct-2026 15:46:42 UTC] [2026-10-08 15:46:42] INFO auth: login ok user=lurix_farham ip=178.131.178.112
+
+[08-Oct-2026 15:48:20 UTC] [2026-10-08 15:48:20] INFO auth: login ok user=lurix_farham ip=178.131.178.112
+
+[08-Oct-2026 16:04:20 UTC] [2026-10-08 16:04:20] INFO auth: login ok user=lurix_farham ip=178.131.178.112
+
+[08-Oct-2026 16:20:29 UTC] [2026-10-08 16:20:29] INFO auth: login ok user=lurix_farham ip=178.131.178.112
+
+[08-Oct-2026 16:39:59 UTC] [2026-10-08 16:39:59] INFO auth: login ok user=lurix_farham ip=178.131.178.112
+
+[08-Oct-2026 18:53:40 UTC] [2026-10-08 18:53:40] INFO auth: login ok user=lurix_farham ip=178.131.178.112
+
+[08-Oct-2026 19:14:23 UTC] [2026-10-08 19:14:23] INFO auth: login ok user=lurix_farham ip=178.131.178.112
+
+[08-Oct-2026 19:15:16 UTC] [2026-10-08 19:15:16] INFO auth: login ok user=lurix_farham ip=178.131.178.112
+
+[12-Oct-2026 18:07:50 UTC] [2026-10-12 18:07:50] INFO auth: login ok user=lurix_farham ip=178.131.178.242
+
+[13-Oct-2026 09:22:35 UTC] [2026-10-13 09:22:35] INFO auth: login ok user=admin ip=178.131.178.145
+

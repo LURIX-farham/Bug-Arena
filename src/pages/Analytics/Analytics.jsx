@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ArrowRight } from 'lucide-react'
 import { getReplayAnalytics, getReplaySessions } from '../../services/replayStore'
 import { useI18n } from '../../i18n/useI18n'
 import {
@@ -70,7 +71,7 @@ function Analytics() {
           <h1>
             <GradientText
               as="span"
-              colors={['var(--accent)', '#59f3c4', '#7c5cff']}
+              colors={['var(--accent)', 'var(--secondary)', 'var(--tertiary)']}
               animationSpeed={7}
               pauseOnHover
             >
@@ -87,7 +88,10 @@ function Analytics() {
           />
         </div>
         <Magnet padding={22} magnetStrength={4} maxOffset={5}>
-          <Link className="analytics-replay-link" to="/replays">{t('analytics', 'openReplays')} →</Link>
+          <Link className="analytics-replay-link" to="/replays">
+            <span>{t('analytics', 'openReplays')}</span>
+            <ArrowRight size={14} strokeWidth={1.75} aria-hidden="true" />
+          </Link>
         </Magnet>
       </header>
 
@@ -144,7 +148,7 @@ function Analytics() {
           </div>
         </SpotlightCard>
 
-        <SpotlightCard as="article" className="analytics-panel" spotlightColor="rgba(34, 211, 238, 0.12)">
+        <SpotlightCard as="article" className="analytics-panel" spotlightColor="rgba(var(--secondary-rgb), 0.12)">
           <div className="analytics-panel-head"><span>{t('analytics', 'modes')}</span><strong>
             <AnimatedCounter
               value={modes.length}

@@ -1,3 +1,10 @@
+/* =================================================================
+   BUG//ARENA — GLOBAL FOUNDATION  (v2.0 "BLUEPRINT")
+   -----------------------------------------------------------------
+   Base reset, document typography, brand signature utilities and
+   the shared motion layer. Theme values live in variables.css.
+================================================================= */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -22,16 +29,57 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-sans);
+  line-height: 1.5;
+  font-size: var(--text-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
+/* Display headings carry the brand's geometric voice. Space Grotesk
+   falls back to Vazirmatn for Persian glyphs automatically. */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  font-weight: 700;
+}
+
+::selection {
+  background: rgba(var(--primary-rgb), 0.28);
+  color: var(--text-primary);
+}
+
+/* Precision scrollbars — thin, quiet, navy */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border: 3px solid var(--bg-primary);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
 /* Persian / RTL typography
-   Vazirmatn is loaded from Google Fonts in index.html.
-   When the document is in Persian, swap body + UI fonts to Vazirmatn so
-   letter shapes, digits and spacing look native rather than like a Latin
-   fallback. Latin words inside Persian text still render fine because
+   Vazirmatn is loaded from index.html. When the document is in
+   Persian, swap body + UI fonts to Vazirmatn so letter shapes,
+   digits and spacing look native rather than like a Latin fallback.
+   Latin words inside Persian text still render fine because
    Vazirmatn includes Latin glyphs. */
 html[lang='fa'] body,
 html[lang='fa'] button,
@@ -39,6 +87,13 @@ html[lang='fa'] input,
 html[lang='fa'] textarea,
 html[lang='fa'] select {
   font-family: var(--font-fa);
+}
+
+html[lang='fa'] h1,
+html[lang='fa'] h2,
+html[lang='fa'] h3,
+html[lang='fa'] h4 {
+  letter-spacing: 0;
 }
 
 html[lang='fa'] .navbar-logo,
@@ -81,7 +136,7 @@ html[lang='fa'] .rank-position {
 
 /* Persian numerals look better with regular weight; tighten letter-spacing */
 html[lang='fa'] .home-hero-title {
-  letter-spacing: -1px;
+  letter-spacing: 0;
   font-weight: 800;
 }
 
@@ -200,14 +255,16 @@ a {
   padding: 36px;
   border: 1px solid var(--border);
   background: var(--bg-surface);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
 }
 
 .app-error-eyebrow {
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  opacity: 0.6;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--primary);
 }
 
 .app-error-card h1 {
@@ -217,7 +274,7 @@ a {
 .app-error-card p {
   margin: 0 0 24px;
   line-height: 1.6;
-  opacity: 0.72;
+  color: var(--text-secondary);
 }
 
 .app-error-card button {
@@ -241,9 +298,78 @@ a {
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
 
-/* =========================
+/* ================================================================
+   BRAND SIGNATURE UTILITIES
+   Reusable identity elements every surface can compose.
+================================================================ */
+
+/* Blueprint grid — the drafting-board texture */
+.bp-grid {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.bp-grid-fine {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Cut-corner motif — echoes the notch carved through the logo mark.
+   Apply to CTAs, featured panels, scoreboard cells. */
+.cut-corner {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+.cut-corner-tr {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+}
+
+.cut-corner-sm {
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+/* Corner ticks — drafting/registration marks for framed panels */
+.tick-frame {
+  position: relative;
+}
+
+.tick-frame::before,
+.tick-frame::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  transition: border-color var(--duration-base) ease;
+}
+
+.tick-frame::before {
+  top: -1px;
+  inset-inline-start: -1px;
+  border-top: 2px solid rgba(var(--primary-rgb), 0.55);
+  border-inline-start: 2px solid rgba(var(--primary-rgb), 0.55);
+}
+
+.tick-frame::after {
+  bottom: -1px;
+  inset-inline-end: -1px;
+  border-bottom: 2px solid rgba(var(--primary-rgb), 0.55);
+  border-inline-end: 2px solid rgba(var(--primary-rgb), 0.55);
+}
+
+/* Tabular numerals for scores, timers, ranks */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+/* ================================================================
    THEME TOGGLE
-========================= */
+================================================================ */
 
 .theme-toggle {
   display: inline-flex;
@@ -260,8 +386,8 @@ a {
 }
 
 .theme-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: rgba(var(--primary-rgb), 0.55);
+  color: var(--primary);
 }
 
 .theme-toggle.icon {
@@ -294,8 +420,8 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  color: var(--primary);
+  transition: transform 0.3s var(--ease-spring);
 }
 
 [data-theme='dark'] .theme-toggle-thumb {
@@ -312,17 +438,14 @@ a {
   letter-spacing: 1px;
 }
 
-/* RTL: keep icon button symmetric, no flip needed */
-
-/* =========================
-   LIGHT THEME POLISH
-   These overrides adjust specific surfaces in light mode so they look
-   intentional rather than just inverted. Dark mode is the default
-   Bug Arena look and needs no extra polish.
-========================= */
+/* ================================================================
+   SURFACE POLISH PER THEME
+   Fine-tunes key composites so both themes read as art-directed,
+   not merely inverted.
+================================================================ */
 
 [data-theme='light'] .app-topbar {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.86);
   border-bottom-color: var(--border);
 }
 
@@ -333,35 +456,28 @@ a {
 }
 
 [data-theme='light'] .landing {
-  background:
-    radial-gradient(circle at 70% 20%, rgba(var(--accent-rgb), 0.06), transparent 35%),
-    radial-gradient(circle at 20% 80%, rgba(var(--accent-2-rgb), 0.05), transparent 40%),
-    var(--bg-primary);
+  background: var(--bg-primary);
 }
 
 [data-theme='light'] .auth-page {
-  background:
-    radial-gradient(circle at 70% 20%, rgba(var(--accent-rgb), 0.07), transparent 35%),
-    radial-gradient(circle at 20% 80%, rgba(var(--accent-3-rgb), 0.05), transparent 40%),
-    var(--bg-primary);
+  background: var(--bg-primary);
 }
 
 [data-theme='light'] .stat-card:hover,
 [data-theme='light'] .home-panel,
 [data-theme='light'] .settings-card,
 [data-theme='light'] .auth-card {
-  box-shadow: 0 1px 3px rgba(var(--shadow-color), 0.04);
+  box-shadow: 0 1px 3px rgba(var(--shadow-color), 0.05);
 }
 
 [data-theme='light'] .stat-card:hover {
-  border-color: rgba(var(--accent-rgb), 0.35);
-  box-shadow: 0 6px 20px rgba(var(--accent-rgb), 0.08);
+  border-color: rgba(var(--primary-rgb), 0.4);
+  box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.1);
 }
 
-/* In light mode the success/win badges need stronger contrast */
 [data-theme='light'] .match-result.win {
-  background: rgba(var(--accent-rgb), 0.12);
-  color: var(--accent);
+  background: rgba(var(--success-rgb), 0.12);
+  color: var(--success);
 }
 
 [data-theme='light'] .match-result.loss {
@@ -369,50 +485,47 @@ a {
   color: var(--danger);
 }
 
-/* In light mode, the global search overlay needs a lighter scrim */
 [data-theme='light'] .global-search-overlay {
-  background: rgba(15, 23, 42, 0.45);
+  background: rgba(10, 26, 51, 0.45);
 }
 
-/* In light mode, notifications/user-menu shadow is softer */
 [data-theme='light'] .notification-panel,
 [data-theme='light'] .user-menu,
 [data-theme='light'] .global-search {
   box-shadow: 0 20px 60px rgba(var(--shadow-color), 0.18);
 }
 
-/* In light mode, code-window (the demo on the landing) should keep a
-   dark editor feel so Python syntax reads naturally. */
+/* The code window keeps a dark navy editor feel in light mode so
+   Python syntax reads naturally against the drafting-paper UI. */
 [data-theme='light'] .code-window {
-  background: #0f172a;
-  color: #e2e8f0;
-  border-color: #1e293b;
+  background: var(--code-bg);
+  color: var(--code-text);
+  border-color: var(--code-border);
 }
 
 [data-theme='light'] .code-header,
 [data-theme='light'] .code-footer {
-  background: #1e293b;
-  border-color: #334155;
-  color: #94a3b8;
+  background: #0b1a30;
+  border-color: var(--code-border);
+  color: #8fa3c2;
 }
 
 [data-theme='light'] .code-body {
-  background: #0f172a;
+  background: var(--code-bg);
 }
 
 [data-theme='light'] .code-body code {
-  color: #e2e8f0;
+  color: var(--code-text);
 }
 
 [data-theme='light'] .code-body .error-line code {
-  color: #fca5a5;
+  color: #ffb3c1;
 }
 
 [data-theme='light'] .demo-status {
-  color: #94a3b8;
+  color: #8fa3c2;
 }
 
-/* In light mode, the demo-result box stays vibrant */
 [data-theme='light'] .demo-result {
   background: var(--bg-surface);
   border: 1px solid var(--border);
@@ -420,151 +533,13 @@ a {
 }
 
 [data-theme='light'] .demo-result strong {
-  color: var(--accent);
-}
-
-/* =========================
-   DARK THEME POLISH
-   Adds subtle cyan/blue undertones to the previously black+green
-   palette, giving the dark mode more depth.
-========================= */
-
-[data-theme='dark'] .landing {
-  background:
-    radial-gradient(circle at 70% 20%, rgba(var(--accent-rgb), 0.08), transparent 35%),
-    radial-gradient(circle at 15% 90%, rgba(var(--accent-2-rgb), 0.05), transparent 45%),
-    var(--bg-primary);
-}
-
-[data-theme='dark'] .auth-page {
-  background:
-    radial-gradient(circle at 70% 20%, rgba(var(--accent-rgb), 0.08), transparent 35%),
-    radial-gradient(circle at 15% 90%, rgba(var(--accent-3-rgb), 0.04), transparent 45%),
-    var(--bg-primary);
+  color: var(--primary);
 }
 
 [data-theme='dark'] .stat-card:hover {
-  border-color: rgba(var(--accent-rgb), 0.25);
-  box-shadow: 0 8px 24px rgba(var(--accent-rgb), 0.06);
+  border-color: rgba(var(--primary-rgb), 0.32);
+  box-shadow: 0 8px 24px rgba(var(--primary-rgb), 0.08);
 }
-
-/* ================================================================
-   BUG ARENA 2.0 VISUAL FOUNDATION
-   Semantic depth, richer color roles and consistent interactive states.
-================================================================ */
-:root {
-  --brand-500: #00c896;
-  --brand-400: #22e6b3;
-  --brand-600: #009f79;
-  --violet-500: #7c5cff;
-  --cyan-500: #21b6f3;
-  --amber-500: #f5a524;
-  --rose-500: #f05d78;
-  --surface-tint: rgba(255,255,255,.025);
-  --control-height: 42px;
-}
-
-[data-theme='dark'] {
-  --bg-primary: #080b10;
-  --bg-surface: #0d1219;
-  --bg-elevated: #141b24;
-  --bg-sunken: #05070a;
-  --bg-overlay: rgba(8,11,16,.92);
-  --border: #202b38;
-  --border-strong: #334252;
-  --border-subtle: #17212b;
-  --text-primary: #f4f7fb;
-  --text-secondary: #aab6c5;
-  --text-muted: #738195;
-  --text-disabled: #4c5969;
-  --text-invert: #07100d;
-  --primary: var(--brand-400);
-  --primary-rgb: 34,230,179;
-  --primary-soft: rgba(34,230,179,.09);
-  --primary-soft-strong: rgba(34,230,179,.16);
-  --accent: var(--brand-400);
-  --accent-rgb: 34,230,179;
-  --accent-hover: #54f0c9;
-  --accent-soft: rgba(34,230,179,.09);
-  --secondary: var(--violet-500);
-  --secondary-rgb: 124,92,255;
-  --secondary-soft: rgba(124,92,255,.12);
-  --tertiary: var(--cyan-500);
-  --tertiary-rgb: 33,182,243;
-  --tertiary-soft: rgba(33,182,243,.11);
-  --success: #31d58b;
-  --success-rgb: 49,213,139;
-  --success-soft: rgba(49,213,139,.11);
-  --warning: #f5a524;
-  --warning-rgb: 245,165,36;
-  --warning-soft: rgba(245,165,36,.12);
-  --danger: #f05d78;
-  --danger-rgb: 240,93,120;
-  --danger-soft: rgba(240,93,120,.11);
-  --info: #21b6f3;
-  --info-rgb: 33,182,243;
-  --info-soft: rgba(33,182,243,.11);
-  --code-bg: #090d12;
-  --code-border: #1b2631;
-  --code-text: #d6dee8;
-  --code-gutter: #536174;
-  --shadow-xs: 0 1px 2px rgba(0,0,0,.24);
-  --shadow-sm: 0 6px 18px rgba(0,0,0,.25);
-  --shadow-md: 0 16px 42px rgba(0,0,0,.3);
-  --shadow-soft: 0 24px 70px rgba(0,0,0,.34);
-  --shadow-strong: 0 34px 100px rgba(0,0,0,.42);
-}
-
-[data-theme='light'] {
-  --bg-primary: #f1f5f9;
-  --bg-surface: #ffffff;
-  --bg-elevated: #f8fafc;
-  --bg-sunken: #e7edf4;
-  --bg-overlay: rgba(241,245,249,.94);
-  --border: #d6dee8;
-  --border-strong: #b8c5d4;
-  --border-subtle: #e5ebf1;
-  --text-primary: #101828;
-  --text-secondary: #475467;
-  --text-muted: #66758a;
-  --text-disabled: #98a5b5;
-  --text-invert: #ffffff;
-  --primary: #008f70;
-  --primary-rgb: 0,143,112;
-  --primary-soft: rgba(0,143,112,.08);
-  --primary-soft-strong: rgba(0,143,112,.14);
-  --accent: #008f70;
-  --accent-rgb: 0,143,112;
-  --accent-hover: #00755c;
-  --accent-soft: rgba(0,143,112,.08);
-  --secondary: #6947e8;
-  --secondary-rgb: 105,71,232;
-  --secondary-soft: rgba(105,71,232,.08);
-  --tertiary: #078bc7;
-  --tertiary-rgb: 7,139,199;
-  --tertiary-soft: rgba(7,139,199,.08);
-  --success: #087f5b;
-  --success-rgb: 8,127,91;
-  --success-soft: rgba(8,127,91,.08);
-  --warning: #a86400;
-  --warning-rgb: 168,100,0;
-  --warning-soft: rgba(168,100,0,.09);
-  --danger: #c83b58;
-  --danger-rgb: 200,59,88;
-  --danger-soft: rgba(200,59,88,.08);
-  --info: #087fb5;
-  --info-rgb: 8,127,181;
-  --info-soft: rgba(8,127,181,.08);
-  --shadow-xs: 0 1px 2px rgba(16,24,40,.05);
-  --shadow-sm: 0 5px 16px rgba(16,24,40,.07);
-  --shadow-md: 0 14px 36px rgba(16,24,40,.1);
-  --shadow-soft: 0 24px 70px rgba(16,24,40,.11);
-  --shadow-strong: 0 34px 100px rgba(16,24,40,.15);
-}
-
-body { line-height: 1.5; }
-button, a, input, textarea, select { transition: border-color .2s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease; }
-button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 
 /* Shared component language */
 .stat-card, .home-panel, .challenge-card, .settings-card, .profile-history, .profile-progress-panel,
@@ -574,8 +549,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   box-shadow: var(--shadow-sm);
 }
 
-[data-theme='light'] .app-topbar { background: rgba(255,255,255,.9); }
-[data-theme='dark'] .app-topbar { background: rgba(8,11,16,.9); }
+[data-theme='light'] .app-topbar { background: rgba(255, 255, 255, 0.9); }
+[data-theme='dark'] .app-topbar { background: rgba(5, 12, 27, 0.88); }
 
 /* ================================================================
    PREMIUM MOTION LAYER
@@ -626,7 +601,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   background: linear-gradient(
     115deg,
     transparent 30%,
-    rgba(var(--primary-rgb), .045) 48%,
+    rgba(var(--primary-rgb), .05) 48%,
     transparent 66%
   );
   transform: translateX(-45%);

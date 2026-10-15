@@ -96,7 +96,7 @@ function GameModes() {
 
             <Link
               to={activeMode === '1v1' ? '/duel' : '/challenges'}
-              className="mode-action"
+              className="showcase-mode-action"
             >
               {t('landing', 'modesCta')}
               <span>→</span>

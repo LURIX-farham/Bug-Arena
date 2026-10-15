@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ArrowRight, X } from 'lucide-react'
 import { challenges } from '../../data/challenges'
-import { getReplaySessions } from '../../services/replayStore'
+import { getReplaySessions, hydrateReplaysFromServer } from '../../services/replayStore'
 import { useI18n } from '../../i18n/useI18n'
 import {
   AnimatedCounter,
@@ -21,6 +22,7 @@ function Replays() {
   useEffect(() => {
     const refresh = () => setReplays(getReplaySessions())
     window.addEventListener('bug-arena:replay-updated', refresh)
+    hydrateReplaysFromServer().finally(refresh)
     return () => window.removeEventListener('bug-arena:replay-updated', refresh)
   }, [])
 
@@ -44,7 +46,7 @@ function Replays() {
           <h1>
             <GradientText
               as="span"
-              colors={['var(--accent)', '#59f3c4', '#7c5cff']}
+              colors={['var(--accent)', 'var(--secondary)', 'var(--tertiary)']}
               animationSpeed={7}
               pauseOnHover
             >
@@ -85,16 +87,16 @@ function Replays() {
                 <div className="replay-top"><span>{t('challenges', 'bug')} #{item.challengeId}</span><span>{item.mode.toUpperCase()} · {challenge?.difficulty || item.difficulty}</span></div>
                 <div className="replay-main"><div><h2>{item.challengeTitle}</h2><p>{new Date(item.startedAt).toLocaleString()} · {item.events?.length || 0} {t('replays', 'events')}</p></div><div className="replay-score"><span>{item.status === 'completed' ? t('arena', 'points') : t('arena', 'status')}</span><strong>{item.status === 'completed' ? <AnimatedCounter value={item.finalScore} duration={1.5} /> : <ShinyText text={t('replays', 'open')} speed={3.4} />}</strong></div></div>
                 <div className="replay-metrics"><span>{item.attempts} {t('arena', 'attempts')}</span><span>{item.hardened ? t('replays', 'hardened') : t('arena', 'coreFix')}</span><span>{item.timeLeft}{t('replays', 'timeLeftSuffix')}</span></div>
-                <div className="replay-bottom"><span>{item.events?.filter((event) => event.type === 'test_run').length || 0} {t('replays', 'testRuns')} · {item.events?.filter((event) => event.type === 'hardening_run').length || 0} {t('replays', 'hardeningRuns')}</span><button type="button" onClick={() => setSelectedId(item.id)}>{t('replays', 'viewReplay')} →</button></div>
+                <div className="replay-bottom"><span>{item.events?.filter((event) => event.type === 'test_run').length || 0} {t('replays', 'testRuns')} · {item.events?.filter((event) => event.type === 'hardening_run').length || 0} {t('replays', 'hardeningRuns')}</span><button type="button" className="replay-open-button" onClick={() => setSelectedId(item.id)}><span>{t('replays', 'viewReplay')}</span><ArrowRight size={13} strokeWidth={1.75} aria-hidden="true" /></button></div>
               </SpotlightCard>
             )
           })}
         </AnimatedList>
-      ) : <section className="replay-empty"><strong>{t('replays', 'emptyTitle')}</strong><p>{t('replays', 'emptyBody')}</p><Link to="/challenges">{t('replays', 'browseChallenges')} →</Link></section>}
+      ) : <section className="replay-empty state-empty bp-grid"><strong>{t('replays', 'emptyTitle')}</strong><p>{t('replays', 'emptyBody')}</p><Link to="/challenges" className="replay-empty-link"><span>{t('replays', 'browseChallenges')}</span><ArrowRight size={14} strokeWidth={1.75} aria-hidden="true" /></Link></section>}
 
       {selected && <div className="replay-overlay" role="dialog" aria-modal="true" aria-label={t('replays', 'detailsAria')}>
         <div className="replay-viewer">
-          <div className="replay-viewer-head"><div><span>{t('replays', 'timeline')}</span><h2>{selected.challengeTitle}</h2></div><button type="button" onClick={() => setSelectedId(null)}>{t('common', 'close')} ×</button></div>
+          <div className="replay-viewer-head"><div><span>{t('replays', 'timeline')}</span><h2>{selected.challengeTitle}</h2></div><button type="button" className="replay-viewer-close" onClick={() => setSelectedId(null)}><span>{t('common', 'close')}</span><X size={14} strokeWidth={1.75} aria-hidden="true" /></button></div>
           <AnimatedList className="replay-timeline" delay={60} initialDelay={100}>
             {selected.events.map((event, index) => <div className="replay-event" key={`${event.at}-${index}`}><div className="replay-event-dot" /><div><strong>{event.type.replaceAll('_', ' ').toUpperCase()}</strong><span>{new Date(event.at).toLocaleTimeString()} · {Math.round((event.elapsedMs || 0) / 1000)}s</span></div>{event.payload?.passed !== undefined && <em>{event.payload.passed}/{event.payload.total} {t('replays', 'testsPassed')}</em>}</div>)}
           </AnimatedList>

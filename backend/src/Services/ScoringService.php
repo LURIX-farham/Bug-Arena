@@ -40,29 +40,56 @@ final class ScoringService
             default => 0,
         };
 
-        // Integrity: accept either the full suite (core + hidden) or the
-        // core-only suite. Core-only solves cannot claim the hardening bonus.
-        // Any other testsTotal value is rejected as tampering / stale client.
-        $effectiveHardened = $hardened;
-        if ($expectedTests > 0) {
-            $isFullSuite = ($testsTotal === $expectedTests && $testsPassed === $expectedTests);
-            $isCoreOnly = ($coreTests > 0
-                && $testsTotal === $coreTests
-                && $testsPassed === $coreTests);
-
-            if ($isFullSuite) {
-                // Full suite passed — hardening flag from client is trusted.
-            } elseif ($isCoreOnly) {
-                // Core fixed without hidden tests — force non-hardened scoring.
-                $effectiveHardened = false;
-            } else {
-                \BugArena\Utils\Helpers::fail('test_integrity_failed', 409, [
-                    'testsTotal' => $testsTotal,
-                    'testsPassed' => $testsPassed,
-                    'expectedTests' => $expectedTests,
-                    'coreTests' => $coreTests,
-                ]);
+        // When challenge_tests rows are missing, fall back to evaluation_tests JSON.
+        if ($expectedTests <= 0 || $coreTests <= 0) {
+            $fromJson = self::countsFromEvaluationJson($challenge);
+            if ($expectedTests <= 0) {
+                $expectedTests = $fromJson['expected'];
             }
+            if ($coreTests <= 0) {
+                $coreTests = $fromJson['core'];
+            }
+        }
+
+        $effectiveHardened = $hardened;
+
+        // Must have passed at least one test and passed everything that was run.
+        if ($testsTotal < 1 || $testsPassed < 1 || $testsPassed < $testsTotal) {
+            \BugArena\Utils\Helpers::fail('test_integrity_failed', 409, [
+                'reason' => 'not_all_passed',
+                'testsTotal' => $testsTotal,
+                'testsPassed' => $testsPassed,
+                'expectedTests' => $expectedTests,
+                'coreTests' => $coreTests,
+            ]);
+        }
+
+        // Accept a perfect run of the full suite or of the core suite, judged
+        // against BOTH the challenge_tests table and the evaluation JSON
+        // (legacy seeds can disagree). Any other count is rejected: a client
+        // reporting "1 of 1 passed" must not earn points.
+        $json = self::countsFromEvaluationJson($challenge);
+        $fullCounts = array_values(array_unique(array_filter([$expectedTests, $json['expected']])));
+        $coreCounts = array_values(array_unique(array_filter([$coreTests, $json['core']])));
+
+        $isFullSuite = in_array($testsTotal, $fullCounts, true);
+        $isCoreOnly = in_array($testsTotal, $coreCounts, true);
+
+        if ($fullCounts === [] && $coreCounts === []) {
+            // Challenge has no registered tests at all: nothing can be verified.
+            \BugArena\Utils\Helpers::fail('test_integrity_failed', 409, ['reason' => 'challenge_has_no_tests']);
+        }
+        if (!$isFullSuite && !$isCoreOnly) {
+            \BugArena\Utils\Helpers::fail('test_integrity_failed', 409, [
+                'testsTotal' => $testsTotal,
+                'testsPassed' => $testsPassed,
+                'expectedTests' => $expectedTests,
+                'coreTests' => $coreTests,
+            ]);
+        }
+        if (!$isFullSuite) {
+            // Core-only run: no hardening bonus.
+            $effectiveHardened = false;
         }
 
         $hardeningBonus = $effectiveHardened
@@ -78,5 +105,33 @@ final class ScoringService
             'hardeningBonus' => $hardeningBonus,
             'hardened' => $effectiveHardened,
         ];
+    }
+
+    /** @return array{expected:int, core:int} */
+    private static function countsFromEvaluationJson(array $challenge): array
+    {
+        $raw = $challenge['evaluation_tests'] ?? $challenge['evaluationTests'] ?? null;
+        if (is_string($raw)) {
+            $decoded = json_decode($raw, true);
+        } elseif (is_array($raw)) {
+            $decoded = $raw;
+        } else {
+            $decoded = [];
+        }
+        if (!is_array($decoded)) {
+            return ['expected' => 0, 'core' => 0];
+        }
+        $expected = count($decoded);
+        $core = 0;
+        foreach ($decoded as $test) {
+            if (!is_array($test)) {
+                continue;
+            }
+            $type = (string) ($test['type'] ?? 'core');
+            if ($type !== 'hidden') {
+                $core++;
+            }
+        }
+        return ['expected' => $expected, 'core' => $core];
     }
 }

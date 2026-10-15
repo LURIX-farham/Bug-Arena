@@ -53,7 +53,7 @@ final class ReplayController
     public function store(Request $request): void
     {
         $userId = AuthMiddleware::requireAuth();
-        (new RateLimitMiddleware(60, 60))->handle('replays:' . $userId);
+        (new RateLimitMiddleware(300, 60))->handle('replays-write:' . $userId);
         $result = self::createSession($userId, $request->body);
         Response::json($result['payload'], $result['http']);
     }
@@ -61,8 +61,8 @@ final class ReplayController
     /** Shared pipeline (HTTP + /sync batch). */
     public static function createSession(int $userId, array $body): array
     {
-        $publicId = substr(trim((string) ($body['id'] ?? '')), 0, 36);
-        if (!preg_match('/^[a-zA-Z0-9-]{8,36}$/', $publicId)) {
+        $publicId = substr(trim((string) ($body['id'] ?? '')), 0, 64);
+        if (!preg_match('/^[a-zA-Z0-9_-]{8,64}$/', $publicId)) {
             $publicId = Helpers::uuid();
         }
         $pdo = Database::pdo();
@@ -99,7 +99,7 @@ final class ReplayController
     public function addEvents(Request $request, array $params): void
     {
         $userId = AuthMiddleware::requireAuth();
-        (new RateLimitMiddleware(120, 60))->handle('replay-events:' . $userId);
+        (new RateLimitMiddleware(600, 60))->handle('replay-events:' . $userId);
         $result = self::appendEvents($userId, (string) $params['id'], $request->body);
         Response::json($result['payload'], $result['http']);
     }
@@ -107,13 +107,17 @@ final class ReplayController
     /** Shared pipeline (HTTP + /sync batch). */
     public static function appendEvents(int $userId, string $publicId, array $body): array
     {
+        if (self::isIgnorableReplayId($publicId)) {
+            return ['http' => 200, 'payload' => ['ok' => true, 'ignored' => true, 'count' => 0]];
+        }
         $pdo = Database::pdo();
 
         $stmt = $pdo->prepare('SELECT id FROM replay_sessions WHERE public_id = ? AND user_id = ? LIMIT 1');
         $stmt->execute([$publicId, $userId]);
         $replayId = $stmt->fetchColumn();
         if (!$replayId) {
-            Helpers::fail('replay_not_found', 404);
+            // Soft-fail: stale client session ids must not spam 404 in the console.
+            return ['http' => 200, 'payload' => ['ok' => true, 'ignored' => true, 'count' => 0]];
         }
 
         $events = isset($body['events']) && is_array($body['events'])
@@ -154,7 +158,7 @@ final class ReplayController
     public function finish(Request $request, array $params): void
     {
         $userId = AuthMiddleware::requireAuth();
-        (new RateLimitMiddleware(60, 60))->handle('replays:' . $userId);
+        (new RateLimitMiddleware(300, 60))->handle('replays-write:' . $userId);
         $result = self::closeSession($userId, (string) $params['id'], $request->body);
         Response::json($result['payload'], $result['http']);
     }
@@ -162,6 +166,10 @@ final class ReplayController
     /** Shared pipeline (HTTP + /sync batch). */
     public static function closeSession(int $userId, string $publicId, array $body): array
     {
+        if (self::isIgnorableReplayId($publicId)) {
+            return ['http' => 200, 'payload' => ['ok' => true, 'ignored' => true]];
+        }
+
         $config = $GLOBALS['bug_arena_config'];
         $pdo = Database::pdo();
 
@@ -196,6 +204,12 @@ final class ReplayController
             }
         }
         return ['http' => 200, 'payload' => ['ok' => true]];
+    }
+
+    private static function isIgnorableReplayId(string $publicId): bool
+    {
+        $id = trim($publicId);
+        return $id === '' || $id === 'undefined' || $id === 'null' || strtolower($id) === 'undefined';
     }
 
     private static function publicRow(array $row): array

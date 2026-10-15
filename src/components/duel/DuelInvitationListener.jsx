@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
+import { X } from 'lucide-react'
 import { acceptInvitation, canDuel, createPoller, declineInvitation, fetchInvitations, heartbeat } from '../../services/duelStore.js'
 import { useI18n } from '../../i18n/useI18n'
 import './duel.css'
@@ -124,7 +125,7 @@ function DuelInvitationListener() {
           disabled={busy}
           aria-label={t('duel', 'decline')}
         >
-          ×
+          <X size={14} strokeWidth={1.75} />
         </button>
       </div>
     </div>

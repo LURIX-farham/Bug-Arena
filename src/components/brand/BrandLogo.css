@@ -1,6 +1,7 @@
 /* =====================================================================
-   BrandLogo — image mark + optional wordmark
-   Uses design tokens so dark/light + RTL stay consistent.
+   BrandLogo — the BUG//ARENA mark + wordmark
+   Theme-correct mark variants (navy on paper, white on navy), sharp
+   architectural presentation. No rounded plates, no decoration.
 ===================================================================== */
 
 .brand-logo {
@@ -10,62 +11,60 @@
   text-decoration: none;
   color: var(--text-primary);
   min-width: 0;
-  transition: opacity var(--duration-fast, 0.15s) ease, filter 0.2s ease;
+  transition: opacity var(--duration-fast, 0.15s) ease, transform 0.2s var(--ease-out);
 }
 
 .brand-logo:hover {
-  filter: brightness(1.08);
+  opacity: 0.92;
+}
+
+.brand-logo:active {
+  transform: scale(0.98);
 }
 
 .brand-logo:focus-visible {
   outline: 2px solid rgba(var(--accent-rgb), 0.55);
   outline-offset: 3px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
 }
 
 .brand-logo-mark {
+  position: relative;
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  border-radius: 10px;
-  background: transparent;
-  overflow: hidden;
   line-height: 0;
 }
 
 .brand-logo-mark img {
+  grid-area: 1 / 1;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  /* Dark navy mark stays crisp on dark UI; invert lightly on pure dark if needed */
   user-select: none;
   pointer-events: none;
 }
 
-/* Sizes */
-.brand-logo--sm .brand-logo-mark {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+/* Theme-correct mark: navy on light, white on dark.
+   (Specificity must beat `.brand-logo-mark img` above.) */
+.brand-logo-mark img.brand-logo-img-dark {
+  display: none;
 }
 
-.brand-logo--md .brand-logo-mark {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
+[data-theme='dark'] .brand-logo-mark img.brand-logo-img-light {
+  display: none;
 }
 
-.brand-logo--lg .brand-logo-mark {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+[data-theme='dark'] .brand-logo-mark img.brand-logo-img-dark {
+  display: block;
 }
 
+/* Wordmark — Space Grotesk echoes the mark's geometry */
 .brand-logo-wordmark {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
   white-space: nowrap;
   line-height: 1;
 }
@@ -83,8 +82,26 @@
 }
 
 .brand-logo-wordmark span {
-  color: var(--accent);
+  color: var(--primary);
   margin-inline: 1px;
+  font-weight: 700;
+}
+
+/* Sizes — the mark span must be explicitly sized, otherwise the
+   img (width/height 100%) falls back to its natural 1024px size */
+.brand-logo--sm .brand-logo-mark {
+  width: 28px;
+  height: 28px;
+}
+
+.brand-logo--md .brand-logo-mark {
+  width: 34px;
+  height: 34px;
+}
+
+.brand-logo--lg .brand-logo-mark {
+  width: 44px;
+  height: 44px;
 }
 
 /* Compact = icon only (collapsed sidebar) */
@@ -97,24 +114,25 @@
   height: 32px;
 }
 
-/* Optional soft plate behind the mark on elevated surfaces */
-.brand-logo--plated .brand-logo-mark {
-  background: rgba(var(--accent-rgb), 0.06);
+@media (max-width: 600px) {
+  .brand-logo--md .brand-logo-wordmark {
+    font-size: 14px;
+  }
+
+  .brand-logo--lg .brand-logo-mark {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Optional framed presentation for hero / marketing contexts */
+.brand-logo--framed .brand-logo-mark {
+  padding: 8px;
   border: 1px solid var(--border);
-  padding: 4px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
   box-sizing: content-box;
 }
-
-/* Light theme: mark is already dark navy — stays readable */
-[data-theme='light'] .brand-logo-mark img {
-  filter: none;
-}
-
-/* If you ever need a white version on dark solid backgrounds, uncomment:
-[data-theme='dark'] .brand-logo-mark img {
-  filter: brightness(0) invert(1);
-}
-*/
 
 @media (max-width: 600px) {
   .brand-logo--md .brand-logo-wordmark {

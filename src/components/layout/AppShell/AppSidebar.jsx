@@ -1,5 +1,18 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
+import {
+  House,
+  Bug,
+  Swords,
+  Trophy,
+  Play,
+  User,
+  Activity,
+  Target,
+  Award,
+  Settings,
+  PanelLeftClose,
+} from 'lucide-react'
 import { useI18n } from '../../../i18n/useI18n'
 import { getCurrentPlayer } from '../../../services/playerStore'
 import { getAuthUser } from '../../../services/authStore.js'
@@ -9,37 +22,37 @@ import BrandLogo from '../../brand/BrandLogo'
 const mainNavigation = [
   {
     label: 'Home',
-    icon: '⌂',
+    Icon: House,
     path: '/home',
   },
   {
     label: 'Challenges',
-    icon: '◈',
+    Icon: Bug,
     path: '/challenges',
   },
   {
     label: 'Duel',
-    icon: '⚔',
+    Icon: Swords,
     path: '/duel',
   },
   {
     label: 'Leaderboard',
-    icon: '◆',
+    Icon: Trophy,
     path: '/leaderboard',
   },
   {
     label: 'Replays',
-    icon: '▷',
+    Icon: Play,
     path: '/replays',
   },
   {
     label: 'Profile',
-    icon: '℗',
+    Icon: User,
     path: '/profile',
   },
   {
     label: 'Analytics',
-    icon: '⌁',
+    Icon: Activity,
     path: '/analytics',
   },
 ]
@@ -47,12 +60,12 @@ const mainNavigation = [
 const secondaryNavigation = [
   {
     label: 'Tournaments',
-    icon: '◎',
+    Icon: Target,
     path: '/tournaments',
   },
   {
     label: 'Achievements',
-    icon: '◇',
+    Icon: Award,
     path: '/achievements',
   },
 ]
@@ -81,26 +94,7 @@ function writeCollapsedPreference(collapsed) {
    stroke="currentColor" -> inherits theme colors; the RTL flip is
    handled in CSS (html[dir='rtl']) instead of utility classes. */
 function SidebarCollapseIcon() {
-  return (
-    <svg
-      className="sidebar-collapse-icon"
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        d="M6 2V14M5.2 2H10.8C11.9201 2 12.4802 2 12.908 2.21799C13.2843 2.40973 13.5903 2.71569 13.782 3.09202C14 3.51984 14 4.0799 14 5.2V10.8C14 11.9201 14 12.4802 13.782 12.908C13.5903 13.2843 13.2843 13.5903 12.908 13.782C12.4802 14 11.9201 14 10.8 14H5.2C4.07989 14 3.51984 14 3.09202 13.782C2.71569 13.5903 2.40973 13.2843 2.21799 12.908C2 12.4802 2 11.9201 2 10.8V5.2C2 4.07989 2 3.51984 2.21799 3.09202C2.40973 2.71569 2.71569 2.40973 3.09202 2.21799C3.51984 2 4.0799 2 5.2 2Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.33"
-      />
-    </svg>
-  )
+  return <PanelLeftClose className="sidebar-collapse-icon" size={16} strokeWidth={1.75} aria-hidden="true" />
 }
 
 function AppSidebar() {
@@ -128,7 +122,7 @@ function AppSidebar() {
   const secondary = secondaryNavigation.map((item) => ({ ...item, label: labels[item.label.toLowerCase()] || item.label }))
   const authUser = getAuthUser()
   if (authUser?.isAdmin) {
-    secondary.push({ label: labels.admin || 'Admin', icon: '⚙', path: '/admin' })
+    secondary.push({ label: labels.admin || 'Admin', Icon: Settings, path: '/admin' })
   }
 
   // Real player identity — same server-backed snapshot the topbar uses.
@@ -205,7 +199,7 @@ function AppSidebar() {
             </span>
 
             <span className="sidebar-icon" data-tip={item.label}>
-              {item.icon}
+              <item.Icon aria-hidden="true" />
             </span>
 
             <span className="sidebar-text">
@@ -233,7 +227,7 @@ function AppSidebar() {
             </span>
 
             <span className="sidebar-icon" data-tip={item.label}>
-              {item.icon}
+              <item.Icon aria-hidden="true" />
             </span>
 
             <span className="sidebar-text">
@@ -274,26 +268,6 @@ function AppSidebar() {
 
         <span className={`sidebar-player-state${online ? ' online' : ''}`} aria-hidden="true" />
       </Link>
-
-      {/* <div className="sidebar-bottom">
-
-        <NavLink
-          to="/system"
-          className="sidebar-settings"
-        >
-          ◌
-          {t('nav', 'system')}
-        </NavLink>
-
-        <NavLink
-          to="/settings"
-          className="sidebar-settings"
-        >
-          ⚙
-          {t('nav', 'settings')}
-        </NavLink>
-
-      </div> */}
 
     </aside>
   )

@@ -34,14 +34,14 @@ function LeaderboardPreview() {
         </p>
       </div>
 
-      <div className="leaderboard">
+      <div className="showcase-leaderboard">
 
-        <div className="leaderboard-header">
+        <div className="showcase-leaderboard-header">
           <span>{t('landing', 'globalRanking')}</span>
           <span>{t('landing', 'season')}</span>
         </div>
 
-        <div className="leaderboard-columns">
+        <div className="showcase-leaderboard-columns">
           <span>{t('landing', 'colRank')}</span>
           <span>{t('landing', 'colPlayer')}</span>
           <span>{t('landing', 'colXp')}</span>
@@ -50,10 +50,10 @@ function LeaderboardPreview() {
 
         {players.map((player) => (
           <div
-            className="leaderboard-row"
+            className="showcase-leaderboard-row"
             key={player.rank}
           >
-            <span className="player-rank">
+            <span className="showcase-player-rank">
               {player.rank}
             </span>
 
@@ -61,18 +61,18 @@ function LeaderboardPreview() {
 
             <span>{player.xp}</span>
 
-            <span className="player-win">
+            <span className="showcase-player-win">
               {player.win}
             </span>
           </div>
         ))}
 
-        <div className="leaderboard-divider">
+        <div className="showcase-leaderboard-divider">
           <span>•••</span>
         </div>
 
-        <div className="leaderboard-row current-player">
-          <span className="player-rank">
+        <div className="showcase-leaderboard-row showcase-current-player">
+          <span className="showcase-player-rank">
             127
           </span>
 
@@ -80,12 +80,12 @@ function LeaderboardPreview() {
 
           <span>8,420</span>
 
-          <span className="player-win">
+          <span className="showcase-player-win">
             68%
           </span>
         </div>
 
-        <div className="leaderboard-footer">
+        <div className="showcase-leaderboard-footer">
           <Link to="/leaderboard">
             {t('landing', 'viewFullLeaderboard')}
             <span>→</span>

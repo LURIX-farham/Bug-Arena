@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Check, Flame, Inbox } from 'lucide-react'
 import { getCurrentPlayer } from '../../services/playerStore'
 import { getCompletedChallenges } from '../../services/submissionStore'
 import { getProgressionStats } from '../../services/progressionStore'
@@ -8,7 +9,6 @@ import {
   AnimatedList,
   BlurText,
   DotGrid,
-  GradientText,
   SpotlightCard,
 } from '../../components/reactbits'
 import { useTheme } from '../../theme/useTheme'
@@ -76,9 +76,9 @@ function Profile() {
 
   const [xpTrackRef, xpTrackInView] = useInViewOnce(0.3)
 
-  // DotGrid palette — concrete colors for the canvas layer.
+  // DotGrid palette — concrete colors for the canvas layer (electric blue).
   const dotBase = isDark ? 'rgba(154, 161, 172, 0.16)' : 'rgba(71, 85, 105, 0.13)'
-  const dotActive = isDark ? 'rgba(124, 255, 107, 0.7)' : 'rgba(37, 99, 235, 0.45)'
+  const dotActive = isDark ? 'rgba(61, 126, 255, 0.6)' : 'rgba(30, 86, 224, 0.45)'
 
   const statCards = [
     { label: t('profile', 'totalXp'), value: progression.xp, tone: 'accent' },
@@ -119,16 +119,12 @@ function Profile() {
               direction="bottom"
               stepDuration={0.2}
             />
-            <h1 id="profile-hero-title">
-              <GradientText
-                as="span"
-                colors={['var(--accent)', '#59f3c4', '#7c5cff']}
-                animationSpeed={7}
-                pauseOnHover
-              >
-                {player.displayName.toLowerCase()}
-              </GradientText>
-            </h1>
+            <div className="profile-identity">
+              <span className="profile-avatar" aria-hidden="true">
+                {String(player.displayName || player.username || '?').charAt(0).toUpperCase()}
+              </span>
+              <h1 id="profile-hero-title">{player.displayName.toLowerCase()}</h1>
+            </div>
             <BlurText
               as="p"
               text={t('profile', 'tagline')}
@@ -138,17 +134,20 @@ function Profile() {
               stepDuration={0.3}
             />
 
-            <span className="profile-hero-rank">
-              <GradientText
-                as="span"
-                className="profile-hero-rank-title"
-                colors={['var(--accent)', 'var(--secondary)', 'var(--tertiary)']}
-                animationSpeed={9}
-                pauseOnHover
-              >
-                {rankTitle}
-              </GradientText>
-            </span>
+            <div className="profile-meta-row">
+              <span className="profile-meta-item">
+                <small>{t('profile', 'lvl')}</small>
+                <strong className="tnum">{Number(progression.level) || 1}</strong>
+              </span>
+              <span className="profile-meta-item">
+                <small>{t('profile', 'score')}</small>
+                <strong className="tnum">{player.score}</strong>
+              </span>
+              <span className="profile-meta-item">
+                <small>{t('home', 'rank')}</small>
+                <strong className="profile-meta-rank">{rankTitle}</strong>
+              </span>
+            </div>
           </div>
 
           <SpotlightCard
@@ -168,7 +167,12 @@ function Profile() {
                 />
               </span>
               <span className="profile-hero-streak">
-                <em aria-hidden="true">🔥</em>
+                <Flame
+                  size={16}
+                  strokeWidth={1.75}
+                  aria-hidden="true"
+                  className="profile-hero-streak-flame"
+                />
                 <AnimatedCounter
                   as="strong"
                   value={progression.streak}
@@ -249,7 +253,7 @@ function Profile() {
           <AnimatedList className="submission-list" delay={70} initialDelay={140}>
             {submissions.slice().sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)).map((submission) => (
               <div className="submission-row" key={`${submission.challengeId}-${submission.submittedAt}`}>
-                <div className="submission-status">✓</div>
+                <div className="submission-status"><Check size={16} strokeWidth={1.75} aria-hidden="true" /></div>
                 <div className="submission-main"><strong>{submission.challengeTitle}</strong><span>{t('profile', 'bugLabel')} #{submission.challengeId}</span></div>
                 <div className="submission-rating"><span>{t('profile', 'score')}</span><strong>+{submission.score}</strong></div>
                 <div className="submission-score"><span>{t('profile', 'xp')}</span><strong>{submission.score}</strong></div>
@@ -260,7 +264,7 @@ function Profile() {
             ))}
           </AnimatedList>
         ) : (
-          <div className="profile-empty"><span>◌</span><strong>{t('profile', 'emptyTitle')}</strong><p>{t('profile', 'emptyBody')}</p></div>
+          <div className="profile-empty"><span aria-hidden="true"><Inbox size={18} strokeWidth={1.75} /></span><strong>{t('profile', 'emptyTitle')}</strong><p>{t('profile', 'emptyBody')}</p></div>
         )}
       </section>
     </div>

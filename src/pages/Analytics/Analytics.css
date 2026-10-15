@@ -1,69 +1,308 @@
-.analytics-page{display:flex;flex-direction:column;gap:24px}.analytics-header{display:flex;justify-content:space-between;align-items:flex-end;gap:24px}.analytics-header h1{margin:8px 0;font-size:clamp(42px,6vw,76px);letter-spacing:-.06em}.analytics-header p{margin:0;color:var(--muted,#7d8490);max-width:650px}.analytics-replay-link{color:inherit;text-decoration:none;font-size:10px;letter-spacing:.14em;border:1px solid var(--line,#252932);padding:12px 14px;background:var(--panel,#111318)}.analytics-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.analytics-grid article,.analytics-panel,.analytics-table{border:1px solid var(--line,#252932);background:var(--panel,#111318)}.analytics-grid article{padding:18px;min-height:125px}.analytics-grid span,.analytics-panel-head span,.analytics-table-head span{font-size:9px;letter-spacing:.15em;color:var(--muted,#7d8490)}.analytics-grid strong{display:block;font-size:30px;margin:12px 0 5px}.analytics-grid small{color:var(--muted,#7d8490);font-size:10px;line-height:1.5}.analytics-panels{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}.analytics-panel{padding:22px}.analytics-panel-head{display:flex;justify-content:space-between;align-items:center}.analytics-panel-head strong{font-size:32px}.analytics-panel>p{margin:10px 0 24px;color:var(--muted,#7d8490)}.analytics-bars{display:grid;gap:12px}.analytics-bar-row{display:grid;grid-template-columns:80px 1fr 28px;align-items:center;gap:10px;font-size:9px;letter-spacing:.08em}.analytics-bar-row>div{height:7px;background:var(--bg-sunken);border:1px solid var(--line,#252932)}.analytics-bar-row i{display:block;height:100%;background:currentColor}.analytics-mode-list{display:grid;gap:8px;margin-top:20px}.analytics-mode-list div{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line,#252932);font-size:11px}.analytics-event-summary{display:flex;justify-content:space-between;margin-top:25px;padding-top:15px;border-top:1px solid var(--line,#252932);font-size:10px;color:var(--muted,#7d8490)}.analytics-event-summary strong{color:var(--text,#f4f4f2);font-size:18px}.analytics-table{overflow:hidden}.analytics-table-head{display:flex;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line,#252932)}.analytics-session{display:grid;grid-template-columns:90px 1fr 90px 100px 150px;gap:14px;align-items:center;padding:16px 20px;color:inherit;text-decoration:none;border-bottom:1px solid var(--line,#252932);font-size:11px}.analytics-session:last-child{border-bottom:0}.analytics-session span,.analytics-session small{color:var(--muted,#7d8490)}.analytics-session em{font-style:normal;font-size:9px;letter-spacing:.1em;color:var(--muted,#7d8490)}.analytics-session b{text-align:right}.analytics-session small{text-align:right}.analytics-empty{padding:35px;text-align:center;color:var(--muted,#7d8490)}@media(max-width:1000px){.analytics-grid{grid-template-columns:repeat(3,1fr)}.analytics-panels{grid-template-columns:1fr}.analytics-session{grid-template-columns:80px 1fr 80px 90px}.analytics-session small{display:none}}@media(max-width:620px){.analytics-header{align-items:flex-start;flex-direction:column}.analytics-grid{grid-template-columns:repeat(2,1fr)}.analytics-session{grid-template-columns:1fr 1fr}.analytics-session span{display:none}.analytics-session b{text-align:left}.analytics-session em{grid-column:2}.analytics-bar-row{grid-template-columns:65px 1fr 20px}}
+/* =================================================================
+   ANALYTICS — PERFORMANCE LAB  (v2.0 "BLUEPRINT")
+   -----------------------------------------------------------------
+   Composition (top → bottom):
+   1. Header        — mono eyebrow, display h1, replay-archive link
+   2. Stat grid     — six tone-coded hairline metric cards
+   3. Breakdowns    — difficulty meters + mode distribution panels
+   4. Session table — recent runs, mono timestamps, hover lift
 
-/* =====================================================================
-   ANALYTICS MOTION PASS — hero, tone-coded counters, draw-in meters.
-   Logical properties + tokens only.
-===================================================================== */
+   Every direction-sensitive rule uses logical properties so the
+   Persian (RTL) layout mirrors cleanly. Numerals are mono tabular.
+================================================================= */
+
+.analytics-page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+
+/* =========================
+   1 · HEADER
+========================= */
+
+.analytics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+}
 
 .analytics-header .eyebrow {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+
+  color: var(--primary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.analytics-header .eyebrow::before {
+  content: '//';
+
+  margin-inline-end: 8px;
+
+  color: var(--text-muted);
+  font-weight: 700;
 }
 
 .analytics-header h1 {
-  margin: 8px 0;
+  margin: 0;
+
+  font-size: clamp(26px, 3vw, 36px);
+  letter-spacing: -0.02em;
 }
 
-.analytics-header h1 .gradient-text {
+.analytics-header h1 .animated-gradient-text {
   display: inline-block;
 }
 
-/* ---- Tone-coded stat cards: glowing tick + tabular numerals ---- */
-.analytics-grid article {
+.analytics-header p {
+  margin: 10px 0 0;
+
+  max-width: 640px;
+
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+}
+
+/* Secondary CTA — hairline, mono, arrow nudges forward on hover */
+.analytics-replay-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 11px 14px;
+
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+
+  color: var(--text-primary);
+  text-decoration: none;
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  transition: border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease,
+    background-color var(--duration-fast) ease;
+}
+
+.analytics-replay-link:hover {
+  border-color: var(--primary);
+
+  background: var(--primary-soft);
+
+  color: var(--primary);
+}
+
+.analytics-replay-link svg {
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.analytics-replay-link:hover svg {
+  transform: translateX(2px);
+}
+
+html[dir='rtl'] .analytics-replay-link svg {
+  transform: scaleX(-1);
+}
+
+html[dir='rtl'] .analytics-replay-link:hover svg {
+  transform: scaleX(-1) translateX(2px);
+}
+
+
+/* =========================
+   2 · STAT GRID — tone-coded metric cards
+========================= */
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.analytics-grid article.card-spotlight {
   position: relative;
+
+  min-height: 128px;
+  padding: 18px 18px 16px;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+
+  background: var(--bg-surface);
+}
+
+.analytics-grid article span,
+.analytics-panel-head span,
+.analytics-table-head span {
+  display: block;
+
+  color: var(--text-muted);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
 }
 
 .analytics-grid article strong {
+  display: block;
+
+  margin: 12px 0 6px;
+
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }
 
+.analytics-grid article small {
+  display: block;
+
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  line-height: 1.55;
+}
+
+/* Tone notch — a hard-edged tick, one per metric family */
 .analytics-grid article[data-tone]::after {
   content: '';
 
   position: absolute;
-
   inset-inline-start: 0;
-  top: 18px;
+  top: 16px;
 
   width: 3px;
-  height: 22px;
+  height: 20px;
 
-  border-radius: 3px;
-
-  background: var(--tone, var(--accent));
-
-  opacity: 0.85;
+  background: var(--tone, var(--primary));
+  opacity: 0.9;
 }
 
-.analytics-grid article[data-tone='accent']   { --tone: var(--accent); }
-.analytics-grid article[data-tone='info']    { --tone: var(--info); }
-.analytics-grid article[data-tone='tertiary']{ --tone: var(--tertiary); }
-.analytics-grid article[data-tone='success'] { --tone: var(--success); }
-.analytics-grid article[data-tone='warning'] { --tone: var(--warning); }
-.analytics-grid article[data-tone='danger']  { --tone: var(--danger); }
+.analytics-grid article[data-tone='accent']    { --tone: var(--primary); }
+.analytics-grid article[data-tone='info']     { --tone: var(--info); }
+.analytics-grid article[data-tone='tertiary'] { --tone: var(--tertiary); }
+.analytics-grid article[data-tone='success']  { --tone: var(--success); }
+.analytics-grid article[data-tone='warning']  { --tone: var(--warning); }
+.analytics-grid article[data-tone='danger']   { --tone: var(--danger); }
 
-/* ---- Difficulty meters: fill draws in when scrolled into view ---- */
+
+/* =========================
+   3 · BREAKDOWN PANELS
+========================= */
+
+.analytics-panels {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 14px;
+}
+
+.analytics-panel {
+  padding: 22px;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+
+  background: var(--bg-surface);
+}
+
+.analytics-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.analytics-panel-head strong {
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.analytics-panel > p {
+  margin: 10px 0 22px;
+
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+/* ---- Difficulty meters: hairline track, primary fill ---- */
+
+.analytics-bars {
+  display: grid;
+  gap: 12px;
+}
+
+.analytics-bar-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 30px;
+  align-items: center;
+  gap: 10px;
+}
+
+.analytics-bar-row > span {
+  color: var(--text-muted);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
 .analytics-bar-row > div {
+  height: 8px;
   overflow: hidden;
+
+  background: var(--bg-sunken);
+
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+}
+
+.analytics-bar-row b {
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.analytics-bars small {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
 }
 
 .analytics-bar-fill {
   display: block;
 
   width: 0;
+  height: 100%;
 
-  background: currentColor;
-
-  box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.35);
+  background: linear-gradient(90deg, rgba(var(--primary-rgb), 0.5), var(--primary));
 
   transition: width 1s var(--ease-out) 0.15s;
 }
@@ -72,31 +311,283 @@
   width: var(--bar-width, 0%);
 }
 
-/* ---- Recent sessions: staggered reveal + hover slide ---- */
+html[dir='rtl'] .analytics-bar-fill {
+  background: linear-gradient(-90deg, rgba(var(--primary-rgb), 0.5), var(--primary));
+}
+
+/* ---- Mode distribution ---- */
+
+.analytics-mode-list {
+  display: grid;
+  gap: 0;
+
+  margin-top: 18px;
+}
+
+.analytics-mode-list div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 11px 0;
+
+  border-block-end: 1px solid var(--border-subtle);
+}
+
+.analytics-mode-list div:last-child {
+  border-block-end: 0;
+}
+
+.analytics-mode-list span {
+  color: var(--text-secondary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.analytics-mode-list strong {
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.analytics-mode-list small {
+  margin-top: 10px;
+
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.analytics-event-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+
+  margin-top: 20px;
+  padding-top: 14px;
+
+  border-block-start: 1px solid var(--border-subtle);
+}
+
+.analytics-event-summary span {
+  color: var(--text-muted);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.analytics-event-summary strong {
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================
+   4 · RECENT SESSIONS
+========================= */
+
+.analytics-table {
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+
+  background: var(--bg-surface);
+}
+
+.analytics-table-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 16px 20px;
+
+  border-block-end: 1px solid var(--border);
+}
+
+.analytics-table-head strong {
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
 .analytics-table .animated-list__item {
   display: grid;
 }
 
 .analytics-session {
+  display: grid;
+  grid-template-columns: 90px 1fr 90px 100px 150px;
+  gap: 14px;
+  align-items: center;
+
+  padding: 15px 20px;
+
+  border-block-end: 1px solid var(--border-subtle);
+
+  color: inherit;
+  text-decoration: none;
+
+  font-size: var(--text-sm);
+
   transition: background var(--duration-fast) ease;
+}
+
+.analytics-session:last-child {
+  border-block-end: 0;
 }
 
 .analytics-session:hover {
   background: var(--bg-elevated);
 }
 
+.analytics-session span {
+  color: var(--text-muted);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
 .analytics-session strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.analytics-session em {
+  font-style: normal;
+
+  color: var(--text-secondary);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.analytics-session b {
+  color: var(--text-primary);
+
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-align: end;
   font-variant-numeric: tabular-nums;
 }
 
-/* ---- Light theme ---- */
+.analytics-session small {
+  color: var(--text-muted);
+
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.analytics-empty {
+  padding: 36px 24px;
+
+  border-block-start: 1px dashed var(--border);
+
+  color: var(--text-muted);
+  text-align: center;
+
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1100px) {
+  .analytics-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1000px) {
+  .analytics-panels {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-session {
+    grid-template-columns: 80px 1fr 80px 90px;
+  }
+
+  .analytics-session small {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .analytics-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .analytics-replay-link {
+    align-self: flex-start;
+  }
+
+  .analytics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .analytics-session {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .analytics-session span {
+    display: none;
+  }
+
+  .analytics-session b {
+    text-align: start;
+  }
+
+  .analytics-session em {
+    grid-column: 2;
+  }
+
+  .analytics-bar-row {
+    grid-template-columns: 65px 1fr 24px;
+  }
+}
+
+
+/* =========================
+   THEME + MOTION
+========================= */
+
 [data-theme='light'] .analytics-bar-fill {
-  box-shadow: none;
+  background: var(--primary);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .analytics-bar-fill {
     transition: none;
     width: var(--bar-width, 0%);
+  }
+
+  .analytics-replay-link svg {
+    transition: none;
   }
 }
